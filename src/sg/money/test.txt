@@ -1,3 +1,0 @@
-This is a test file.
-
-I am using it to check the git functionality.

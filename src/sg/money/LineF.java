@@ -12,6 +12,4 @@ public class LineF
 		this.from = from;
 		this.to = to;
 	}
-	//test change 1 - delete me
-	//change 2 - delete me also please!
 }
