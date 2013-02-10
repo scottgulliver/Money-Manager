@@ -9,4 +9,6 @@ public class Budget
 	public double value;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
+	
+	/* test comment for budget class */
 }
