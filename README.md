@@ -1,1 +1,1 @@
-"# This is my README" 
+Money Manager Android project - using Git & BitBucket.
