@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/relLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:background="#FFD2E5ED">
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" android:orientation="vertical" android:id="@+id/linearLayout1">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/relativeLayout1">
+	    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView1" android:layout_alignParentLeft="true" android:src="@drawable/title"></ImageView>
+	    <ImageView android:layout_height="wrap_content" android:id="@+id/imageView2" android:layout_toRightOf="@+id/imageView1" android:layout_alignTop="@+id/imageView1" android:layout_alignBottom="@+id/imageView1" android:src="@drawable/title_ex" android:layout_width="fill_parent" android:scaleType="fitXY"></ImageView>
+    </RelativeLayout>
+    <TableLayout android:id="@+id/tableLayout1" android:layout_width="fill_parent" android:layout_height="wrap_content"  android:stretchColumns="*">
+	    <TableRow android:gravity="fill_horizontal">
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true" />
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView3" android:src="@drawable/record"
+	        	android:clickable="true" android:onClick="recordImage_onClick"/>
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView4" android:src="@drawable/view"
+	        	android:clickable="true" android:onClick="viewImage_onClick"/>
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	    </TableRow>
+	    <TableRow android:gravity="fill_horizontal">
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView5" android:layout_alignParentLeft="true" android:src="@drawable/track" android:gravity="center_horizontal"/>
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView6" android:src="@drawable/change" android:gravity="center_horizontal" 
+	        	android:clickable="true" android:onClick="configImage_onClick"></ImageView>
+	        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	    </TableRow>
+    </TableLayout>
+</LinearLayout>
+    <sg.money.SpendOverview android:layout_width="fill_parent" android:layout_gravity="bottom" android:layout_alignParentBottom="true" android:layout_height="40dip" android:id="@+id/spendbar"></sg.money.SpendOverview>
+</RelativeLayout>

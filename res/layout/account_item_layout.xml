@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemlinearlayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/account_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="2dp"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="8dip"
+        android:text="Cash Account"
+        android:textColor="#222222" />
+    
+	<TextView
+	    android:id="@+id/account_balance" 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+        android:layout_below="@+id/account_name"
+	    android:paddingBottom="8dip"
+	    android:paddingLeft="28dip"
+	    android:paddingRight="8dip"
+	    android:paddingTop="8dip"
+	    android:text="19.99"
+	    android:textColor="#669900" />
+
+</RelativeLayout>

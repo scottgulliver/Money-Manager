@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<CheckBoxPreference
+        android:key="@string/pref_usedarktheme_key"
+        android:title="@string/pref_usedarktheme_title"
+        android:summary="@string/pref_usedarktheme_summ"
+        android:defaultValue="false" />-->
+    <ListPreference
+        android:key="@string/pref_currency_key"
+        android:title="@string/pref_currency_title"
+        android:summary="@string/pref_currency_summ"
+        android:entries="@array/Currencies_Entries"
+        android:entryValues="@array/Currencies_Values"
+		android:defaultValue="GBP" />
+    <!--<EditTextPreference
+        android:key="@string/pref_budget_key"
+        android:title="@string/pref_budget_title"
+        android:summary="@string/pref_budget_summ"
+    	android:numeric="integer"
+        android:defaultValue="150" />-->
+</PreferenceScreen>

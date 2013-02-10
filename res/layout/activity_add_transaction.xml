@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Spinner
+        android:id="@+id/spnCategory1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/spnType1"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@+id/textView3" />
+
+    <EditText
+        android:id="@+id/txtValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtDesc1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:inputType="numberDecimal" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/txtDesc1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spnType1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtValue"
+        android:layout_marginTop="4dp"
+        android:ems="10" />
+
+    <Spinner
+        android:id="@+id/spnType1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spnCategory1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtDesc1"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/txtSpendingByCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/spnType1"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:text="Type" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnDate"
+        android:layout_alignBottom="@+id/btnDate"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="4dp"
+        android:text="Date" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/spnCategory1"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:text="Category             " />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtDesc1"
+        android:layout_alignBottom="@+id/txtDesc1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="4dp"
+        android:text="Description" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtValue"
+        android:layout_alignBottom="@+id/txtValue"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="4dp"
+        android:text="Amount" />
+
+    <EditText
+        android:id="@+id/txtNewCatName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spnCategory1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/spnCategory1"
+        android:layout_marginTop="4dp"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtNewCatName"
+        android:layout_alignBottom="@+id/txtNewCatName"
+        android:layout_alignLeft="@+id/textView3"
+        android:text="Category Name" />
+
+    <Button
+        android:id="@+id/btnDate"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spnCategory1"
+        android:layout_below="@+id/txtNewCatName"
+        android:layout_marginTop="4dp"
+        android:text="15/12/12" />
+
+</RelativeLayout>

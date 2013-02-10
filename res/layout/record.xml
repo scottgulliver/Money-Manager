@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:orientation="vertical" android:id="@+id/linearLayout1">
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/relativeLayout1">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView1" android:src="@drawable/back" android:layout_alignParentLeft="true" 
+        	android:clickable="true" android:onClick="backImage_onClick"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imageView3" android:src="@drawable/title" android:layout_alignParentRight="true"></ImageView>
+        <ImageView android:layout_width="fill_parent" android:scaleType="fitXY" android:layout_height="wrap_content" android:id="@+id/imageView2" android:src="@drawable/title_ex"></ImageView>
+    </LinearLayout>
+    <TextView android:text="Amount:" android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <EditText android:id="@+id/txtNewCatName" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="0.00"></EditText>
+    <TextView android:text="Description:" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextView9"></TextView>
+    <EditText android:id="@+id/EditText01" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text=""></EditText>
+    <TextView android:text="Category:" android:id="@+id/textView2" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <Spinner android:layout_width="fill_parent" android:id="@+id/spinner1" android:layout_height="wrap_content"></Spinner>
+    <TextView android:layout_width="wrap_content" android:text="New Category:" android:layout_height="wrap_content" android:id="@+id/TextView01" android:visibility="gone"></TextView>
+    <EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/EditText02" android:text="" android:visibility="invisible"></EditText>
+    <Button android:text="      Save      " android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content" 
+    	android:clickable="true" android:onClick="saveButton_onClick"/>
+</LinearLayout>
