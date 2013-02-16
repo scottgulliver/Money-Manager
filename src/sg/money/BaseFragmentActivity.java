@@ -46,22 +46,27 @@ public abstract class BaseFragmentActivity extends FragmentActivity
 		case ACTIVITY_ACCOUNTS:
 			startActivity(new Intent(this, AccountsActivity.class));
 			finish();
+			overridePendingTransition(0,0);
 			break;
 		case ACTIVITY_TRANSACTIONS:
 			startActivity(new Intent(this, TransactionsActivity.class));
 			finish();
+			overridePendingTransition(0,0);
 			break;
 		case ACTIVITY_CATEGORIES:
 			startActivity(new Intent(this, CategoriesActivity.class));
 			finish();
+			overridePendingTransition(0,0);
 			break;
 		case ACTIVITY_OVERVIEW:
 			startActivity(new Intent(this, OverviewActivity.class));
 			finish();
+			overridePendingTransition(0,0);
 			break;
 		case ACTIVITY_BUDGETS:
 			startActivity(new Intent(this, BudgetsActivity.class));
 			finish();
+			overridePendingTransition(0,0);
 			break;
 		}
 
