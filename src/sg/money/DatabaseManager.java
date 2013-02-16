@@ -53,6 +53,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	static final String colBudgetsID="BudgetID";
 	static final String colBudgetsName="Name";
 	static final String colBudgetsValue="Value";
+	static final String colBudgetsNotify="NotifyType";
 
 	static final String budgetLinksTable="BudgetLinks";
 	static final String colBudgetLinksID="ID";
@@ -97,7 +98,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 13); 
+		super(context, dbName, null, 14); 
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -252,7 +253,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		SQLiteDatabase db= getDatabase(this, DATABASE_WRITE_MODE);
 		
 		String sql = "CREATE TABLE "+budgetsTable+" ("+colBudgetsID+ " INTEGER PRIMARY KEY , "+
-				colBudgetsName+" TEXT , "+colBudgetsValue+" REAL )";
+				colBudgetsName+" TEXT , "+colBudgetsValue+" REAL , "+colBudgetsNotify+" INTEGER )";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -309,6 +310,13 @@ public class DatabaseManager extends SQLiteOpenHelper
 		if (oldVersion <= 12)
 		{
 			createBudgetsTables();
+		}
+		
+		if (oldVersion <= 13)
+		{
+			String sql = "ALTER TABLE "+budgetsTable+" ADD COLUMN "+colBudgetsNotify+" INTEGER";
+			Log.i("SQL", sql);
+			db.execSQL(sql);
 		}
 		
 		clearDatabase();
@@ -811,8 +819,8 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		String name = budget.name.replace("'", "''");
 		
-		String sql = "INSERT INTO "+budgetsTable+" ("+colBudgetsName+","+colBudgetsValue+
-													") VALUES ('"+name+"',"+budget.value+") ";
+		String sql = "INSERT INTO "+budgetsTable+" ("+colBudgetsName+","+colBudgetsValue+","+colBudgetsNotify+
+													") VALUES ('"+name+"',"+budget.value+","+budget.notifyType+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -849,7 +857,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db = getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colBudgetsID+","+colBudgetsName+","+colBudgetsValue+" FROM "+budgetsTable+"";
+			String sql = "SELECT "+colBudgetsID+","+colBudgetsName+","+colBudgetsValue+","+colBudgetsNotify+" FROM "+budgetsTable+"";
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -863,6 +871,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				budget.id = c.getInt((c.getColumnIndex(colBudgetsID)));
 				budget.name = c.getString((c.getColumnIndex(colBudgetsName)));
 				budget.value = c.getDouble((c.getColumnIndex(colBudgetsValue)));
+				budget.notifyType = c.getInt((c.getColumnIndex(colBudgetsNotify)));
 				
 				/* find links */
 				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
@@ -913,7 +922,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db = getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colBudgetsName+","+colBudgetsValue+" FROM "+budgetsTable+" WHERE "+colBudgetsID+" = "+id;
+			String sql = "SELECT "+colBudgetsName+","+colBudgetsValue+","+colBudgetsNotify+" FROM "+budgetsTable+" WHERE "+colBudgetsID+" = "+id;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -926,6 +935,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				budget.id = id;
 				budget.name = c.getString((c.getColumnIndex(colBudgetsName)));
 				budget.value = c.getDouble((c.getColumnIndex(colBudgetsValue)));
+				budget.notifyType = c.getInt((c.getColumnIndex(colBudgetsNotify)));
 				
 				/* find links */
 				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
@@ -989,7 +999,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		String name = budget.name.replace("'", "''");
 		
-		String sql = "UPDATE "+budgetsTable+" SET "+colBudgetsName+" = '"+name+"', "+colBudgetsValue+" = "+budget.value+" WHERE "+colBudgetsID+" = "+budget.id;
+		String sql = "UPDATE "+budgetsTable+" SET "+colBudgetsName+" = '"+name+"', "+colBudgetsValue+" = "+budget.value+", "+colBudgetsNotify+" = "+budget.notifyType+" WHERE "+colBudgetsID+" = "+budget.id;
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		

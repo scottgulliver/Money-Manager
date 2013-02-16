@@ -69,13 +69,14 @@ public abstract class BaseFragmentActivity extends FragmentActivity
 			overridePendingTransition(0,0);
 			break;
 		}
-
+ 
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		BudgetNotificationReciever.setUpEvents(this, false);
 		
 		actionBar = getActionBar();
 	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);

@@ -73,6 +73,8 @@
             android:name="sg.money.AddBudgetActivity"
             android:label="@string/title_activity_add_budget" >
         </activity>
+        
+        <receiver android:process=":remote" android:name="BudgetNotificationReciever"></receiver>
     </application>
 
 </manifest>

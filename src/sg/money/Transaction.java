@@ -1,8 +1,7 @@
 package sg.money;
 
 import java.util.Date;
-
-import android.app.Activity;
+import android.content.Context;
 
 public class Transaction
 {
@@ -13,9 +12,9 @@ public class Transaction
 	public Date dateTime;
 	public int account;
 	
-	public double getRealValue(Activity activity)
+	public double getRealValue(Context context)
 	{
-		Category category = DatabaseManager.getInstance(activity).GetCategory(this.category);
+		Category category = DatabaseManager.getInstance(context).GetCategory(this.category);
 		return (category.income ? value : value * -1.0);
 	}
 }
