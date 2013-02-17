@@ -23,7 +23,6 @@ public class TransactionsActivity extends BaseFragmentActivity
     ViewPager viewPager;
     TabsAdapter tabsAdapter;
     PagerTitleStrip titleStrip;
-    Fragment currentFragment;
     
     public Account selectedAccount = null;
 	
@@ -146,18 +145,16 @@ public class TransactionsActivity extends BaseFragmentActivity
 		@Override
 		public Fragment getItem(int position) {
 			TabInfo info = tabs.get(position);
-			context.currentFragment = Fragment.instantiate(context, info.clss.getName(), info.args);
-			fragments.add(context.currentFragment);
-			return context.currentFragment;
+			Fragment fragment = Fragment.instantiate(context, info.clss.getName(), info.args);
+			fragments.add(fragment);
+			return fragment;
 		}
 		
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 		}
 		
 		public void onPageSelected(int position) {
-			//actionBar.setSelectedNavigationItem(position);
 			context.selectedAccount = tabs.get(position).account;
-			context.currentFragment = fragments.get(position);
 		}
 		
 		public void onPageScrollStateChanged(int state)
