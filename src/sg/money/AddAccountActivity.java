@@ -1,17 +1,23 @@
 package sg.money;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AddAccountActivity extends Activity
 {    
     EditText txtName;
+    EditText txtStartingBalance;
+    TextView textView2;
     Account editAccount;
     ArrayList<Account> currentAccounts;
 	
@@ -22,6 +28,10 @@ public class AddAccountActivity extends Activity
         setContentView(R.layout.activity_add_acount);
         
         txtName = (EditText)findViewById(R.id.txtName);
+        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
+        textView2 = (TextView)findViewById(R.id.textView2);
+        
+        txtStartingBalance.setText("0.00");
         
         //check if we are editing
         editAccount = null;
@@ -31,6 +41,13 @@ public class AddAccountActivity extends Activity
         	editAccount = DatabaseManager.getInstance(AddAccountActivity.this).GetAccount(editId);
         	txtName.setText(editAccount.name);
         	setTitle("Edit Account");
+        	
+        	txtStartingBalance.setVisibility(View.GONE);
+        	textView2.setVisibility(View.GONE);
+        	
+        	RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)txtName.getLayoutParams();
+        	params.addRule(RelativeLayout.RIGHT_OF, R.id.textView1);
+        	txtName.setLayoutParams(params);
         }
         
         currentAccounts = DatabaseManager.getInstance(this).GetAllAccounts();
@@ -97,6 +114,28 @@ public class AddAccountActivity extends Activity
 	    	newAccount.value = 0;
 	    	
 			DatabaseManager.getInstance(AddAccountActivity.this).AddAccount(newAccount);
+			
+			double startBalance = Double.valueOf(txtStartingBalance.getText().toString());
+			if (startBalance != 0.0)
+			{
+				Transaction transaction = new Transaction();
+				transaction.account = newAccount.id;
+				transaction.description = "Starting balance for account";
+				transaction.dateTime = Calendar.getInstance().getTime();
+				transaction.value = startBalance;
+				
+				ArrayList<Category> categories = DatabaseManager.getInstance(AddAccountActivity.this).GetAllCategories();
+				for(Category category : categories)
+				{
+					if (category.name.equals("Starting Balance") && category.income == startBalance > 0)
+					{
+						transaction.category = category.id;
+						break;
+					}
+				}
+				
+				DatabaseManager.getInstance(AddAccountActivity.this).InsertTransaction(transaction);
+			}
     	}
     	else
     	{

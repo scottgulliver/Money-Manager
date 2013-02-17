@@ -20,11 +20,32 @@
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@+id/textView2"
         android:ems="10" >
 
         <requestFocus />
     </EditText>
+
+    <EditText
+        android:id="@+id/txtStartBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtName"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@+id/textView2"
+        android:ems="10"
+        android:inputType="numberDecimal|numberSigned" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/txtStartBalance"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="8dp"
+        android:text="Starting Balance" />
 
 </RelativeLayout>
