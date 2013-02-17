@@ -132,7 +132,15 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		createBudgetsTables();
 		
-		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Car Expenses',-6744954,0) ";
+		populateDefaultCategories(db);
+		populateDefaultAccounts(db);
+		
+		clearDatabase();
+	}
+	
+	private void populateDefaultCategories(SQLiteDatabase db)
+	{
+		String sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Car Expenses',-6744954,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Cash Withdrawal',-9463754,0) ";
@@ -241,16 +249,16 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Misc (In)',-5416974,1) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-		
-		
-		sql = "INSERT INTO "+accountsTable+" ("+colAccountsName+","+colAccountsValue+") VALUES ('Cash', 0) ";
+	}
+	
+	private void populateDefaultAccounts(SQLiteDatabase db)
+	{
+		String sql = "INSERT INTO "+accountsTable+" ("+colAccountsName+","+colAccountsValue+") VALUES ('Cash', 0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		sql = "INSERT INTO "+accountsTable+" ("+colAccountsName+","+colAccountsValue+") VALUES ('Bank Account', 0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-
-		clearDatabase();
 	}
 	
 	private void createBudgetsTables()
