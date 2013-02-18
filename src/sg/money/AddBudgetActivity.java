@@ -146,7 +146,13 @@ public class AddBudgetActivity extends Activity
     	ArrayList<String> items = new ArrayList<String>();
     	items.add("All Categories");
     	for(Category category : currentCategories)
+    	{
+        	//change this! - see issue #37
+        	if (category.name.equals("Starting Balance"))
+        		continue;
+        	
     		items.add(category.name);
+    	}
 
     	viewingDialog = CATEGORIESLIST;
     	createDialog("Categories", items, checkedItems).show();

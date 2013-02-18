@@ -23,6 +23,10 @@ public class Budget
 		double spending = 0;
         for(Transaction transaction : transactions)
         {
+        	//change this! - see issue #37
+        	if (DatabaseManager.getInstance(context).GetCategory(transaction.category).name.equals("Starting Balance"))
+        		continue;
+        	
         	if (!accounts.isEmpty())
         	{
             	boolean isAccout = false;

@@ -135,6 +135,12 @@ public class DatabaseManager extends SQLiteOpenHelper
 		populateDefaultCategories(db);
 		populateDefaultAccounts(db);
 		
+		//db.execSQL("INSERT INTO Transactions (Value,Description,CategoryID,AccountID,Date) VALUES (15,'Entry 1 for November 4, 2011 0:00:00 AM GMT',1,1,'November 4, 2011 0:00:00 AM GMT'");//1
+		//db.execSQL("INSERT INTO Transactions (Value,Description,CategoryID,AccountID,Date) VALUES (-15,'Entry 1 for November 4, 2011 0:00:01 AM GMT',1,1,'November 4, 2011 0:00:01 AM GMT'");//1
+
+
+		
+		
 		clearDatabase();
 	}
 	
