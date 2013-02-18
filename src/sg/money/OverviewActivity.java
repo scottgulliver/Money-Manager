@@ -94,6 +94,7 @@ public class OverviewActivity extends BaseActivity
 		}
     	Calendar endDate = (Calendar)startDate.clone();
     	endDate.add(Calendar.MONTH, 1);
+    	endDate.add(Calendar.SECOND, -1);
     	
     	transactions = DatabaseManager.getInstance(OverviewActivity.this).GetAllTransactions(startDate.getTime(), endDate.getTime());
     	//Toast.makeText(OverviewActivity.this, transactions.size() + " transactions.", Toast.LENGTH_SHORT).show();

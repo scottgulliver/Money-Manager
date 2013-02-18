@@ -78,6 +78,7 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 				
 				endDate = (Calendar)startDate.clone();
 				endDate.add(Calendar.MONTH, 1);
+				endDate.add(Calendar.SECOND, -1);
 
 				ArrayList<Budget> budgets = DatabaseManager.getInstance(context).GetAllBudgets();
 				ArrayList<Budget> budgetsToShow = new ArrayList<Budget>();

@@ -86,6 +86,7 @@ public class BudgetsActivity extends BaseActivity {
 		}
     	Calendar endDate = (Calendar)startDate.clone();
     	endDate.add(Calendar.MONTH, 1);
+		endDate.add(Calendar.SECOND, -1);
     	
     	transactions = DatabaseManager.getInstance(BudgetsActivity.this).GetAllTransactions(startDate.getTime(), endDate.getTime());
 		budgets = DatabaseManager.getInstance(BudgetsActivity.this).GetAllBudgets();
