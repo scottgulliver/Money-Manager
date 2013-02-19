@@ -88,12 +88,19 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 					if (budget.notifyType > 0 && budget.notifyType <= highestNotifyType)
 						budgetsToShow.add(budget);
 				}
-				
+
+				boolean onlyDailyBudgets = true;
 				ArrayList<String> linesToShow = new ArrayList<String>();
 				for(Budget budget : budgetsToShow)
 				{
 					linesToShow.add(budget.name + " - " + budget.getCompletePercentage(context, startDate, endDate));
+					
+					if (budget.notifyType > 1)
+						onlyDailyBudgets = false;
 				}
+				
+				if (onlyDailyBudgets)
+					title = "Daily budget overview";
 				
 				String smallText = "Expand to see budgets";
 				
