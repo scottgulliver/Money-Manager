@@ -77,6 +77,10 @@ public class BudgetListAdapter extends BaseAdapter
         double spending = 0;
         for(Transaction transaction : transactions)
         {
+        	//change this! - see issue #37
+        	if (DatabaseManager.getInstance(activity).GetCategory(transaction.category).name.equals("Starting Balance"))
+        		continue;
+        	
         	if (!budget.accounts.isEmpty())
         	{
             	boolean isAccout = false;

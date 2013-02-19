@@ -92,14 +92,18 @@ public class AddTransactionActivity extends FragmentActivity
 
 		spnType.setAdapter(arrayAdapter2);
 		
-		spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
+		spnType.post(new Runnable() { // set up as a post to stop the initial call on initialising UI
+			public void run() {
+				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 						PopulateCategories();
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
 					}
-		});
+				});
+			}});
+		
 		PopulateCategories();
 		
 		spnCategory.setOnItemSelectedListener(new OnItemSelectedListener() {

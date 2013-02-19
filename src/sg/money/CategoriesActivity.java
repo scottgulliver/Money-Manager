@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -96,11 +97,23 @@ public class CategoriesActivity extends BaseActivity {
 	private void DeleteItems()
 	{
 		ArrayList<Category> selectedItems = adapter.GetSelectedItems();
+		ArrayList<Category> permanentItems = new ArrayList<Category>();
 		for(Category selectedItem : selectedItems)
 		{
-			DatabaseManager.getInstance(CategoriesActivity.this).DeleteCategory(selectedItem);
+			if (!selectedItem.isPermanent)
+				DatabaseManager.getInstance(CategoriesActivity.this).DeleteCategory(selectedItem);
+			else
+				permanentItems.add(selectedItem);
 		}
 		UpdateList();
+		
+		if (!permanentItems.isEmpty())
+		{
+			String msg = "Can't delete ";
+			for(Category category : permanentItems)
+				msg += category.name + (permanentItems.get(permanentItems.size()-1) != category ? ", " : ".");
+			Toast.makeText(CategoriesActivity.this, msg, Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	MultiChoiceModeListener multiChoiceListner = new MultiChoiceModeListener()

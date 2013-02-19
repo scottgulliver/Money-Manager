@@ -94,6 +94,7 @@ public class OverviewActivity extends BaseActivity
 		}
     	Calendar endDate = (Calendar)startDate.clone();
     	endDate.add(Calendar.MONTH, 1);
+    	endDate.add(Calendar.SECOND, -1);
     	
     	transactions = DatabaseManager.getInstance(OverviewActivity.this).GetAllTransactions(startDate.getTime(), endDate.getTime());
     	//Toast.makeText(OverviewActivity.this, transactions.size() + " transactions.", Toast.LENGTH_SHORT).show();
@@ -156,6 +157,11 @@ public class OverviewActivity extends BaseActivity
     				break;
     			}
     		}
+    		
+    		//don't count the starting balance categories
+    		if (thisCategory.name.equals("Starting Balance"))
+    			continue;
+    		
     		if (thisCategory.income)
     		{
     			income += transaction.value;
@@ -188,14 +194,15 @@ public class OverviewActivity extends BaseActivity
 		double total = 0;
 		for(Transaction transaction : transactions)
 		{
-			if (!getCategory(transaction.category).income)
+			if (!getCategory(transaction.category).income 
+					&& !getCategory(transaction.category).name.equals("Starting Balance"))
 				total -= transaction.value;
 		}
 		
 		//add each category in turn
 		for(Category category : categories)
 		{
-			if (category.income)
+			if (category.income || category.name.equals("Starting Balance"))
 				continue;
 			
 			double categoryValue = 0;
