@@ -62,6 +62,16 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
         	spnType.setSelection(editCategory.income?1:0);
         	currentColor = editCategory.color;
         	this.setTitle("Edit Category");
+        	
+        	if (editCategory.isPermanent)
+        	{
+        		txtName.setFocusable(false);
+        		txtName.setFocusableInTouchMode(false);
+        		txtName.setClickable(false);
+        		spnType.setFocusable(false);
+        		spnType.setFocusableInTouchMode(false);
+        		spnType.setClickable(false);
+        	}
         }
 
     	imgColor.setBackgroundColor(currentColor);
@@ -116,15 +126,18 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
     		return false;
     	}
     	
-    	for(Category currentCategory : currentCategories)
+    	if (editCategory == null || !editCategory.isPermanent)
     	{
-    		if (editCategory != null && (currentCategory.id == editCategory.id)) continue;
-    		
-    		if (txtName.getText().toString().trim().equals(currentCategory.name.trim()))
-        	{
-        		Toast.makeText(AddCategoryActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
-        		return false;
-        	}
+	    	for(Category currentCategory : currentCategories)
+	    	{
+	    		if (editCategory != null && (currentCategory.id == editCategory.id)) continue;
+	    		
+	    		if (txtName.getText().toString().trim().equals(currentCategory.name.trim()))
+	        	{
+	        		Toast.makeText(AddCategoryActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
+	        		return false;
+	        	}
+	    	}
     	}
     	
     	return true;

@@ -11,9 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class AddBudgetActivity extends Activity
@@ -25,10 +27,13 @@ public class AddBudgetActivity extends Activity
 	ArrayList<Category> selectedCategories;
 	ArrayList<Account> selectedAccounts;
 	
+	ArrayList<String> notifyTypeOptions;
+	
 	EditText txtName;
 	EditText txtValue;
 	Button btnCategories;
 	Button btnAccounts;
+	Spinner spnNotifyType;
 	
 	Budget editBudget;
 	
@@ -46,6 +51,7 @@ public class AddBudgetActivity extends Activity
 		txtValue = (EditText)findViewById(R.id.txtValue);
 		btnCategories = (Button)findViewById(R.id.btnCategories);
       	btnAccounts = (Button)findViewById(R.id.btnAccounts);
+      	spnNotifyType = (Spinner)findViewById(R.id.spnNotifyType);
       
       	btnCategories.setOnClickListener(new OnClickListener() { 
 			public void onClick(View v) { CategoriesClicked(); } });
@@ -65,6 +71,15 @@ public class AddBudgetActivity extends Activity
       	selectedCategories = new ArrayList<Category>();
     	selectedAccounts = new ArrayList<Account>();
     	
+    	notifyTypeOptions = new ArrayList<String>();
+    	notifyTypeOptions.add("None");
+    	notifyTypeOptions.add("Daily");
+    	notifyTypeOptions.add("Weekly");
+    	notifyTypeOptions.add("Monthly");
+    	
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, notifyTypeOptions);
+        spnNotifyType.setAdapter(arrayAdapter);
+    	
       	//check if we are editing
       	editBudget = null;
       	int editId = getIntent().getIntExtra("ID", -1);
@@ -75,6 +90,8 @@ public class AddBudgetActivity extends Activity
       		txtValue.setText(String.valueOf(editBudget.value));
       		selectedCategories = editBudget.categories;
       		selectedAccounts = editBudget.accounts;
+      		
+      		spnNotifyType.setSelection(editBudget.notifyType);
       		
       		this.setTitle("Edit Budget");
       	}
@@ -129,7 +146,13 @@ public class AddBudgetActivity extends Activity
     	ArrayList<String> items = new ArrayList<String>();
     	items.add("All Categories");
     	for(Category category : currentCategories)
+    	{
+        	//change this! - see issue #37
+        	if (category.name.equals("Starting Balance"))
+        		continue;
+        	
     		items.add(category.name);
+    	}
 
     	viewingDialog = CATEGORIESLIST;
     	createDialog("Categories", items, checkedItems).show();
@@ -314,6 +337,7 @@ public class AddBudgetActivity extends Activity
 		editBudget.value = Double.parseDouble(txtValue.getText().toString().trim());
 		editBudget.categories = selectedCategories;
 		editBudget.accounts = selectedAccounts;
+		editBudget.notifyType = spnNotifyType.getSelectedItemPosition();
 		
     	//commit to the db
     	if (creatingNew)
