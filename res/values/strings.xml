@@ -15,15 +15,24 @@
     <string name="title_activity_test">TEST</string>
     <string name="title_activity_categories">Categories</string>
     <string name="title_activity_add_category">Add Category</string>
-    <string name="pref_usedarktheme_key">USEDARKTHEME</string>
-    <string name="pref_usedarktheme_title">Use dark theme</string>
-    <string name="pref_usedarktheme_summ">Use the dark theme</string>
+    <string name="title_activity_overview">Overview</string>
+    <string name="title_activity_budgets">Budgets</string>
+    <string name="title_activity_add_budget">Add Budget</string>
+    
+    
+    <!-- *** PREFERENCE STRINGS ***** -->
+    
     <string name="pref_currency_key">CURRENCY</string>
     <string name="pref_currency_title">Currency</string>
     <string name="pref_currency_summ">Choose your currency</string>
-    <string name="pref_budget_key">BUDGET</string>
-    <string name="pref_budget_title">Budget</string>
-    <string name="pref_budget_summ">Specify a monthly budget</string>
+    
+    <string name="pref_negativebrackets_key">NEGATIVEBRACKETS</string>
+    <string name="pref_negativebrackets_title">Negative number backets</string>
+    <string name="pref_negativebrackets_summ">Use brackets around negative numbers</string>
+    
+    <string name="pref_dateformat_key">DATEFORMAT</string>
+    <string name="pref_dateformat_title">Date format</string>
+    <string name="pref_dateformat_summ">Choose which date format to use</string>
 
     <string-array name="Currencies_Entries">
         <item>$ (USD)</item>
@@ -55,9 +64,10 @@
         <item>INR</item>
         <item>VND</item>
     </string-array>
-
-    <string name="title_activity_overview">Overview</string>
-    <string name="title_activity_budgets">Budgets</string>
-    <string name="title_activity_add_budget">Add Budget</string>
+    
+    <string-array name="Dateformat_Entries">
+        <item>dd/mm/yy</item>
+        <item>mm/dd/yy</item>
+    </string-array>
 
 </resources>

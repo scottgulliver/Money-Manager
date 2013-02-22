@@ -1,5 +1,7 @@
 package sg.money;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -14,6 +16,7 @@ public class Misc
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
 		String currencyCode = sharedPref.getString(activity.getString(R.string.pref_currency_key), "GBP");
+		boolean useBrackets = sharedPref.getBoolean(activity.getString(R.string.pref_negativebrackets_key), false);
 		
 		//put value into a raw formatted value string
 		String formattedValue = String.format(Locale.ENGLISH, "%.2f", value);
@@ -52,9 +55,30 @@ public class Misc
 		
 		//add a negative back on if required
 		if (isNegative)
-			formattedValue = "-" + formattedValue;
+		{
+			if (useBrackets)
+				formattedValue = "(" + formattedValue + ")";
+			else
+				formattedValue = "-" + formattedValue;
+		}
 		
 		return formattedValue;
+	}
+	
+	public static String formatDate(Activity activity, Date date) throws Exception
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+		String datePref = sharedPref.getString(activity.getString(R.string.pref_dateformat_key), "dd/mm/yy");
+		
+		SimpleDateFormat dateFormat;
+		if (datePref.equals("dd/mm/yy"))
+			dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+		else if (datePref.equals("mm/dd/yy"))
+			dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.ENGLISH);
+		else
+			throw new Exception("Unsupported date format - " + datePref);
+    	
+    	return dateFormat.format(date);
 	}
     
     static float dipsToPixels(Resources resources, float dipValue)
