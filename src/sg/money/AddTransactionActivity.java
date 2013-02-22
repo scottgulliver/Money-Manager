@@ -53,6 +53,7 @@ public class AddTransactionActivity extends FragmentActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
+    	setTitle("Add Transaction");
         
         accountID = getIntent().getIntExtra("AccountID", -1);
         

@@ -46,6 +46,7 @@ public class AddBudgetActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_budget);
+  		setTitle("Add Budget");
         
 		txtName = (EditText)findViewById(R.id.txtName);
 		txtValue = (EditText)findViewById(R.id.txtValue);
@@ -93,7 +94,7 @@ public class AddBudgetActivity extends Activity
       		
       		spnNotifyType.setSelection(editBudget.notifyType);
       		
-      		this.setTitle("Edit Budget");
+      		setTitle("Edit Budget");
       	}
 	}
 

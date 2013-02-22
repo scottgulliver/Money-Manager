@@ -26,6 +26,7 @@ public class AddAccountActivity extends Activity
     {
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_acount);
+    	setTitle("Add Account");
         
         txtName = (EditText)findViewById(R.id.txtName);
         txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
