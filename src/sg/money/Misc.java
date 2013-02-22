@@ -5,7 +5,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
@@ -84,5 +88,24 @@ public class Misc
     static float dipsToPixels(Resources resources, float dipValue)
     {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, resources.getDisplayMetrics());
+    }
+    
+    static void showConfirmationDialog(Context context, String message, OnClickListener okClick)
+    {
+    	showConfirmationDialog(context, message, okClick, 
+    			new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+    }
+    
+    static void showConfirmationDialog(Context context, String message, OnClickListener okClick, OnClickListener cancelClick)
+    {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+	    builder.setMessage(message);
+	    builder.setPositiveButton("OK", okClick);
+	    builder.setNegativeButton("Cancel", cancelClick);
+	    builder.create().show();
     }
 }

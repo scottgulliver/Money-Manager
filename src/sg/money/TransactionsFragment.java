@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -114,8 +116,7 @@ public class TransactionsFragment extends Fragment
                     mode.finish();
                     return true;
                 case R.id.cab_delete:
-    				DeleteItems();
-                    mode.finish();
+                	confirmDeleteItems(mode);
                     return true;
                 default:
                     return false;
@@ -155,6 +156,23 @@ public class TransactionsFragment extends Fragment
 		intent.putExtra("AccountID", selectedItem.account);
 		intent.putExtra("ID", selectedItem.id);
     	startActivityForResult(intent, REQUEST_ADDTRANSACTION);
+	}
+	
+	private void confirmDeleteItems(final ActionMode mode)
+	{
+		Misc.showConfirmationDialog(getActivity(), 
+				adapter.GetSelectedItems().size() == 1 
+					? "Delete 1 transaction?"
+					: "Delete " + adapter.GetSelectedItems().size() + " transactions?", 
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+						DeleteItems();
+	                    mode.finish();
+					}
+				},
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+                    mode.finish();
+				}
+			});
 	}
 	
 	private void DeleteItems()

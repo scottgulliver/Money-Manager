@@ -196,6 +196,23 @@ public class BudgetsActivity extends BaseActivity {
 		startActivityForResult(intent, REQUEST_ADDBUDGET);
 	}
 	
+	private void confirmDeleteItems(final ActionMode mode)
+	{
+		Misc.showConfirmationDialog(this, 
+				adapter.GetSelectedItems().size() == 1 
+					? "Delete 1 budget?"
+					: "Delete " + adapter.GetSelectedItems().size() + " budgets?", 
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+						DeleteItems();
+	                    mode.finish();
+					}
+				},
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+                    mode.finish();
+				}
+			});
+	}
+	
 	private void DeleteItems()
 	{
 		ArrayList<Budget> selectedItems = adapter.GetSelectedItems();
@@ -225,8 +242,7 @@ public class BudgetsActivity extends BaseActivity {
                     mode.finish();
                     return true;
                 case R.id.cab_delete:
-    				DeleteItems();
-                    mode.finish();
+                	confirmDeleteItems(mode);
                     return true;
                 default:
                     return false;
