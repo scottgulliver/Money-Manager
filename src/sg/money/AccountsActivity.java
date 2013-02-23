@@ -86,6 +86,7 @@ public class AccountsActivity extends BaseActivity
     	transactionsIntent.putExtra("AccountID", account.id);
 		startActivity(transactionsIntent);
 		finish();
+		overridePendingTransition(0,0);
 	}
 
 	static final int REQUEST_SETTINGS = 10;
