@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="7dp"
         android:layout_height="50dp"
-        android:background="#ffffff" />
+        android:background="#ffaaaa" />
 
     <TextView
         android:id="@+id/category_name"

@@ -1,126 +1,133 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:stretchColumns="1" >
 
-    <Spinner
-        android:id="@+id/spnCategory1"
+    <TableRow
+        android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/spnType1"
-        android:layout_marginTop="4dp"
-        android:layout_toRightOf="@+id/textView3" />
+        android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/txtValue"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Amount" />
+
+        <EditText
+            android:id="@+id/txtValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10"
+            android:inputType="numberDecimal" >
+            <requestFocus />
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtDesc1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:inputType="numberDecimal" >
+        android:layout_height="wrap_content" >
 
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Description" />
 
-    <EditText
-        android:id="@+id/txtDesc1"
+        <EditText
+            android:id="@+id/txtDesc1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spnType1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtValue"
-        android:layout_marginTop="4dp"
-        android:ems="10" />
+        android:layout_height="wrap_content" >
 
-    <Spinner
-        android:id="@+id/spnType1"
+        <TextView
+            android:id="@+id/txtSpendingByCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Type" />
+
+        <Spinner
+            android:id="@+id/spnType1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spnCategory1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtDesc1"
-        android:layout_marginTop="4dp" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/txtSpendingByCategory"
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Category" />
+
+        <Spinner
+            android:id="@+id/spnCategory1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/spnType1"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="20dp"
-        android:text="Type" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/textView5"
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Category Name" />
+
+        <EditText
+            android:id="@+id/txtNewCatName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow6"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btnDate"
-        android:layout_alignBottom="@+id/btnDate"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="4dp"
-        android:text="Date" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/spnCategory1"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="20dp"
-        android:text="Category             " />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Date" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/txtDesc1"
-        android:layout_alignBottom="@+id/txtDesc1"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="4dp"
-        android:text="Description" />
+        <Button
+            android:id="@+id/btnDate"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="15/12/12" />
+    </TableRow>
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/txtValue"
-        android:layout_alignBottom="@+id/txtValue"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="4dp"
-        android:text="Amount" />
-
-    <EditText
-        android:id="@+id/txtNewCatName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spnCategory1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/spnCategory1"
-        android:layout_marginTop="4dp"
-        android:ems="10" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/txtNewCatName"
-        android:layout_alignBottom="@+id/txtNewCatName"
-        android:layout_alignLeft="@+id/textView3"
-        android:text="Category Name" />
-
-    <Button
-        android:id="@+id/btnDate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spnCategory1"
-        android:layout_below="@+id/txtNewCatName"
-        android:layout_marginTop="4dp"
-        android:text="15/12/12" />
-
-</RelativeLayout>
+</TableLayout>
