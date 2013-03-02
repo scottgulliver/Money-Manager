@@ -2,5 +2,5 @@
     <item android:id="@+id/cab_delete"
         android:orderInCategory="1"
         android:icon="@drawable/content_discard"
-        android:showAsAction="always" />
+        android:showAsAction="always" android:title="Delete"/>
 </menu>

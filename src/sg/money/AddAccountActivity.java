@@ -27,6 +27,8 @@ public class AddAccountActivity extends Activity
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_acount);
     	setTitle("Add Account");
+    	
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         
         txtName = (EditText)findViewById(R.id.txtName);
         txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
@@ -77,6 +79,12 @@ public class AddAccountActivity extends Activity
 	        case R.id.menu_settings:{
                 break;
             	}
+	        
+	        case android.R.id.home: // up button
+	            Intent intent = new Intent(this, AccountsActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
 	    }
 	    return true;
 	}

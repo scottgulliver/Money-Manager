@@ -54,6 +54,8 @@ public class AddTransactionActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
     	setTitle("Add Transaction");
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         
         accountID = getIntent().getIntExtra("AccountID", -1);
         
@@ -258,6 +260,14 @@ public class AddTransactionActivity extends FragmentActivity
 	        case R.id.menu_settings:{
                 break;
             	}
+
+	        case android.R.id.home: // up button
+	            Intent intent = new Intent(this, TransactionsActivity.class);
+	            if (accountID != -1)
+	            	intent.putExtra("AccountID", accountID);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
 	    }
 	    return true;
 	}

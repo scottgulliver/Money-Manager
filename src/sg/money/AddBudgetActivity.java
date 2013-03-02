@@ -47,6 +47,8 @@ public class AddBudgetActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_budget);
   		setTitle("Add Budget");
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         
 		txtName = (EditText)findViewById(R.id.txtName);
 		txtValue = (EditText)findViewById(R.id.txtValue);
@@ -122,6 +124,12 @@ public class AddBudgetActivity extends Activity
 	        case R.id.menu_settings:{
                 break;
             	}
+
+	        case android.R.id.home: // up button
+	            Intent intent = new Intent(this, BudgetsActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
 	    }
 	    return true;
 	}
