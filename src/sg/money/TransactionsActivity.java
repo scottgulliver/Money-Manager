@@ -2,10 +2,13 @@ package sg.money;
 
 import java.util.ArrayList;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
@@ -18,13 +21,20 @@ import android.widget.AdapterView;
 public class TransactionsActivity extends BaseFragmentActivity
 {
     static final int REQUEST_ADDTRANSACTION = 0;
+    static final int REQUEST_VIEWACCOUNTS = 1;
     static final int REQUEST_SETTINGS = 10;
+    
+    static final String SETTING_LASTACCOUNTVIEWED = "SETTING_LASTACCOUNTVIEWED";
     
     ViewPager viewPager;
     TabsAdapter tabsAdapter;
     PagerTitleStrip titleStrip;
     
     public Account selectedAccount = null;
+    
+    ArrayList<Account> accounts;
+    
+    ActionBar actionBar;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,50 +46,51 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        setContentView(R.layout.activity_transactions);
 	        viewPager = (ViewPager) findViewById(R.id.pager);
 	        titleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
-	        //viewPager.setId(R.id.pager);
 	        viewPager.setOffscreenPageLimit(3);
 
-	        final ActionBar bar = getActionBar();
-	        //bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-	        //bar.setDisplayOptions(0,  ActionBar.DISPLAY_SHOW_TITLE);
+	        actionBar = getActionBar();
 	        
-	        tabsAdapter = new TabsAdapter(this, viewPager);
-	        
-	        ArrayList<Account> accounts = DatabaseManager.getInstance(TransactionsActivity.this).GetAllAccounts();
-	        
-	        for(Account account : accounts)
-	        {
-	        	Bundle tabBundle = new Bundle();
-	        	tabBundle.putInt("AccountID", account.id);
-		        tabsAdapter.addTab(bar.newTab().setText(account.name), TransactionsFragment.class, tabBundle, account);
-	        }
-	        
-	        selectedAccount = accounts.get(0);
-	        
-	        if (savedInstanceState != null)
-	        {
-	        	//bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
-	        }
-	        
-	        if (getIntent().getIntExtra("AccountID", -1) != -1)
-	        {
-	        	int index = -1;
-	        	for(Account account : accounts)
-	        	{
-	        		if (account.id == getIntent().getIntExtra("AccountID", 0))
-	        		{
-	        			index = accounts.indexOf(account);
-	        			break;
-	        		}
-	        	}
-	        	viewPager.setCurrentItem(index);
-		        selectedAccount = accounts.get(index);
-	        }
+	        UpdateUI();
     	}
     	catch(Exception e)
     	{
     		e.printStackTrace();
     	}
+    }
+    
+    private void UpdateUI()
+    {
+    	tabsAdapter = new TabsAdapter(this, viewPager);
+        
+        accounts = DatabaseManager.getInstance(TransactionsActivity.this).GetAllAccounts();
+        
+        for(Account account : accounts)
+        {
+        	Bundle tabBundle = new Bundle();
+        	tabBundle.putInt("AccountID", account.id);
+	        tabsAdapter.addTab(actionBar.newTab().setText(account.name), TransactionsFragment.class, tabBundle, account);
+        }
+        
+        if (accounts.isEmpty())
+        {
+        	Bundle tabBundle = new Bundle();
+        	tabBundle.putString("EmptyText", "No accounts are created");
+	        tabsAdapter.addTab(actionBar.newTab().setText("(No accounts)"), EmptyListFragment.class, tabBundle, null);
+        	viewPager.setCurrentItem(0);
+        }
+        
+        selectedAccount = !accounts.isEmpty() ? accounts.get(0) : null;
+
+        //load last viewed page 
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		Integer selectedPosition = sharedPref.getInt(SETTING_LASTACCOUNTVIEWED, -1);
+        if (selectedPosition != -1 && selectedPosition < accounts.size())
+        {
+        	viewPager.setCurrentItem(selectedPosition);
+	        selectedAccount = accounts.get(selectedPosition);
+        }
+        
+        invalidateOptionsMenu();
     }
     
     @Override
@@ -155,6 +166,12 @@ public class TransactionsActivity extends BaseFragmentActivity
 		
 		public void onPageSelected(int position) {
 			context.selectedAccount = tabs.get(position).account;
+
+			//save this, so we load it by default next time
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+			Editor editor = sharedPref.edit();
+			editor.putInt(SETTING_LASTACCOUNTVIEWED, position);
+			editor.commit();
 		}
 		
 		public void onPageScrollStateChanged(int state)
@@ -185,6 +202,8 @@ public class TransactionsActivity extends BaseFragmentActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_transactions, menu);
+        MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
+        addTransaction.setVisible(accounts.size() > 0);
         return true; 
     }
     
@@ -197,6 +216,30 @@ public class TransactionsActivity extends BaseFragmentActivity
 	    		intent.putExtra("AccountID", selectedAccount.id);
 	        	startActivityForResult(intent, REQUEST_ADDTRANSACTION);
 	    		break;
+	    		}
+
+	    	case R.id.menu_viewaccounts:{
+	    		Intent intent = new Intent(this, AccountsActivity.class);
+	        	startActivityForResult(intent, REQUEST_VIEWACCOUNTS);
+	        	break;
+	    		}
+
+	    	case R.id.menu_viewbudgets:{
+	    		Intent intent = new Intent(this, BudgetsActivity.class);
+	        	startActivity(intent);
+	        	break;
+	    		}
+
+	    	case R.id.menu_viewoverview:{
+	    		Intent intent = new Intent(this, OverviewActivity.class);
+	        	startActivity(intent);
+	        	break;
+	    		} 
+	    	
+	    	case R.id.menu_managecategories:{
+	    		Intent intent = new Intent(this, CategoriesActivity.class);
+	        	startActivity(intent);
+	        	break;
 	    		}
 	    	
 	        case R.id.menu_settings:{
@@ -219,26 +262,44 @@ public class TransactionsActivity extends BaseFragmentActivity
 			{
 				if (resultCode == RESULT_OK)
 				{
-					UpdateUI();
+					UpdateTransactions();
 					//((TransactionsFragment)currentFragment).UpdateList(); FIX THIS AND ADD BACK IN
+				}
+				break;
+			}
+			case REQUEST_VIEWACCOUNTS:
+			{
+				UpdateUI();
+				if (resultCode == RESULT_OK)
+				{
+					int accountId = data.getIntExtra("AccountID", -1);
+					if (accountId != -1)
+			        {
+			        	int index = -1;
+			        	for(Account account : accounts)
+			        	{
+			        		if (account.id == accountId)
+			        		{
+			        			index = accounts.indexOf(account);
+			        			break;
+			        		}
+			        	}
+			        	viewPager.setCurrentItem(index,false);
+				        selectedAccount = accounts.get(index);
+			        }
 				}
 				break;
 			}
 			case REQUEST_SETTINGS:
 			{
-				UpdateUI();
+				UpdateTransactions();
 				break;
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
     }
 
-	@Override
-	protected int thisActivity() {
-		return BaseFragmentActivity.ACTIVITY_TRANSACTIONS;
-	}
-	
-	public void UpdateUI()
+	public void UpdateTransactions()
 	{
 		for(Fragment fragment : tabsAdapter.fragments)
 		{

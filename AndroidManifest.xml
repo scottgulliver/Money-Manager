@@ -15,6 +15,11 @@
         <activity
             android:name="sg.money.TransactionsActivity"
             android:label="@string/title_activity_transactions" >
+            <intent-filter android:label="@string/app_name" >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="sg.money.AddTransactionActivity"
@@ -26,12 +31,7 @@
         </activity>
         <activity
             android:name="sg.money.AccountsActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/title_activity_accounts" >
         </activity>
         <activity
             android:name="sg.money.AddAccountActivity"
@@ -63,7 +63,7 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widgetinfoxml" />
-        </receiver>
+        </receiver>
         -->
         <activity
             android:name="sg.money.BudgetsActivity"
@@ -73,8 +73,16 @@
             android:name="sg.money.AddBudgetActivity"
             android:label="@string/title_activity_add_budget" >
         </activity>
-        
-        <receiver android:process=":remote" android:name="BudgetNotificationReciever"></receiver>
+
+        <receiver
+            android:name="sg.money.BudgetNotificationReciever"
+            android:process=":remote" >
+        </receiver>
+
+        <activity
+            android:name="sg.money.SmallOverviewFragment"
+            android:label="@string/title_activity_small_overview_fragment" >
+        </activity>
     </application>
 
 </manifest>

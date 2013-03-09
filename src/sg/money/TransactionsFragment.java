@@ -48,6 +48,12 @@ public class TransactionsFragment extends Fragment
     	View v = inflater.inflate(R.layout.fragment_transactions, null);
     	
     	transactionsList = (ListView)v.findViewById(R.id.transactionsListing);
+    	
+    	View emptyView = v.findViewById(android.R.id.empty);
+    	TextView emptyText = (TextView)v.findViewById(R.id.empty_text);
+    	emptyText.setText("No transactions");
+    	transactionsList.setEmptyView(emptyView);
+    	
         transactionsList.setOnItemClickListener( 
 				new OnItemClickListener()
 				{
@@ -202,7 +208,7 @@ public class TransactionsFragment extends Fragment
 		Activity a = getActivity();
 
 		if(a instanceof TransactionsActivity) {
-		    ((TransactionsActivity)a).UpdateUI();
+		    ((TransactionsActivity)a).UpdateTransactions();
 		}
 	}
 }

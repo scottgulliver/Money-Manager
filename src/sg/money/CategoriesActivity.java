@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,6 +30,12 @@ public class CategoriesActivity extends BaseActivity {
 		setContentView(R.layout.activity_categories);
 
 		categoriesList = (ListView) findViewById(R.id.categoriesList);
+        
+        View emptyView = findViewById(android.R.id.empty);
+    	TextView emptyText = (TextView)findViewById(R.id.empty_text);
+    	emptyText.setText("No categories");
+    	categoriesList.setEmptyView(emptyView);
+    	
 		categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
 		categoriesList.setMultiChoiceModeListener(multiChoiceListner);
 		categoriesList.setOnItemClickListener( 
@@ -187,9 +194,4 @@ public class CategoriesActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     };
-
-	@Override
-	protected int thisActivity() {
-		return ACTIVITY_CATEGORIES;
-	}
 }

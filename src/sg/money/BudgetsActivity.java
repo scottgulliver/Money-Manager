@@ -31,7 +31,6 @@ public class BudgetsActivity extends BaseActivity {
 
 	ListView budgetsList;
 	TextView txtMonth;
-	TextView txtNoBudgets;
 	ArrayList<Budget> budgets;
 	BudgetListAdapter adapter;
 	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
@@ -42,10 +41,16 @@ public class BudgetsActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_budgets);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		budgetsList = (ListView) findViewById(R.id.budgetsList);
         txtMonth = (TextView)findViewById(R.id.txtMonth);
-        txtNoBudgets = (TextView)findViewById(R.id.txtNoBudgets);
+        
+        View emptyView = findViewById(android.R.id.empty);
+    	TextView emptyText = (TextView)findViewById(R.id.empty_text);
+    	emptyText.setText("No budgets");
+    	budgetsList.setEmptyView(emptyView);
+        
 		budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
 		budgetsList.setMultiChoiceModeListener(multiChoiceListner);
 		budgetsList.setOnItemClickListener( 
@@ -92,9 +97,6 @@ public class BudgetsActivity extends BaseActivity {
 		budgets = DatabaseManager.getInstance(BudgetsActivity.this).GetAllBudgets();
 		adapter = new BudgetListAdapter(this, budgets, transactions);
 		budgetsList.setAdapter(adapter);
-		
-		txtNoBudgets.setVisibility(budgets.size() == 0 ? View.VISIBLE : View.GONE);
-		budgetsList.setVisibility(budgets.size() == 0 ? View.GONE : View.VISIBLE);
 	}
 
 	public class DateComparator implements Comparator<Transaction> {
@@ -152,9 +154,23 @@ public class BudgetsActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+
+	    case android.R.id.home:
+            Intent parentActivityIntent = new Intent(this, TransactionsActivity.class);
+            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(parentActivityIntent);
+            finish();
+            return true;
+            
 		case R.id.menu_addbudget: {
 			Intent intent = new Intent(this, AddBudgetActivity.class);
 			startActivityForResult(intent, REQUEST_ADDBUDGET);
+			break;
+			}
+        
+		case R.id.menu_viewcategories: {
+			Intent intent = new Intent(this, CategoriesActivity.class);
+			startActivity(intent);
 			break;
 			}
 		
@@ -275,9 +291,4 @@ public class BudgetsActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     };
-
-	@Override
-	protected int thisActivity() {
-		return ACTIVITY_BUDGETS;
-	}
 }

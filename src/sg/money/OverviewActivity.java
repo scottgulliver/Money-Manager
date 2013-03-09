@@ -54,6 +54,7 @@ public class OverviewActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         //get the controls
         txtMonth = (TextView)findViewById(R.id.txtMonth);
@@ -303,6 +304,13 @@ public class OverviewActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId())
 	    {
+		    case android.R.id.home:
+	            Intent parentActivityIntent = new Intent(this, TransactionsActivity.class);
+	            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(parentActivityIntent);
+	            finish();
+	            return true;
+            
 	    	case R.id.menu_month:{
 	    		createDialog().show();
 	    		break;
@@ -329,9 +337,4 @@ public class OverviewActivity extends BaseActivity
 			}
 		}
     }
-
-	@Override
-	protected int thisActivity() {
-		return ACTIVITY_OVERVIEW;
-	}
 }

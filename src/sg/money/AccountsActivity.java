@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -29,8 +30,15 @@ public class AccountsActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         accountsList = (ListView)findViewById(R.id.accountsList);
+        
+        View emptyView = findViewById(android.R.id.empty);
+    	TextView emptyText = (TextView)findViewById(R.id.empty_text);
+    	emptyText.setText("No accounts");
+    	accountsList.setEmptyView(emptyView);
+        
         accountsList.setOnItemClickListener( 
 				new OnItemClickListener()
 				{
@@ -63,10 +71,23 @@ public class AccountsActivity extends BaseActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId())
 	    {
+		    case android.R.id.home:
+	            Intent parentActivityIntent = new Intent(this, TransactionsActivity.class);
+	            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(parentActivityIntent);
+	            finish();
+	            return true;
+        
 	    	case R.id.menu_addaccount:{
 	    		Intent intent = new Intent(this, AddAccountActivity.class);
 	        	startActivityForResult(intent, REQUEST_ADDACCOUNT);
 	    		break;
+	    		}
+	    	
+	    	case R.id.menu_managecategories:{
+	    		Intent intent = new Intent(this, CategoriesActivity.class);
+	        	startActivity(intent);
+	        	break;
 	    		}
 	    	
 	        case R.id.menu_settings:{
@@ -81,12 +102,11 @@ public class AccountsActivity extends BaseActivity
     protected void onListItemClick(AdapterView<?> l, View v, int position, long id)
 	{
     	Account account = accounts.get(position);
-
-    	Intent transactionsIntent = new Intent(this, TransactionsActivity.class);
-    	transactionsIntent.putExtra("AccountID", account.id);
-		startActivity(transactionsIntent);
-		finish();
-		overridePendingTransition(0,0);
+    	
+		Intent intent=new Intent();
+	    intent.putExtra("AccountID", account.id);
+	    setResult(RESULT_OK, intent);
+	    finish();
 	}
 
 	static final int REQUEST_SETTINGS = 10;
@@ -196,11 +216,5 @@ public class AccountsActivity extends BaseActivity
 			DatabaseManager.getInstance(AccountsActivity.this).DeleteAccount(selectedItem);
 		}
 		UpdateList();
-	}
-
-	@Override
-	protected int thisActivity()
-	{
-		return ACTIVITY_ACCOUNTS;
 	}
 }

@@ -18,18 +18,15 @@
     <string name="title_activity_overview">Overview</string>
     <string name="title_activity_budgets">Budgets</string>
     <string name="title_activity_add_budget">Add Budget</string>
-    
-    
+
     <!-- *** PREFERENCE STRINGS ***** -->
-    
+
     <string name="pref_currency_key">CURRENCY</string>
     <string name="pref_currency_title">Currency</string>
     <string name="pref_currency_summ">Choose your currency</string>
-    
     <string name="pref_negativebrackets_key">NEGATIVEBRACKETS</string>
     <string name="pref_negativebrackets_title">Negative number backets</string>
     <string name="pref_negativebrackets_summ">Use brackets around negative numbers</string>
-    
     <string name="pref_dateformat_key">DATEFORMAT</string>
     <string name="pref_dateformat_title">Date format</string>
     <string name="pref_dateformat_summ">Choose which date format to use</string>
@@ -64,10 +61,12 @@
         <item>INR</item>
         <item>VND</item>
     </string-array>
-    
     <string-array name="Dateformat_Entries">
         <item>dd/mm/yy</item>
         <item>mm/dd/yy</item>
     </string-array>
+
+    <string name="title_activity_small_overview_fragment">Overview</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

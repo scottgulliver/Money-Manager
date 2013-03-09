@@ -1,13 +1,38 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_addtransaction"
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_addtransaction"
         android:icon="@drawable/content_new"
         android:orderInCategory="1"
-        android:showAsAction="always" android:title="Add Transaction"/>
-    
-    
-    <item android:id="@+id/menu_settings"
+        android:showAsAction="always"
+        android:title="Add Transaction"/>
+    <item
+        android:id="@+id/menu_viewaccounts"
+        android:icon="@drawable/sort_by_size"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:title="Accounts"/>
+    <item
+        android:id="@+id/menu_viewoverview"
+        android:icon="@drawable/overview"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
+        android:title="Overview"/>
+    <item
+        android:id="@+id/menu_viewbudgets"
+        android:orderInCategory="4"
+        android:showAsAction="ifRoom"
+        android:title="Budgets"/>
+    <item
+        android:id="@+id/menu_managecategories"
+        android:orderInCategory="90"
+        android:showAsAction="never"
+        android:title="Categories"/>
+    <item
+        android:id="@+id/menu_settings"
         android:icon="@drawable/action_settings"
-        android:title="@string/menu_settings"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never"
+        android:title="@string/menu_settings"/>
+
 </menu>
