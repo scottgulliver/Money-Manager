@@ -50,8 +50,8 @@ public class TransactionsFragment extends Fragment
     	transactionsList = (ListView)v.findViewById(R.id.transactionsListing);
     	
     	View emptyView = v.findViewById(android.R.id.empty);
-    	TextView emptyText = (TextView)v.findViewById(R.id.empty_text);
-    	emptyText.setText("No transactions");
+    	((TextView)v.findViewById(R.id.empty_text)).setText("No transactions");
+    	((TextView)v.findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	transactionsList.setEmptyView(emptyView);
     	
         transactionsList.setOnItemClickListener( 

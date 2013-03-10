@@ -61,6 +61,7 @@ public class TransactionsActivity extends BaseFragmentActivity
     private void UpdateUI()
     {
     	tabsAdapter = new TabsAdapter(this, viewPager);
+    	actionBar.removeAllTabs();
         
         accounts = DatabaseManager.getInstance(TransactionsActivity.this).GetAllAccounts();
         
@@ -75,6 +76,7 @@ public class TransactionsActivity extends BaseFragmentActivity
         {
         	Bundle tabBundle = new Bundle();
         	tabBundle.putString("EmptyText", "No accounts are created");
+        	tabBundle.putString("EmptyHint", "Go to Accounts to create one.");
 	        tabsAdapter.addTab(actionBar.newTab().setText("(No accounts)"), EmptyListFragment.class, tabBundle, null);
         	viewPager.setCurrentItem(0);
         }

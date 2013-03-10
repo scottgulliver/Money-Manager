@@ -47,8 +47,8 @@ public class BudgetsActivity extends BaseActivity {
         txtMonth = (TextView)findViewById(R.id.txtMonth);
         
         View emptyView = findViewById(android.R.id.empty);
-    	TextView emptyText = (TextView)findViewById(R.id.empty_text);
-    	emptyText.setText("No budgets");
+    	((TextView)findViewById(R.id.empty_text)).setText("No budgets");
+    	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	budgetsList.setEmptyView(emptyView);
         
 		budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		

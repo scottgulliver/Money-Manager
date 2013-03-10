@@ -35,8 +35,8 @@ public class AccountsActivity extends BaseActivity
         accountsList = (ListView)findViewById(R.id.accountsList);
         
         View emptyView = findViewById(android.R.id.empty);
-    	TextView emptyText = (TextView)findViewById(R.id.empty_text);
-    	emptyText.setText("No accounts");
+    	((TextView)findViewById(R.id.empty_text)).setText("No accounts");
+    	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	accountsList.setEmptyView(emptyView);
         
         accountsList.setOnItemClickListener( 

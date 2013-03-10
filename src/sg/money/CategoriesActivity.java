@@ -32,8 +32,8 @@ public class CategoriesActivity extends BaseActivity {
 		categoriesList = (ListView) findViewById(R.id.categoriesList);
         
         View emptyView = findViewById(android.R.id.empty);
-    	TextView emptyText = (TextView)findViewById(R.id.empty_text);
-    	emptyText.setText("No categories");
+    	((TextView)findViewById(R.id.empty_text)).setText("No categories");
+    	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	categoriesList.setEmptyView(emptyView);
     	
 		categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
