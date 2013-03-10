@@ -1,5 +1,6 @@
 package sg.money;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,7 +24,8 @@ public class Misc
 		boolean useBrackets = sharedPref.getBoolean(activity.getString(R.string.pref_negativebrackets_key), false);
 		
 		//put value into a raw formatted value string
-		String formattedValue = String.format(Locale.ENGLISH, "%.2f", value);
+		DecimalFormat decimalFormatter = new DecimalFormat("###,##0.00");
+	    String formattedValue = decimalFormatter.format(value);
 		boolean isNegative = (value < 0);
 		
 		//remove any negative chars - these go before the symbol
