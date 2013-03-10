@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <ListPreference
-        android:key="@string/pref_currency_key"
-        android:title="@string/pref_currency_title"
-        android:summary="@string/pref_currency_summ"
+        android:defaultValue="GBP"
         android:entries="@array/Currencies_Entries"
         android:entryValues="@array/Currencies_Values"
-		android:defaultValue="GBP" />
+        android:key="@string/pref_currency_key"
+        android:summary="@string/pref_currency_summ"
+        android:title="@string/pref_currency_title" />
 
-    <CheckBoxPreference 
+    <CheckBoxPreference
+        android:defaultValue="false"
         android:key="@string/pref_negativebrackets_key"
-        android:title="@string/pref_negativebrackets_title"
         android:summary="@string/pref_negativebrackets_summ"
-        android:defaultValue="false" />
-    
+        android:title="@string/pref_negativebrackets_title" />
+
     <ListPreference
-        android:key="@string/pref_dateformat_key"
-        android:title="@string/pref_dateformat_title"
-        android:summary="@string/pref_dateformat_summ"
+        android:defaultValue="dd/mm/yy"
         android:entries="@array/Dateformat_Entries"
         android:entryValues="@array/Dateformat_Entries"
-		android:defaultValue="dd/mm/yy" />
-    
+        android:key="@string/pref_dateformat_key"
+        android:summary="@string/pref_dateformat_summ"
+        android:title="@string/pref_dateformat_title" />
+
+    <PreferenceScreen
+        android:key="@string/pref_subsecurity_key"
+        android:persistent="true"
+        android:title="@string/pref_subsecurity_title" >
+        <Preference
+            android:key="@string/pref_enablepin_key"
+            android:title="@string/pref_enablepin_title" />
+        <Preference
+            android:key="@string/pref_changepin_key"
+            android:title="@string/pref_changepin_title" />
+        <Preference
+            android:key="@string/pref_disablepin_key"
+            android:title="@string/pref_disablepin_title" />
+    </PreferenceScreen>
+
 </PreferenceScreen>

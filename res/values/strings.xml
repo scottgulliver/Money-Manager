@@ -30,6 +30,17 @@
     <string name="pref_dateformat_key">DATEFORMAT</string>
     <string name="pref_dateformat_title">Date format</string>
     <string name="pref_dateformat_summ">Choose which date format to use</string>
+    <string name="pref_subsecurity_key">SUB_SECURITY</string>
+    <string name="pref_subsecurity_title">Security</string>
+    <string name="pref_enablepin_key">ENABLEPIN</string>
+    <string name="pref_enablepin_title">Enable Pin Protection</string>
+    <string name="pref_changepin_key">CHANGEPIN</string>
+    <string name="pref_changepin_title">Change PIN</string>
+    <string name="pref_disablepin_key">DISABLEPIN</string>
+    <string name="pref_disablepin_title">Disable Pin Protection</string>
+    <string name="pref_pinnumber_key">SAVEDPINNUMBER</string>
+    <string name="pref_pinnumber_title">PIN Number</string>
+    <string name="pref_pinnumber_summ">Enter a PIN number</string>
 
     <string-array name="Currencies_Entries">
         <item>$ (USD)</item>
@@ -66,7 +77,7 @@
         <item>mm/dd/yy</item>
     </string-array>
 
-    <string name="title_activity_small_overview_fragment">Overview</string>
+    <string name="title_activity_pin_entry">Enter your PIN</string>
     <string name="action_settings">Settings</string>
 
 </resources>

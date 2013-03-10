@@ -246,6 +246,11 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        	startActivityForResult(new Intent(TransactionsActivity.this, SettingsActivity.class), REQUEST_SETTINGS);
                 break;
             	}
+	    	
+	        case R.id.menu_exit:{
+	        	finish();
+                break;
+            	}
 	    }
 	    return true;
 	}
