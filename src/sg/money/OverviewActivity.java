@@ -159,8 +159,7 @@ public class OverviewActivity extends BaseActivity
     			}
     		}
     		
-    		//don't count the starting balance categories
-    		if (thisCategory.name.equals("Starting Balance"))
+    		if (!thisCategory.useInReports)
     			continue;
     		
     		if (thisCategory.income)
@@ -195,15 +194,14 @@ public class OverviewActivity extends BaseActivity
 		double total = 0;
 		for(Transaction transaction : transactions)
 		{
-			if (!getCategory(transaction.category).income 
-					&& !getCategory(transaction.category).name.equals("Starting Balance"))
+			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports)
 				total -= transaction.value;
 		}
 		
 		//add each category in turn
 		for(Category category : categories)
 		{
-			if (category.income || category.name.equals("Starting Balance"))
+			if (category.income || !category.useInReports)
 				continue;
 			
 			double categoryValue = 0;
