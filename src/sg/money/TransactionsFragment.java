@@ -68,6 +68,8 @@ public class TransactionsFragment extends Fragment
         
         txtTotal = (TextView)v.findViewById(R.id.txtTotal);
         
+        parentActivity = (TransactionsActivity)getActivity();
+        
         UpdateList();
         
         return v;
@@ -88,14 +90,14 @@ public class TransactionsFragment extends Fragment
     	Collections.reverse(transactions);
     	 
         // Getting adapter by passing xml data ArrayList
-		adapter=new TransactionsListAdapter(this.getActivity(), transactions, categories);
+		adapter=new TransactionsListAdapter(parentActivity, transactions, categories);
 		transactionsList.setAdapter(adapter);
 		
 		Double total = 0.0;
 		for(Transaction transaction : transactions)
 			total += transaction.value;
 		
-		txtTotal.setText(Misc.formatValue(getActivity(), total));
+		txtTotal.setText(Misc.formatValue(parentActivity, total));
     }
     
     protected void onListItemClick(AdapterView<?> l, View v, int position, long id)
