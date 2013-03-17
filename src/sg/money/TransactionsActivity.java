@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -101,7 +101,7 @@ public class TransactionsActivity extends BaseFragmentActivity
     	outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
     }
     
-    public static class TabsAdapter extends FragmentPagerAdapter
+    public static class TabsAdapter extends FragmentStatePagerAdapter
     	implements ActionBar.TabListener, ViewPager.OnPageChangeListener 
 	{
     	private final TransactionsActivity context;
@@ -308,6 +308,9 @@ public class TransactionsActivity extends BaseFragmentActivity
 
 	public void UpdateTransactions()
 	{
+		if (accounts.isEmpty())
+			return;
+		
 		for(Fragment fragment : tabsAdapter.fragments)
 		{
 			((TransactionsFragment)fragment).UpdateList();

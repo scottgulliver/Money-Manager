@@ -80,7 +80,6 @@
         android:layout_centerVertical="true"
         android:ems="10"
         android:gravity="center"
-        android:inputType="phone"
-        android:password="true" />
+        android:inputType="numberPassword" />
 
 </RelativeLayout>
