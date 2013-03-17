@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,10 +46,6 @@ public class AddAccountActivity extends Activity
         	
         	txtStartingBalance.setVisibility(View.GONE);
         	textView2.setVisibility(View.GONE);
-        	
-        	RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)txtName.getLayoutParams();
-        	params.addRule(RelativeLayout.RIGHT_OF, R.id.textView1);
-        	txtName.setLayoutParams(params);
         }
         
         currentAccounts = DatabaseManager.getInstance(this).GetAllAccounts();
