@@ -1,6 +1,5 @@
 package sg.money;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -89,8 +88,14 @@ public class TransactionsListAdapter extends BaseAdapter {
         categoryText.setText(getCategory(transactionData.category).name);
         valueText.setText(Misc.formatValue(activity, transactionData.value));
 
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-    	dateText.setText(dateFormat.format(transactionData.dateTime));
+        try
+        {
+        	dateText.setText(Misc.formatDate(activity, transactionData.dateTime));
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
         
         if (transactionData.value >= 0)
         	valueText.setTextColor(Color.argb(255, 102, 153, 0));

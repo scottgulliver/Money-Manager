@@ -1,51 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:stretchColumns="1">
 
-    <TextView
-        android:id="@+id/textView1"
+    <TableRow
+        android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="18dp"
-        android:text="Name" />
+        android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/txtName"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/txtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10" >
+            <requestFocus />
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="4dp"
-        android:layout_toRightOf="@+id/textView2"
-        android:ems="10" >
+        android:layout_height="wrap_content" >
 
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Starting Balance" />
 
-    <EditText
-        android:id="@+id/txtStartBalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtName"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_toRightOf="@+id/textView2"
-        android:ems="10"
-        android:inputType="numberDecimal|numberSigned" />
+        <EditText
+            android:id="@+id/txtStartBalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10"
+            android:inputType="numberDecimal|numberSigned" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/txtStartBalance"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="8dp"
-        android:text="Starting Balance" />
+    </TableRow>
 
-</RelativeLayout>
+</TableLayout>

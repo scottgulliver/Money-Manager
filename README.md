@@ -1,1 +1,1 @@
-Money Manager Android project - using Git & BitBucket. 
+Money Manager Android project - using Git & BitBucket.  

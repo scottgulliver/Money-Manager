@@ -1,104 +1,111 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="4dp" >
+    android:stretchColumns="1" >
 
-    <EditText
-        android:id="@+id/txtName"
+    <TableRow
+        android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtValue"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:ems="10" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/textView1"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/txtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/txtName"
-        android:layout_alignBottom="@+id/txtName"
-        android:layout_alignParentLeft="true"
-        android:text="Name" />
+        android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/txtValue"
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Budget" />
+        
+        <EditText
+            android:id="@+id/txtValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btnCategories"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtName"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:inputType="numberDecimal" />
+        android:layout_height="wrap_content" >
+        
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Categories" />
 
-    <TextView
-        android:id="@+id/textView2"
+        <Button
+            android:id="@+id/btnCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Edit" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignBaseline="@+id/txtValue"
-        android:layout_marginTop="23dp"
-        android:text="Budget" />
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/btnCategories"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_alignLeft="@+id/btnAccounts"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/txtValue"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
-        android:text="Edit" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Accounts" />
+        
+        <Button
+            android:id="@+id/btnAccounts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Edit" />
 
-    <TextView
-        android:id="@+id/textView3"
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignBaseline="@id/btnCategories"
-        android:layout_marginTop="15dp"
-        android:text="Categories" />
+        android:layout_height="wrap_content" >
+        
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Notifications" />
 
-    <Button
-        android:id="@+id/btnAccounts"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_alignLeft="@+id/spnNotifyType"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/btnCategories"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
-        android:text="Edit" />
+        <Spinner
+            android:id="@+id/spnNotifyType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignBaseline="@id/btnAccounts"
-        android:layout_marginTop="15dp"
-        android:text="Accounts" />
-
-    <Spinner
-        android:id="@+id/spnNotifyType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnAccounts"
-        android:layout_marginTop="4dp"
-    	android:layout_marginLeft="4dp" 
-        android:layout_toRightOf="@+id/textView5"
-        android:layout_alignParentRight="true" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/spnNotifyType"
-        android:layout_marginTop="15dp"
-        android:text="Notifications" />
-
-</RelativeLayout>
+    </TableRow>
+</TableLayout>

@@ -54,6 +54,7 @@ public class OverviewActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         //get the controls
         txtMonth = (TextView)findViewById(R.id.txtMonth);
@@ -158,8 +159,7 @@ public class OverviewActivity extends BaseActivity
     			}
     		}
     		
-    		//don't count the starting balance categories
-    		if (thisCategory.name.equals("Starting Balance"))
+    		if (!thisCategory.useInReports)
     			continue;
     		
     		if (thisCategory.income)
@@ -194,15 +194,14 @@ public class OverviewActivity extends BaseActivity
 		double total = 0;
 		for(Transaction transaction : transactions)
 		{
-			if (!getCategory(transaction.category).income 
-					&& !getCategory(transaction.category).name.equals("Starting Balance"))
+			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports)
 				total -= transaction.value;
 		}
 		
 		//add each category in turn
 		for(Category category : categories)
 		{
-			if (category.income || category.name.equals("Starting Balance"))
+			if (category.income || !category.useInReports)
 				continue;
 			
 			double categoryValue = 0;
@@ -303,6 +302,13 @@ public class OverviewActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId())
 	    {
+		    case android.R.id.home:
+	            Intent parentActivityIntent = new Intent(this, TransactionsActivity.class);
+	            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(parentActivityIntent);
+	            finish();
+	            return true;
+            
 	    	case R.id.menu_month:{
 	    		createDialog().show();
 	    		break;
@@ -329,9 +335,4 @@ public class OverviewActivity extends BaseActivity
 			}
 		}
     }
-
-	@Override
-	protected int thisActivity() {
-		return ACTIVITY_OVERVIEW;
-	}
 }

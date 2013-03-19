@@ -31,7 +31,6 @@ public class BudgetsActivity extends BaseActivity {
 
 	ListView budgetsList;
 	TextView txtMonth;
-	TextView txtNoBudgets;
 	ArrayList<Budget> budgets;
 	BudgetListAdapter adapter;
 	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
@@ -42,10 +41,16 @@ public class BudgetsActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_budgets);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		budgetsList = (ListView) findViewById(R.id.budgetsList);
         txtMonth = (TextView)findViewById(R.id.txtMonth);
-        txtNoBudgets = (TextView)findViewById(R.id.txtNoBudgets);
+        
+        View emptyView = findViewById(android.R.id.empty);
+    	((TextView)findViewById(R.id.empty_text)).setText("No budgets");
+    	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
+    	budgetsList.setEmptyView(emptyView);
+        
 		budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
 		budgetsList.setMultiChoiceModeListener(multiChoiceListner);
 		budgetsList.setOnItemClickListener( 
@@ -92,9 +97,6 @@ public class BudgetsActivity extends BaseActivity {
 		budgets = DatabaseManager.getInstance(BudgetsActivity.this).GetAllBudgets();
 		adapter = new BudgetListAdapter(this, budgets, transactions);
 		budgetsList.setAdapter(adapter);
-		
-		txtNoBudgets.setVisibility(budgets.size() == 0 ? View.VISIBLE : View.GONE);
-		budgetsList.setVisibility(budgets.size() == 0 ? View.GONE : View.VISIBLE);
 	}
 
 	public class DateComparator implements Comparator<Transaction> {
@@ -152,9 +154,23 @@ public class BudgetsActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+
+	    case android.R.id.home:
+            Intent parentActivityIntent = new Intent(this, TransactionsActivity.class);
+            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(parentActivityIntent);
+            finish();
+            return true;
+            
 		case R.id.menu_addbudget: {
 			Intent intent = new Intent(this, AddBudgetActivity.class);
 			startActivityForResult(intent, REQUEST_ADDBUDGET);
+			break;
+			}
+        
+		case R.id.menu_viewcategories: {
+			Intent intent = new Intent(this, CategoriesActivity.class);
+			startActivity(intent);
 			break;
 			}
 		
@@ -196,6 +212,23 @@ public class BudgetsActivity extends BaseActivity {
 		startActivityForResult(intent, REQUEST_ADDBUDGET);
 	}
 	
+	private void confirmDeleteItems(final ActionMode mode)
+	{
+		Misc.showConfirmationDialog(this, 
+				adapter.GetSelectedItems().size() == 1 
+					? "Delete 1 budget?"
+					: "Delete " + adapter.GetSelectedItems().size() + " budgets?", 
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+						DeleteItems();
+	                    mode.finish();
+					}
+				},
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+                    mode.finish();
+				}
+			});
+	}
+	
 	private void DeleteItems()
 	{
 		ArrayList<Budget> selectedItems = adapter.GetSelectedItems();
@@ -225,8 +258,7 @@ public class BudgetsActivity extends BaseActivity {
                     mode.finish();
                     return true;
                 case R.id.cab_delete:
-    				DeleteItems();
-                    mode.finish();
+                	confirmDeleteItems(mode);
                     return true;
                 default:
                     return false;
@@ -259,9 +291,4 @@ public class BudgetsActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     };
-
-	@Override
-	protected int thisActivity() {
-		return ACTIVITY_BUDGETS;
-	}
 }

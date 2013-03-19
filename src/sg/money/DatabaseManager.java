@@ -44,6 +44,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	static final String colCategoriesColor="Color";
 	static final String colCategoriesIsIncome="IsIncome";
 	static final String colCategoriesIsPermanent="IsPermanent";
+	static final String colCategoriesUseInReports="UseInReports";
 
 	static final String accountsTable="Accounts";
 	static final String colAccountsID="AccountID";
@@ -99,7 +100,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 15); 
+		super(context, dbName, null, 16); 
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -121,7 +122,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		sql = "CREATE TABLE "+categoriesTable+" ("+colCategoriesID+ " INTEGER PRIMARY KEY , "+
 		colCategoriesName+ " TEXT , "+colCategoriesColor+" INTEGER , "+colCategoriesIsIncome+" INTEGER, "+
-		colCategoriesIsPermanent+" INTEGER default 0)";
+		colCategoriesIsPermanent+" INTEGER default 0, "+colCategoriesUseInReports+" INTEGER default 1)";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -206,7 +207,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Bill Payment',-7072528,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Starting Balance',-1416974,0,1) ";
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+") VALUES ('Starting Balance',-1416974,0,1,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Standing Order',-5007468,0) ";
@@ -249,7 +250,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Loan',-12416974,1) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Starting Balance',-2416974,1,1) ";
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+") VALUES ('Starting Balance',-2416974,1,1,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Misc (In)',-5416974,1) ";
@@ -359,7 +360,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (incomeStartBalance == null)
 			{
-				AddCategory(new Category("Starting Balance", -2416974, true, true));
+				AddCategory(new Category("Starting Balance", -2416974, true, true, false));
 			}
 			else
 			{
@@ -369,13 +370,38 @@ public class DatabaseManager extends SQLiteOpenHelper
 			
 			if (expenseStartBalance == null)
 			{
-				AddCategory(new Category("Starting Balance", -1416974, false, true));
+				AddCategory(new Category("Starting Balance", -1416974, false, true, false));
 			}
 			else
 			{
 				expenseStartBalance.isPermanent = true;
 				UpdateCategory(expenseStartBalance);
 			}
+		}
+		
+		if (oldVersion <= 15)
+		{
+			String sql = "ALTER TABLE "+categoriesTable+" ADD COLUMN "+colCategoriesUseInReports+" INTEGER default 1";
+			Log.i("SQL", sql);
+			db.execSQL(sql);
+			
+			//check categories exist
+			ArrayList<Category> categories = GetAllCategories();
+			Category incomeStartBalance = null;
+			Category expenseStartBalance = null;
+			for(Category category : categories)
+			{
+				if (category.name.equals("Starting Balance") && category.income)
+					incomeStartBalance = category;
+				else if (category.name.equals("Starting Balance") && !category.income)
+					expenseStartBalance = category;
+			}
+			
+			incomeStartBalance.useInReports = false;
+			UpdateCategory(incomeStartBalance);
+			
+			expenseStartBalance.useInReports = false;
+			UpdateCategory(expenseStartBalance);
 		}
 		
 		clearDatabase();
@@ -634,12 +660,14 @@ public class DatabaseManager extends SQLiteOpenHelper
 										+colCategoriesName+","
 										+colCategoriesColor+","
 										+colCategoriesIsIncome+","
-										+colCategoriesIsPermanent+
+										+colCategoriesIsPermanent+","
+										+colCategoriesUseInReports+
 											") VALUES ('"
 										+name+"',"
 										+category.color+","
 										+(category.income?1:0)+","
-										+(category.isPermanent?1:0)
+										+(category.isPermanent?1:0)+","
+										+(category.useInReports?1:0)
 										+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
@@ -666,7 +694,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colCategoriesID+","+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+" FROM "+categoriesTable+"";
+			String sql = "SELECT "+colCategoriesID+","+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+" FROM "+categoriesTable+"";
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -682,6 +710,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				caetgory.color = c.getInt((c.getColumnIndex(colCategoriesColor)));
 				caetgory.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
 				caetgory.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
+				caetgory.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
 				categories.add(caetgory);
 				
 	       	    c.moveToNext();
@@ -707,7 +736,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db=this.getReadableDatabase();
 			
-			String sql = "SELECT "+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+" FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+id;
+			String sql = "SELECT "+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+" FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+id;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -722,6 +751,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				category.color = c.getInt((c.getColumnIndex(colCategoriesColor)));
 				category.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
 				category.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
+				category.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
 				
 	       	    c.moveToNext();
 	        }
@@ -764,6 +794,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 							+colCategoriesName+" = '"+name
 							+"',"+colCategoriesIsIncome+" = "+(category.income?"1":"0")
 							+","+colCategoriesIsPermanent+" = "+(category.isPermanent?"1":"0")
+							+","+colCategoriesUseInReports+" = "+(category.useInReports?"1":"0")
 							+","+colCategoriesColor+" = "+(category.color)
 							+" WHERE "+colCategoriesID+" = "+category.id;
 		Log.i("SQL", sql);

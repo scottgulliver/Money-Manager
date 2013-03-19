@@ -2,17 +2,22 @@
 	<item android:id="@+id/menu_addbudget"
         android:icon="@drawable/content_new"
         android:orderInCategory="1"
-        android:showAsAction="always" />
+        android:showAsAction="always" android:title="Add Budget"/>
 	
 	<item android:id="@+id/menu_month"
         android:title="Choose Month"
         android:icon="@drawable/collections_go_to_today"
         android:orderInCategory="2"
-        android:showAsAction="always" />
+        android:showAsAction="ifRoom" />
+	
+	<item android:id="@+id/menu_viewcategories"
+        android:title="Categories"
+        android:orderInCategory="3"
+        android:showAsAction="never" />
     
     <item android:id="@+id/menu_settings"
         android:icon="@drawable/action_settings"
         android:title="@string/menu_settings"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="never" />
 </menu>

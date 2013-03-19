@@ -8,8 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        tools:listitem="@layout/category_item_layout" />
 
-    </ListView>
+    <include
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/empty_listview" />
 
 </RelativeLayout>

@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +25,9 @@ public class AddAccountActivity extends Activity
     {
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_acount);
+    	setTitle("Add Account");
+    	
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         
         txtName = (EditText)findViewById(R.id.txtName);
         txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
@@ -44,10 +46,6 @@ public class AddAccountActivity extends Activity
         	
         	txtStartingBalance.setVisibility(View.GONE);
         	textView2.setVisibility(View.GONE);
-        	
-        	RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)txtName.getLayoutParams();
-        	params.addRule(RelativeLayout.RIGHT_OF, R.id.textView1);
-        	txtName.setLayoutParams(params);
         }
         
         currentAccounts = DatabaseManager.getInstance(this).GetAllAccounts();
@@ -76,6 +74,12 @@ public class AddAccountActivity extends Activity
 	        case R.id.menu_settings:{
                 break;
             	}
+	        
+	        case android.R.id.home: // up button
+	            Intent intent = new Intent(this, AccountsActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
 	    }
 	    return true;
 	}

@@ -31,6 +31,9 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
     { 
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_category);
+    	setTitle("Add Category");
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
           
         txtName = (EditText)findViewById(R.id.txtName);
         spnType = (Spinner)findViewById(R.id.spnType1);
@@ -61,7 +64,7 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
         	txtName.setText(editCategory.name);
         	spnType.setSelection(editCategory.income?1:0);
         	currentColor = editCategory.color;
-        	this.setTitle("Edit Category");
+        	setTitle("Edit Category");
         	
         	if (editCategory.isPermanent)
         	{
@@ -102,6 +105,12 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 	        case R.id.menu_settings:{
                 break;
             	}
+
+	        case android.R.id.home: // up button
+	            Intent intent = new Intent(this, CategoriesActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
 	    }
 	    return true;
 	}

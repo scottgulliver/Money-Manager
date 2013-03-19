@@ -1,10 +1,9 @@
 package sg.money;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.Date;
 import java.util.Random;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -39,7 +38,7 @@ public class AddTransactionActivity extends FragmentActivity
 	EditText txtNewCatName; 
 	TextView textView4;
 	static Button btnDate;
-	static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+	public static Date buttonDate;
 
 	ArrayList<Category> categories;
 	ArrayList<String> categoryNames;
@@ -54,6 +53,9 @@ public class AddTransactionActivity extends FragmentActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
+    	setTitle("Add Transaction");
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         
         accountID = getIntent().getIntExtra("AccountID", -1);
         
@@ -69,7 +71,7 @@ public class AddTransactionActivity extends FragmentActivity
         textView4.setVisibility(View.GONE);
         
 		final Calendar c = Calendar.getInstance();
-		btnDate.setText(dateFormat.format(c.getTime()));
+		updateDateButtonText(c.getTime());
 
     	categories = DatabaseManager.getInstance(AddTransactionActivity.this).GetAllCategories();
     	
@@ -144,7 +146,7 @@ public class AddTransactionActivity extends FragmentActivity
             
         	
         	txtDesc.setText(editTransaction.description);
-            btnDate.setText(dateFormat.format(editTransaction.dateTime));
+        	updateDateButtonText(editTransaction.dateTime);
             
             spnType.setSelection(editCategory.income?1:0);
     		PopulateCategories();
@@ -160,6 +162,19 @@ public class AddTransactionActivity extends FragmentActivity
         }
     }
     
+    public void updateDateButtonText(Date date)
+    {
+    	try
+        {
+			btnDate.setText(Misc.formatDate(AddTransactionActivity.this, date));
+	    	buttonDate = date;
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+    }
+    
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
     {
 		@Override
@@ -168,12 +183,7 @@ public class AddTransactionActivity extends FragmentActivity
 			// Use the current date as the default date in the picker
 			final Calendar c = Calendar.getInstance();
 			
-			try
-			{
-				c.setTime(dateFormat.parse((String)btnDate.getText()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			c.setTime(buttonDate);
 			
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
@@ -188,7 +198,8 @@ public class AddTransactionActivity extends FragmentActivity
 			c.set(Calendar.YEAR, year);
 			c.set(Calendar.MONTH, month);
 			c.set(Calendar.DAY_OF_MONTH, day);
-			btnDate.setText(dateFormat.format(c.getTime()));
+			
+			((AddTransactionActivity)getActivity()).updateDateButtonText(c.getTime());
 		}
     }
     
@@ -249,6 +260,14 @@ public class AddTransactionActivity extends FragmentActivity
 	        case R.id.menu_settings:{
                 break;
             	}
+
+	        case android.R.id.home: // up button
+	            Intent intent = new Intent(this, TransactionsActivity.class);
+	            if (accountID != -1)
+	            	intent.putExtra("AccountID", accountID);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
 	    }
 	    return true;
 	}
@@ -329,9 +348,7 @@ public class AddTransactionActivity extends FragmentActivity
     	editTransaction.value = Double.valueOf(txtValue.getText().toString());
     	editTransaction.description = txtDesc.getText().toString().trim();
     	Calendar c = Calendar.getInstance();
-    	try {
-			c.setTime(dateFormat.parse((String)btnDate.getText()));
-		} catch (ParseException e) { e.printStackTrace(); }
+    	c.setTime(buttonDate);
     	editTransaction.dateTime = c.getTime();
 		editTransaction.account = accountID;
 		

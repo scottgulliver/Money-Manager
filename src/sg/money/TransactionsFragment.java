@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -46,6 +48,12 @@ public class TransactionsFragment extends Fragment
     	View v = inflater.inflate(R.layout.fragment_transactions, null);
     	
     	transactionsList = (ListView)v.findViewById(R.id.transactionsListing);
+    	
+    	View emptyView = v.findViewById(android.R.id.empty);
+    	((TextView)v.findViewById(R.id.empty_text)).setText("No transactions");
+    	((TextView)v.findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
+    	transactionsList.setEmptyView(emptyView);
+    	
         transactionsList.setOnItemClickListener( 
 				new OnItemClickListener()
 				{
@@ -59,6 +67,8 @@ public class TransactionsFragment extends Fragment
         transactionsList.setMultiChoiceModeListener(multiChoiceListner);
         
         txtTotal = (TextView)v.findViewById(R.id.txtTotal);
+        
+        parentActivity = (TransactionsActivity)getActivity();
         
         UpdateList();
         
@@ -80,14 +90,14 @@ public class TransactionsFragment extends Fragment
     	Collections.reverse(transactions);
     	 
         // Getting adapter by passing xml data ArrayList
-		adapter=new TransactionsListAdapter(this.getActivity(), transactions, categories);
+		adapter=new TransactionsListAdapter(parentActivity, transactions, categories);
 		transactionsList.setAdapter(adapter);
 		
 		Double total = 0.0;
 		for(Transaction transaction : transactions)
 			total += transaction.value;
 		
-		txtTotal.setText(Misc.formatValue(getActivity(), total));
+		txtTotal.setText(Misc.formatValue(parentActivity, total));
     }
     
     protected void onListItemClick(AdapterView<?> l, View v, int position, long id)
@@ -114,8 +124,7 @@ public class TransactionsFragment extends Fragment
                     mode.finish();
                     return true;
                 case R.id.cab_delete:
-    				DeleteItems();
-                    mode.finish();
+                	confirmDeleteItems(mode);
                     return true;
                 default:
                     return false;
@@ -157,6 +166,23 @@ public class TransactionsFragment extends Fragment
     	startActivityForResult(intent, REQUEST_ADDTRANSACTION);
 	}
 	
+	private void confirmDeleteItems(final ActionMode mode)
+	{
+		Misc.showConfirmationDialog(getActivity(), 
+				adapter.GetSelectedItems().size() == 1 
+					? "Delete 1 transaction?"
+					: "Delete " + adapter.GetSelectedItems().size() + " transactions?", 
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+						DeleteItems();
+	                    mode.finish();
+					}
+				},
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+                    mode.finish();
+				}
+			});
+	}
+	
 	private void DeleteItems()
 	{
 		ArrayList<Transaction> selectedItems = adapter.GetSelectedItems();
@@ -184,7 +210,7 @@ public class TransactionsFragment extends Fragment
 		Activity a = getActivity();
 
 		if(a instanceof TransactionsActivity) {
-		    ((TransactionsActivity)a).UpdateUI();
+		    ((TransactionsActivity)a).UpdateTransactions();
 		}
 	}
 }

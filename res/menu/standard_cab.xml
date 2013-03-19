@@ -2,9 +2,9 @@
     <item android:id="@+id/cab_edit"
         android:orderInCategory="1"
         android:icon="@drawable/content_edit"
-        android:showAsAction="always" />
+        android:showAsAction="always" android:title="Edit"/>
     <item android:id="@+id/cab_delete"
         android:orderInCategory="2"
         android:icon="@drawable/content_discard"
-        android:showAsAction="always" />
+        android:showAsAction="always" android:title="Delete"/>
 </menu>

@@ -2,7 +2,9 @@ package sg.money;
 
 import java.util.ArrayList;
 import android.os.Bundle;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,13 +23,19 @@ public class CategoriesActivity extends BaseActivity {
 	ListView categoriesList;
 	ArrayList<Category> categories;
 	CategoryListAdapter adapter;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categories);
 
 		categoriesList = (ListView) findViewById(R.id.categoriesList);
+        
+        View emptyView = findViewById(android.R.id.empty);
+    	((TextView)findViewById(R.id.empty_text)).setText("No categories");
+    	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
+    	categoriesList.setEmptyView(emptyView);
+    	
 		categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
 		categoriesList.setMultiChoiceModeListener(multiChoiceListner);
 		categoriesList.setOnItemClickListener( 
@@ -94,6 +103,23 @@ public class CategoriesActivity extends BaseActivity {
 		startActivityForResult(intent, REQUEST_ADDCATEGORY);
 	}
 	
+	private void confirmDeleteItems(final ActionMode mode)
+	{
+		Misc.showConfirmationDialog(this, 
+				adapter.GetSelectedItems().size() == 1 
+					? "Delete 1 category?"
+					: "Delete " + adapter.GetSelectedItems().size() + " categories?", 
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+						DeleteItems();
+	                    mode.finish();
+					}
+				},
+				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+                    mode.finish();
+				}
+			});
+	}
+	
 	private void DeleteItems()
 	{
 		ArrayList<Category> selectedItems = adapter.GetSelectedItems();
@@ -135,8 +161,7 @@ public class CategoriesActivity extends BaseActivity {
                     mode.finish();
                     return true;
                 case R.id.cab_delete:
-    				DeleteItems();
-                    mode.finish();
+    				confirmDeleteItems(mode);
                     return true;
                 default:
                     return false;
@@ -169,9 +194,4 @@ public class CategoriesActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     };
-
-	@Override
-	protected int thisActivity() {
-		return ACTIVITY_CATEGORIES;
-	}
 }
