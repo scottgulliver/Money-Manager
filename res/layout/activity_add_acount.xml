@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="1">
+    android:stretchColumns="1" >
 
     <TableRow
         android:id="@+id/tableRow1"
@@ -21,7 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:ems="10" >
+            android:ems="10"
+            android:inputType="textCapSentences" >
+
             <requestFocus />
         </EditText>
     </TableRow>
@@ -45,7 +47,6 @@
             android:layout_margin="@dimen/FormViewMargin"
             android:ems="10"
             android:inputType="numberDecimal|numberSigned" />
-
     </TableRow>
 
 </TableLayout>

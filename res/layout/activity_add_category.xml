@@ -3,67 +3,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:stretchColumns="1" >
-    
-    <TableRow 
+
+    <TableRow
         android:id="@+id/tableRow1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content">
-        
-	    <TextView
-	        android:id="@+id/textView1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="@dimen/FormViewMargin"
-	        android:text="Name" />
-	    
-	    <EditText
-	        android:id="@+id/txtName"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="@dimen/FormViewMargin"
-	        android:ems="10" />
-        
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/txtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:ems="10"
+            android:inputType="textCapSentences" >
+
+            <requestFocus />
+        </EditText>
     </TableRow>
-    
-    <TableRow 
+
+    <TableRow
         android:id="@+id/tableRow2"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content">
-        
-	    <TextView
-	        android:id="@+id/textView2"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="@dimen/FormViewMargin"
-	        android:text="Type" />
-	    
-	    <Spinner
-	        android:id="@+id/spnType1"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="@dimen/FormViewMargin"
-	        tools:listitem="@android:layout/simple_spinner_dropdown_item" />
-        
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Type" />
+
+        <Spinner
+            android:id="@+id/spnType1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
     </TableRow>
-    
-    <TableRow 
+
+    <TableRow
         android:id="@+id/tableRow3"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content">
-        
-	    <TextView
-	        android:id="@+id/textView3"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="@dimen/FormViewMargin"
-	        android:text="Color" />
-	
-	    <ImageView
-	        android:id="@+id/imgColor"
-	        android:layout_width="match_parent"
-	        android:layout_height="50dp"
-	        android:layout_margin="@dimen/FormViewMargin"
-	        android:background="#ff5555" />
-        
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:text="Color" />
+
+        <ImageView
+            android:id="@+id/imgColor"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/FormViewMargin"
+            android:background="#ff5555" />
     </TableRow>
+
 </TableLayout>
