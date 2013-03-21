@@ -28,6 +28,7 @@ public class CategoriesActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categories);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		categoriesList = (ListView) findViewById(R.id.categoriesList);
         
@@ -67,6 +68,14 @@ public class CategoriesActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+
+	    case android.R.id.home:
+            Intent parentActivityIntent = new Intent(this, TransactionsActivity.class);
+            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(parentActivityIntent);
+            finish();
+            return true;
+            
 		case R.id.menu_addcategory: {
 			Intent intent = new Intent(this, AddCategoryActivity.class);
 			startActivityForResult(intent, REQUEST_ADDCATEGORY);
