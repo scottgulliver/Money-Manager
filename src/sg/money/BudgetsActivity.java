@@ -36,6 +36,9 @@ public class BudgetsActivity extends BaseActivity {
 	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 	String currentMonth;
 	ArrayList<Transaction> transactions;
+	
+	//Bundle State Data
+	static final String STATE_MONTH = "stateMonth";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,9 +64,28 @@ public class BudgetsActivity extends BaseActivity {
 						onListItemClick(arg0, arg1, arg2, arg3);
 					}
 				});
-
-    	setData("");
+		
+		if (savedInstanceState != null)
+    	{
+    		currentMonth = savedInstanceState.getString(STATE_MONTH);
+        	setData(currentMonth);
+    	}
+    	else
+    	{
+        	setData("");
+    	}
 	}
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(STATE_MONTH, currentMonth);
+        
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

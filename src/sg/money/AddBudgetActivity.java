@@ -2,6 +2,7 @@ package sg.money;
 
 import java.util.ArrayList;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -41,6 +42,10 @@ public class AddBudgetActivity extends Activity
 	int viewingDialog = 0;
 	static final int ACCOUNTSLIST = 1;
 	static final int CATEGORIESLIST = 2;
+	
+	//Bundle State Data
+	static final String STATE_SELECTED_ACCOUNTS = "stateSelectedAccounts";
+	static final String STATE_SELECTED_CATEGORIES = "stateSelectedCategories";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,54 @@ public class AddBudgetActivity extends Activity
       		setTitle("Edit Budget");
       	}
 	}
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+    	ArrayList<Integer> selectedAccountIds = new ArrayList<Integer>();
+    	for(Account account : selectedAccounts)
+    		selectedAccountIds.add(account.id);
+    	ArrayList<Integer> selectedCategoryIds = new ArrayList<Integer>();
+    	for(Category category : selectedCategories)
+    		selectedCategoryIds.add(category.id);
+    	
+        savedInstanceState.putIntegerArrayList(STATE_SELECTED_ACCOUNTS, selectedAccountIds);
+        savedInstanceState.putIntegerArrayList(STATE_SELECTED_CATEGORIES, selectedCategoryIds);
+        
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+        ArrayList<Integer> selectedAccountIds = savedInstanceState.getIntegerArrayList(STATE_SELECTED_ACCOUNTS);
+        ArrayList<Integer> selectedCategoryIds = savedInstanceState.getIntegerArrayList(STATE_SELECTED_CATEGORIES);
+        
+        selectedAccounts.clear();        
+        for(int accountId : selectedAccountIds)
+        {
+        	for(Account account : currentAccounts)
+        	{
+        		if (account.id == accountId)
+        		{
+        			selectedAccounts.add(account);
+        			break;
+        		}
+        	}
+        }
+        
+        selectedCategories.clear();        
+        for(int categoryId : selectedCategoryIds)
+        {
+        	for(Category category : currentCategories)
+        	{
+        		if (category.id == categoryId)
+        		{
+        			selectedCategories.add(category);
+        			break;
+        		}
+        	}
+        }
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

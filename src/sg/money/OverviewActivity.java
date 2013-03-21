@@ -48,6 +48,8 @@ public class OverviewActivity extends BaseActivity
 	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 	String currentMonth;
 	
+	//Bundle State Data
+	static final String STATE_MONTH = "stateMonth";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,26 @@ public class OverviewActivity extends BaseActivity
     	Collections.reverse(transactions);    	
     	categories = DatabaseManager.getInstance(OverviewActivity.this).GetAllCategories();
     	
-    	setData("");
+    	if (savedInstanceState != null)
+    	{
+    		currentMonth = savedInstanceState.getString(STATE_MONTH);
+        	setData(currentMonth);
+    	}
+    	else
+    	{
+        	setData("");
+    	}
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(STATE_MONTH, currentMonth);
+        
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
     
     private void setData(String month)

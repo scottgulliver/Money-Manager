@@ -1,9 +1,12 @@
 package sg.money;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,6 +50,11 @@ public class AddTransactionActivity extends FragmentActivity
 	int accountID = -1; 
 	
 	public static final String ADD_CATEGORY_STRING = "< Add new category >";
+		
+	//Bundle State Data
+	static final String STATE_DATE = "stateDate";
+	static final String STATE_CATEGORY = "stateCategory";
+	static final String STATE_TYPE = "stateType";
 	
     @Override 
     public void onCreate(Bundle savedInstanceState)
@@ -160,6 +168,45 @@ public class AddTransactionActivity extends FragmentActivity
             	}
             }
         }
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    	String sDate = dateFormat.format(buttonDate);
+        savedInstanceState.putString(STATE_DATE, sDate);
+
+    	Category selectedCategory = getSelectedCategory();
+    	if (selectedCategory != null)
+    		savedInstanceState.putString(STATE_CATEGORY, selectedCategory.name);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    	String sDate = savedInstanceState.getString(STATE_DATE);
+    	
+    	try {
+			updateDateButtonText(dateFormat.parse(sDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    	
+    	String categoryName = savedInstanceState.getString(STATE_CATEGORY, "");
+    	if (!categoryName.equals(""))
+    	{
+    		for(String name : categoryNames)
+            {
+            	if (name.equals(categoryName))
+            	{
+            		spnCategory.setSelection(categoryNames.indexOf(name));
+            		break; 
+            	}
+            }
+    	}
     }
     
     public void updateDateButtonText(Date date)
@@ -307,6 +354,22 @@ public class AddTransactionActivity extends FragmentActivity
     	return true;
     }
     
+    private Category getSelectedCategory()
+    {
+    	Category selectedCategory = null;
+    	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
+    	for(Category category : categories)
+    	{
+    		if (category.name.equals(selectedCategoryName))
+    		{
+    			selectedCategory = category;
+    			break;
+    		}
+    	}
+    	
+    	return selectedCategory;
+    }
+    
     private void OkClicked()
     {
     	if (!Validate())
@@ -320,16 +383,7 @@ public class AddTransactionActivity extends FragmentActivity
     		editTransaction = new Transaction();
     	}
     	
-    	Category selectedCategory = null;
-    	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
-    	for(Category category : categories)
-    	{
-    		if (category.name.equals(selectedCategoryName))
-    		{
-    			selectedCategory = category;
-    			break;
-    		}
-    	}
+    	Category selectedCategory = getSelectedCategory();
 
     	//create the category, if it is new
     	if (txtNewCatName.getVisibility() == View.VISIBLE)

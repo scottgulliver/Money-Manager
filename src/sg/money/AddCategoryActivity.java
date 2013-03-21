@@ -26,6 +26,9 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 	Category editCategory; 
 	int currentColor;
 	
+	//Bundle State Data
+	static final String STATE_COLOUR = "stateColour";
+	
     @Override
     public void onCreate(Bundle savedInstanceState)
     { 
@@ -52,8 +55,15 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 		spnType.setAdapter(arrayAdapter);
 		
 
-		Random rnd = new Random(System.currentTimeMillis());
-		currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+		if (savedInstanceState != null)
+    	{
+			currentColor = savedInstanceState.getInt(STATE_COLOUR);
+    	}
+    	else
+    	{
+    		Random rnd = new Random(System.currentTimeMillis());
+    		currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+    	}
         
         //check if we are editing
 		editCategory = null;
@@ -80,6 +90,17 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
     	imgColor.setBackgroundColor(currentColor);
     	
     	currentCategories = DatabaseManager.getInstance(this).GetAllCategories();
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(STATE_COLOUR, currentColor);
+        
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
