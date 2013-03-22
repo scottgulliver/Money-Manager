@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Name" />
+            android:text="@string/name" />
 
         <EditText
             android:id="@+id/txtName"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Type" />
+            android:text="@string/type" />
 
         <Spinner
             android:id="@+id/spnType1"
@@ -58,14 +58,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Color" />
+            android:text="@string/colour" />
 
         <ImageView
             android:id="@+id/imgColor"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="@dimen/FormViewMargin"
-            android:background="#ff5555" />
+            android:background="#ff5555"
+            android:contentDescription="@string/category_colour" />
     </TableRow>
 
 </TableLayout>

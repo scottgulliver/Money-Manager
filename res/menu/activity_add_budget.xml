@@ -1,10 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-	<item android:id="@+id/menu_acceptbudget"
-        android:orderInCategory="2"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <item
+        android:id="@+id/menu_acceptbudget"
         android:icon="@drawable/navigation_accept"
-        android:showAsAction="always|withText" android:title="Done"/>
-    <item android:id="@+id/menu_rejectbudget"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
+        android:showAsAction="always|withText"
+        android:title="@string/accept_changes"/>
+    <item
+        android:id="@+id/menu_rejectbudget"
         android:icon="@drawable/navigation_cancel"
-        android:showAsAction="never" android:title="Reject changes"/>
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="@string/reject_changes"/>
+
 </menu>

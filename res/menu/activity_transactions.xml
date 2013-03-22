@@ -4,30 +4,30 @@
         android:id="@+id/menu_addtransaction"
         android:icon="@drawable/content_new"
         android:orderInCategory="1"
-        android:showAsAction="always"
-        android:title="Add Transaction"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/add_transaction"/>
     <item
         android:id="@+id/menu_viewaccounts"
         android:icon="@drawable/sort_by_size"
         android:orderInCategory="2"
         android:showAsAction="always"
-        android:title="Accounts"/>
+        android:title="@string/accounts"/>
     <item
         android:id="@+id/menu_viewoverview"
         android:icon="@drawable/overview"
         android:orderInCategory="3"
         android:showAsAction="ifRoom"
-        android:title="Overview"/>
+        android:title="@string/overview"/>
     <item
         android:id="@+id/menu_viewbudgets"
         android:orderInCategory="4"
         android:showAsAction="never"
-        android:title="Budgets"/>
+        android:title="@string/budgets"/>
     <item
         android:id="@+id/menu_managecategories"
         android:orderInCategory="90"
         android:showAsAction="never"
-        android:title="Categories"/>
+        android:title="@string/categories"/>
     <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/action_settings"
@@ -38,6 +38,6 @@
         android:id="@+id/menu_exit"
         android:orderInCategory="101"
         android:showAsAction="never"
-        android:title="Exit"/>
+        android:title="@string/exit"/>
 
 </menu>

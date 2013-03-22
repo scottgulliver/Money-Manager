@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
-        android:text="No data"
+        android:text="@string/no_data"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -22,6 +22,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:textColor="#777777"
-        android:text="Hint.." />
+        android:text="@string/hint_" />
 
 </RelativeLayout>

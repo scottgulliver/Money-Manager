@@ -24,7 +24,7 @@ public class AddAccountActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState); 
-        setContentView(R.layout.activity_add_acount);
+        setContentView(R.layout.activity_add_account);
     	setTitle("Add Account");
     	
 		getActionBar().setDisplayHomeAsUpEnabled(true);

@@ -1,9 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-<ScrollView
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -20,19 +16,20 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="17dp"
-        android:text="January 2013"
+        android:text="@string/design_overview_date"
         android:textColor="#333333"
-        android:textSize="20dp"
+        android:textSize="20sp"
         tools:context=".OverviewActivity" />
     
     <ListView
         android:id="@+id/lstCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pieChartView"
-        android:layout_marginTop="15dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" />
+        android:layout_below="@+id/pieChartView"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="15dp"
+        tools:ignore="NestedScrolling" />
 
     <TextView
         android:id="@+id/textView2"
@@ -41,7 +38,7 @@
         android:layout_alignLeft="@+id/txtMonth"
         android:layout_below="@+id/txtMonth"
         android:layout_marginTop="14dp"
-        android:text="Income: " />
+        android:text="@string/income" />
 
     <TextView
         android:id="@+id/textView3"
@@ -50,7 +47,7 @@
         android:layout_alignLeft="@+id/textView2"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="14dp"
-        android:text="Expenditure: " />
+        android:text="@string/expenditure" />
 
     <TextView
         android:id="@+id/txtIncome"
@@ -59,7 +56,7 @@
         android:layout_above="@+id/textView3"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/textView3"
-        android:text="0.00" />
+        android:text="@string/design_overview_spend" />
 
     <sg.money.PieChartView
         android:id="@+id/pieChartView"
@@ -76,7 +73,7 @@
         android:layout_alignLeft="@+id/textView3"
         android:layout_below="@+id/textView3"
         android:layout_marginTop="24dp"
-        android:text="Spending per category" />
+        android:text="@string/spending_per_category" />
 
     <TextView
         android:id="@+id/txtExpenditure"
@@ -85,8 +82,7 @@
         android:layout_alignBaseline="@+id/textView3"
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignLeft="@+id/txtIncome"
-        android:text="0.00" />
+        android:text="@string/design_overview_spend" />
 
 </RelativeLayout>
 </ScrollView>
-</LinearLayout>

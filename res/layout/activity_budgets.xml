@@ -12,9 +12,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="17dp"
-        android:text="January 2013"
+        android:text="@string/design_budgets_month"
         android:textColor="#333333"
-        android:textSize="20dp"
+        android:textSize="20sp"
         tools:context=".OverviewActivity" />
 
     <ListView

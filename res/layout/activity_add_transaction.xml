@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Amount" />
+            android:text="@string/amount" />
 
         <EditText
             android:id="@+id/txtValue"
@@ -23,6 +23,7 @@
             android:layout_margin="@dimen/FormViewMargin"
             android:ems="10"
             android:inputType="numberDecimal" >
+
             <requestFocus />
         </EditText>
     </TableRow>
@@ -37,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Description" />
+            android:text="@string/description" />
 
         <EditText
             android:id="@+id/txtDesc1"
@@ -58,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Type" />
+            android:text="@string/type" />
 
         <Spinner
             android:id="@+id/spnType1"
@@ -66,7 +67,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
             tools:listitem="@android:layout/simple_spinner_dropdown_item" />
-
     </TableRow>
 
     <TableRow
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Category" />
+            android:text="@string/category" />
 
         <Spinner
             android:id="@+id/spnCategory1"
@@ -87,7 +87,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
             tools:listitem="@android:layout/simple_spinner_dropdown_item" />
-
     </TableRow>
 
     <TableRow
@@ -100,14 +99,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Category Name" />
+            android:text="@string/category_name" />
 
         <EditText
             android:id="@+id/txtNewCatName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:ems="10" />
+            android:ems="10"
+            android:inputType="textCapSentences" />
     </TableRow>
 
     <TableRow
@@ -120,7 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Date" />
+            android:text="@string/date" />
 
         <Button
             android:id="@+id/btnDate"
@@ -128,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="15/12/12" />
+            android:text="@string/design_addtrans_date" />
     </TableRow>
 
 </TableLayout>

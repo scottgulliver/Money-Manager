@@ -22,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:measureWithLargestChild="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            tools:ignore="UselessParent" >
 
             <LinearLayout
                 android:id="@+id/leftSpacer"
@@ -40,7 +41,8 @@
                 android:layout_gravity="left"
                 android:layout_weight="1"
                 android:maxLines="2"
-                android:text="Cancel" />
+                android:text="@string/cancel"
+                tools:ignore="ButtonOrder" />
 
             <Button
                 android:id="@+id/ok_button"
@@ -51,7 +53,7 @@
                 android:layout_weight="1"
                 android:filterTouchesWhenObscured="true"
                 android:maxLines="2"
-                android:text="Continue" />
+                android:text="@string/continue_" />
 
             <LinearLayout
                 android:id="@+id/rightSpacer"
@@ -70,7 +72,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Choose your PIN" />
+        android:text="@string/choose_your_pin" />
 
     <EditText
         android:id="@+id/txtPinNumber"

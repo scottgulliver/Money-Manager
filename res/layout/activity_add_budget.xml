@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Name" />
+            android:text="@string/name" />
 
         <EditText
             android:id="@+id/txtName"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Budget" />
+            android:text="@string/budget" />
 
         <EditText
             android:id="@+id/txtValue"
@@ -59,14 +59,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Categories" />
+            android:text="@string/categories" />
 
         <Button
             android:id="@+id/btnCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Edit" />
+            android:text="@string/edit" />
     </TableRow>
 
     <TableRow
@@ -79,14 +79,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Accounts" />
+            android:text="@string/accounts" />
 
         <Button
             android:id="@+id/btnAccounts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Edit" />
+            android:text="@string/edit" />
     </TableRow>
 
     <TableRow
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/FormViewMargin"
-            android:text="Notifications" />
+            android:text="@string/notifications" />
 
         <Spinner
             android:id="@+id/spnNotifyType"

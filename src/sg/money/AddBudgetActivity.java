@@ -2,7 +2,6 @@ package sg.money;
 
 import java.util.ArrayList;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
