@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.DatePickerDialog;
@@ -17,9 +19,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -32,7 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddTransactionActivity extends FragmentActivity
+public class AddTransactionActivity extends BaseFragmentActivity
 {
 	EditText txtValue;
 	EditText txtDesc; 
@@ -63,7 +62,7 @@ public class AddTransactionActivity extends FragmentActivity
         setContentView(R.layout.activity_add_transaction);
     	setTitle("Add Transaction");
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         accountID = getIntent().getIntExtra("AccountID", -1);
         
@@ -195,8 +194,8 @@ public class AddTransactionActivity extends FragmentActivity
 			e.printStackTrace();
 		}
     	
-    	String categoryName = savedInstanceState.getString(STATE_CATEGORY, "");
-    	if (!categoryName.equals(""))
+    	String categoryName = savedInstanceState.getString(STATE_CATEGORY);
+    	if (categoryName != null)
     	{
     		for(String name : categoryNames)
             {
@@ -286,7 +285,7 @@ public class AddTransactionActivity extends FragmentActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_add_transaction, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_add_transaction, menu);
         return true;
     }
     
@@ -321,13 +320,13 @@ public class AddTransactionActivity extends FragmentActivity
     
     private boolean Validate()
     {
-    	if (txtValue.getText().toString().trim().isEmpty())
+    	if (txtValue.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddTransactionActivity.this, "Please enter a value.", Toast.LENGTH_SHORT).show();
     		return false;
     	}
     	
-    	if (txtDesc.getText().toString().trim().isEmpty())
+    	if (txtDesc.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddTransactionActivity.this, "Please enter a description.", Toast.LENGTH_SHORT).show();
     		return false;
@@ -335,7 +334,7 @@ public class AddTransactionActivity extends FragmentActivity
     	
     	if (txtNewCatName.getVisibility() == View.VISIBLE)
     	{
-    		if (txtNewCatName.getText().toString().trim().isEmpty())
+    		if (txtNewCatName.getText().toString().trim() == "")
     		{
 	    		Toast.makeText(AddTransactionActivity.this, "Please enter a name for the new category.", Toast.LENGTH_SHORT).show();
 	    		return false;

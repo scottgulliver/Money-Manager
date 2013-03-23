@@ -2,7 +2,6 @@ package sg.money;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class PinEntryActivity extends Activity
+public class PinEntryActivity extends BaseActivity
 {
 	public static final int PINENTRYTYPE_CREATE = 1;
 	public static final int PINENTRYTYPE_ENTER = 2;
@@ -43,7 +42,7 @@ public class PinEntryActivity extends Activity
 	}
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		pinEntryType = getIntent().getExtras() != null ? getIntent().getExtras().getInt(PINENTRYTYPE, PINENTRYTYPE_ENTER) : PINENTRYTYPE_ENTER;
 		if (pinEntryType == PINENTRYTYPE_ENTER && !PinIsSet(PinEntryActivity.this))
 		{

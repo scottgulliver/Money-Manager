@@ -1,52 +1,52 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:stretchColumns="1" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/FormViewMargin"
+        android:paddingRight="@dimen/FormViewMargin" >
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/FormViewMargin"
+            android:layout_marginBottom="@dimen/FormViewSmallMargin"
+            android:layout_marginTop="@dimen/FormViewMargin"
             android:text="@string/name" />
 
         <EditText
             android:id="@+id/txtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/FormViewMargin"
+            android:layout_marginBottom="@dimen/FormViewMargin"
+            android:layout_marginTop="@dimen/FormViewSmallMargin"
             android:ems="10"
             android:inputType="textCapSentences" >
 
             <requestFocus />
         </EditText>
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/FormViewMargin"
+            android:layout_marginBottom="@dimen/FormViewSmallMargin"
+            android:layout_marginTop="@dimen/FormViewMargin"
             android:text="@string/starting_balance" />
 
         <EditText
             android:id="@+id/txtStartBalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/FormViewMargin"
+            android:layout_marginBottom="@dimen/FormViewMargin"
+            android:layout_marginTop="@dimen/FormViewSmallMargin"
             android:ems="10"
             android:inputType="numberDecimal|numberSigned" />
-    </TableRow>
+    </LinearLayout>
 
-</TableLayout>
+</ScrollView>

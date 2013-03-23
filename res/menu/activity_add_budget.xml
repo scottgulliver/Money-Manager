@@ -9,7 +9,6 @@
         android:title="@string/accept_changes"/>
     <item
         android:id="@+id/menu_rejectbudget"
-        android:icon="@drawable/navigation_cancel"
         android:orderInCategory="1"
         android:showAsAction="never"
         android:title="@string/reject_changes"/>

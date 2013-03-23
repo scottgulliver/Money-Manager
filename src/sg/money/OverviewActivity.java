@@ -10,6 +10,10 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Random;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,8 +22,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -56,7 +58,7 @@ public class OverviewActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         //get the controls
         txtMonth = (TextView)findViewById(R.id.txtMonth);
@@ -315,7 +317,7 @@ public class OverviewActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_overview, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_overview, menu);
         return true;
     }
     

@@ -8,24 +8,25 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
-public class BudgetsActivity extends BaseActivity {
+public class BudgetsActivity extends BaseActivity implements OnItemLongClickListener, OnItemClickListener
+{
 	static final int REQUEST_ADDBUDGET = 0;
 	static final int REQUEST_SETTINGS = 1;
 
@@ -36,6 +37,7 @@ public class BudgetsActivity extends BaseActivity {
 	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 	String currentMonth;
 	ArrayList<Transaction> transactions;
+	ActionMode actionMode;
 	
 	//Bundle State Data
 	static final String STATE_MONTH = "stateMonth";
@@ -44,7 +46,7 @@ public class BudgetsActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_budgets);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		budgetsList = (ListView) findViewById(R.id.budgetsList);
         txtMonth = (TextView)findViewById(R.id.txtMonth);
@@ -53,17 +55,12 @@ public class BudgetsActivity extends BaseActivity {
     	((TextView)findViewById(R.id.empty_text)).setText("No budgets");
     	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	budgetsList.setEmptyView(emptyView);
-        
-		budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
-		budgetsList.setMultiChoiceModeListener(multiChoiceListner);
-		budgetsList.setOnItemClickListener( 
-				new OnItemClickListener()
-				{
-					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-					{
-						onListItemClick(arg0, arg1, arg2, arg3);
-					}
-				});
+
+        actionMode = null;
+        budgetsList.setItemsCanFocus(false);
+        budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        budgetsList.setOnItemClickListener(this);
+        budgetsList.setOnItemLongClickListener(this);
 		
 		if (savedInstanceState != null)
     	{
@@ -75,6 +72,52 @@ public class BudgetsActivity extends BaseActivity {
         	setData("");
     	}
 	}
+
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (actionMode == null)
+		{
+			onListItemClick(parent, view, position, id);
+		}
+		else
+		{
+			changeItemCheckState(position, budgetsList.isItemChecked(position));
+		}
+	}
+
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		if (actionMode == null) {
+        	actionMode = startActionMode(new ModeCallback());
+        }
+
+		budgetsList.setItemChecked(position, !budgetsList.isItemChecked(position));
+		changeItemCheckState(position, budgetsList.isItemChecked(position));
+        
+		return true;
+	}
+	
+	public void changeItemCheckState(int position, boolean checked) {
+        adapter.SetSelected(position, checked);
+        adapter.notifyDataSetChanged();
+    	final int checkedCount = adapter.GetSelectedItems().size();
+        switch (checkedCount) {
+            case 0:
+                actionMode.setSubtitle(null);
+                break;
+            case 1:
+            	actionMode.getMenu().clear();
+            	actionMode.setSubtitle("" + checkedCount + " selected");
+            	actionMode.getMenuInflater().inflate(R.menu.standard_cab, actionMode.getMenu());
+                break;
+            default:
+            	actionMode.getMenu().clear();
+            	actionMode.getMenuInflater().inflate(R.menu.standard_cab_multiple, actionMode.getMenu());
+            	actionMode.setSubtitle("" + checkedCount + " selected");
+                break;
+        }
+        
+        if (adapter.GetSelectedItems().size() == 0)
+        	actionMode.finish();
+    }
     
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -89,7 +132,7 @@ public class BudgetsActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_budgets, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_budgets, menu);
 		return true;
 	}
 
@@ -261,56 +304,41 @@ public class BudgetsActivity extends BaseActivity {
 		setData(currentMonth);
 	}
 	
-	MultiChoiceModeListener multiChoiceListner = new MultiChoiceModeListener()
-	{
+	private final class ModeCallback implements ActionMode.Callback {
+   	 
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
+            // Create the menu from the xml file
+            MenuInflater inflater = getSupportMenuInflater();
             inflater.inflate(R.menu.standard_cab, menu);
             return true;
         }
-
+ 
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
-
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.cab_edit:
-                	EditItem(adapter.GetSelectedItems().get(0));
-                    mode.finish();
-                    return true;
-                case R.id.cab_delete:
-                	confirmDeleteItems(mode);
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
+ 
         public void onDestroyActionMode(ActionMode mode) {
 			adapter.ClearSelected();
-        }
-        
-        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        	final int checkedCount = budgetsList.getCheckedItemCount();
-            switch (checkedCount) {
-                case 0:
-                    mode.setSubtitle(null);
-                    break;
-                case 1:
-                	mode.getMenu().clear();
-                    mode.setSubtitle("" + checkedCount + " selected");
-                    mode.getMenuInflater().inflate(R.menu.standard_cab, mode.getMenu());
-                    break;
-                default:
-                	mode.getMenu().clear();
-                    mode.getMenuInflater().inflate(R.menu.standard_cab_multiple, mode.getMenu());
-                    mode.setSubtitle("" + checkedCount + " selected");
-                    break;
+	        adapter.notifyDataSetChanged();
+	        budgetsList.clearChoices();
+ 
+            if (mode == actionMode) {
+            	actionMode = null;
             }
-            
-            adapter.SetSelected(position, checked);
-            adapter.notifyDataSetChanged();
+        }
+ 
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+            case R.id.cab_edit:
+            	EditItem(adapter.GetSelectedItems().get(0));
+                mode.finish();
+                return true;
+            case R.id.cab_delete:
+            	confirmDeleteItems(mode);
+                return true;
+            default:
+                return false;
+        }
         }
     };
 }

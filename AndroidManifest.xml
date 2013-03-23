@@ -5,7 +5,7 @@
     android:versionName="1.4.2" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
     <application
@@ -20,7 +20,7 @@
         <activity
             android:name="sg.money.AddTransactionActivity"
             android:label="@string/title_activity_add_transaction"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="sg.money.SettingsActivity"
@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name="sg.money.AddAccountActivity"
-            android:label="@string/title_activity_add_acount" >
+            android:label="@string/title_activity_add_acount"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="sg.money.CategoriesActivity"
@@ -40,7 +41,8 @@
         </activity>
         <activity
             android:name="sg.money.AddCategoryActivity"
-            android:label="@string/title_activity_add_category" >
+            android:label="@string/title_activity_add_category" 
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="sg.money.OverviewActivity"
@@ -52,7 +54,8 @@
         </activity>
         <activity
             android:name="sg.money.AddBudgetActivity"
-            android:label="@string/title_activity_add_budget" >
+            android:label="@string/title_activity_add_budget"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
 
         <receiver

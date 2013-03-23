@@ -1,20 +1,21 @@
 package sg.money;
 
 import java.util.ArrayList;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -27,14 +28,16 @@ public class TransactionsActivity extends BaseFragmentActivity
     static final String SETTING_LASTACCOUNTVIEWED = "SETTING_LASTACCOUNTVIEWED";
     
     ViewPager viewPager;
-    TabsAdapter tabsAdapter;
+    static TabsAdapter tabsAdapter;
     PagerTitleStrip titleStrip;
     
     public Account selectedAccount = null;
     
-    ArrayList<Account> accounts;
+    static ArrayList<Account> accounts;
     
     ActionBar actionBar;
+    
+    Menu menu;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -48,7 +51,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        titleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
 	        viewPager.setOffscreenPageLimit(3);
 
-	        actionBar = getActionBar();
+	        actionBar = getSupportActionBar();
 	        
 	        UpdateUI();
     	}
@@ -92,13 +95,14 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        selectedAccount = accounts.get(selectedPosition);
         }
         
-        invalidateOptionsMenu();
+        this.menu.clear();
+        this.onCreateOptionsMenu(this.menu);
     }
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
-    	outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+    	outState.putInt("tab", getSupportActionBar().getSelectedNavigationIndex());
     }
     
     public static class TabsAdapter extends FragmentStatePagerAdapter
@@ -134,7 +138,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 		public TabsAdapter(TransactionsActivity activity, ViewPager pager) {
 			super(activity.getSupportFragmentManager());
 			context = activity;
-			actionBar = activity.getActionBar();
+			actionBar = activity.getSupportActionBar();
 			viewPager = pager;
 			viewPager.setAdapter(this);
 			viewPager.setOnPageChangeListener(this);
@@ -174,6 +178,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 			Editor editor = sharedPref.edit();
 			editor.putInt(SETTING_LASTACCOUNTVIEWED, position);
 			editor.commit();
+			RemovefragmentsFocus();
 		}
 		
 		public void onPageScrollStateChanged(int state)
@@ -193,19 +198,20 @@ public class TransactionsActivity extends BaseFragmentActivity
 				}
 			}
 		}
-		
+
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		}
-		
+
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		}
 	}
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_transactions, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_transactions, menu);
         MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
         addTransaction.setVisible(accounts.size() > 0);
+        this.menu = menu;
         return true; 
     }
     
@@ -314,6 +320,17 @@ public class TransactionsActivity extends BaseFragmentActivity
 		for(Fragment fragment : tabsAdapter.fragments)
 		{
 			((TransactionsFragment)fragment).UpdateList();
+		}
+	}
+	
+	public static void RemovefragmentsFocus()
+	{
+		if (accounts.isEmpty())
+			return;
+		
+		for(Fragment fragment : tabsAdapter.fragments)
+		{
+			((TransactionsFragment)fragment).focusLost();
 		}
 	}
 }

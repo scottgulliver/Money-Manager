@@ -19,7 +19,9 @@ public class EmptyListFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         bundleText = getArguments().getString("EmptyText");
-        bundleHint = getArguments().getString("EmptyHint", "");
+        bundleHint = getArguments().getString("EmptyHint");
+        if (bundleHint == null)
+        	bundleHint = "";
     }
     
     @Override
@@ -28,13 +30,17 @@ public class EmptyListFragment extends Fragment
     	View v = inflater.inflate(R.layout.empty_listview, null);
     	
         bundleText = getArguments().getString("EmptyText");
-        bundleHint = getArguments().getString("EmptyHint", "");
+        bundleHint = getArguments().getString("EmptyHint");
+        if (bundleHint == null)
+        	bundleHint = "";
     	
     	emptyText = (TextView)v.findViewById(R.id.empty_text);
     	emptyHint = (TextView)v.findViewById(R.id.empty_hint);
     	
         bundleText = getArguments().getString("EmptyText");
-        bundleHint = getArguments().getString("EmptyHint", "");
+        bundleHint = getArguments().getString("EmptyHint");
+        if (bundleHint == null)
+        	bundleHint = "";
     	
     	if (bundleText != null)
     		setEmptyText(bundleText);
@@ -47,7 +53,6 @@ public class EmptyListFragment extends Fragment
     
     @Override
     public void onResume() {
-    	// TODO Auto-generated method stub
     	super.onResume();
     }
     

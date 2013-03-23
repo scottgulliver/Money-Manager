@@ -2,17 +2,18 @@ package sg.money;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddAccountActivity extends Activity
+public class AddAccountActivity extends BaseActivity
 {    
     EditText txtName;
     EditText txtStartingBalance;
@@ -27,7 +28,7 @@ public class AddAccountActivity extends Activity
         setContentView(R.layout.activity_add_account);
     	setTitle("Add Account");
     	
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         txtName = (EditText)findViewById(R.id.txtName);
         txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
@@ -53,7 +54,7 @@ public class AddAccountActivity extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_add_account, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_add_account, menu);
         return true;
     }
     
@@ -86,7 +87,7 @@ public class AddAccountActivity extends Activity
     
     private boolean Validate()
     {
-    	if (txtName.getText().toString().trim().isEmpty())
+    	if (txtName.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddAccountActivity.this, "Please enter a name.", Toast.LENGTH_SHORT).show();
     		return false;

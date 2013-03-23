@@ -2,12 +2,11 @@ package sg.money;
 
 import java.util.ArrayList;
 import java.util.Random;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -16,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class AddCategoryActivity extends Activity implements ColorPickerDialog.OnColorChangedListener
+public class AddCategoryActivity extends BaseActivity implements ColorPickerDialog.OnColorChangedListener
 {
 	ArrayList<Category> currentCategories;
 	EditText txtName;
@@ -36,7 +35,7 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
         setContentView(R.layout.activity_add_category);
     	setTitle("Add Category");
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
           
         txtName = (EditText)findViewById(R.id.txtName);
         spnType = (Spinner)findViewById(R.id.spnType1);
@@ -105,7 +104,7 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_add_category, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_add_category, menu);
         return true;
     }
     
@@ -144,7 +143,7 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
     
     private boolean Validate()
     {
-    	if (txtName.getText().toString().trim().isEmpty())
+    	if (txtName.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddCategoryActivity.this, "Please enter a name.", Toast.LENGTH_SHORT).show();
     		return false;
