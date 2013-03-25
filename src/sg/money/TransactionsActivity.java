@@ -255,6 +255,15 @@ public class TransactionsActivity extends BaseFragmentActivity
                 break;
             	}
 	    	
+	        case R.id.menu_feedback:{
+	        	Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+	        	emailIntent.setType("plain/text");
+	        	emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"pennypressgames@gmail.com"});
+	        	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback for Money Manager");
+	        	startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                break;
+            	}
+	    	
 	        case R.id.menu_exit:{
 	        	finish();
                 break;

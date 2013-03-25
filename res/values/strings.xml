@@ -120,5 +120,6 @@
     <string name="design_transaction_value">19.99</string>
     <string name="design_budgets_month">January 2013</string>
     <string name="category_color">Category Color</string>
+    <string name="send_feedback">Send us feedback</string>
 
 </resources>
