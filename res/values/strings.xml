@@ -121,5 +121,7 @@
     <string name="design_budgets_month">January 2013</string>
     <string name="category_color">Category Color</string>
     <string name="send_feedback">Send us feedback</string>
+	<string name="hide_from_reports">Hide from reports</string>
+	<string name="hide_from_reports_detail">Hide from Overview and Budgets</string>
 
 </resources>

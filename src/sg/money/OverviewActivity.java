@@ -172,6 +172,9 @@ public class OverviewActivity extends BaseActivity
 		double expenditure = 0;
 		for(Transaction transaction : transactions)
     	{
+			if (transaction.dontReport)
+				continue;
+				
     		Category thisCategory = null;
     		for(Category category : categories)
     		{
@@ -217,6 +220,8 @@ public class OverviewActivity extends BaseActivity
 		double total = 0;
 		for(Transaction transaction : transactions)
 		{
+			if (transaction.dontReport)
+				continue;
 			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports)
 				total -= transaction.value;
 		}
@@ -230,6 +235,8 @@ public class OverviewActivity extends BaseActivity
 			double categoryValue = 0;
 			for(Transaction transaction : transactions)
 			{
+				if (transaction.dontReport)
+					continue;
 				if (transaction.category == category.id)
 					categoryValue -= transaction.value;
 			} 

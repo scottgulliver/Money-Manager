@@ -32,6 +32,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	static final String colTransCategory="CategoryID";
 	static final String colTransDate="Date";
 	static final String colTransAccount="AccountID";
+	static final String colTransDontReport="DontReport";
 
 	static final String configTable="Config";
 	static final String colConfigID="ConfigID";
@@ -100,7 +101,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 16); 
+		super(context, dbName, null, 17); 
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -111,7 +112,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		String sql = "CREATE TABLE "+transTable+" ("+colTransID+ " INTEGER PRIMARY KEY , "+
 		colTransValue+ " REAL , "+colTransDesc+" TEXT , "+colTransCategory+" INTEGER , " +colTransDate+" DATETIME , "+
-		colTransAccount + " INTEGER )";
+		colTransAccount + " INTEGER, "+colTransDontReport+" INTEGER )";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -404,6 +405,13 @@ public class DatabaseManager extends SQLiteOpenHelper
 			UpdateCategory(expenseStartBalance);
 		}
 		
+		if (oldVersion <= 16)
+		{
+			String sql = "ALTER TABLE "+transTable+" ADD COLUMN "+colTransDontReport+" INTEGER";
+			Log.i("SQL", sql);
+			db.execSQL(sql);
+		}
+		
 		clearDatabase();
 	}
 	
@@ -415,8 +423,8 @@ public class DatabaseManager extends SQLiteOpenHelper
 		String desc = trans.description.replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
-		String sql = "INSERT INTO "+transTable+" ("+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+","+colTransAccount+") VALUES ("+
-								trans.value+",'"+desc+"',"+trans.category+",'"+df.format(trans.dateTime)+"',"+trans.account+")";
+		String sql = "INSERT INTO "+transTable+" ("+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+","+colTransAccount+","+colTransDontReport+") VALUES ("+
+								trans.value+",'"+desc+"',"+trans.category+",'"+df.format(trans.dateTime)+"',"+trans.account+","+(trans.dontReport?1:0)+")";
 		Log.i("SQL", sql);
 		
 		db.execSQL(sql);
@@ -428,7 +436,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+" FROM "+transTable;
+			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+" FROM "+transTable;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -446,6 +454,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				Date theDate = (Date)df.parse(c.getString((c.getColumnIndex(colTransDate))));
 				transaction.dateTime = theDate;
 				transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
+				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
 				
 				if (transaction.dateTime.compareTo(startDate) >= 0 && transaction.dateTime.compareTo(endDate) <= 0)
 					transactions.add(transaction);
@@ -473,7 +482,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+" FROM "+transTable+"";
+			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+" FROM "+transTable+"";
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -489,6 +498,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.description = c.getString((c.getColumnIndex(colTransDesc)));
 				transaction.category = c.getInt((c.getColumnIndex(colTransCategory)));
 				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
+				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
 				transaction.dateTime = theDate;
 				transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
 				transactions.add(transaction);
@@ -516,7 +526,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+" FROM "+transTable+" WHERE "+colTransAccount+" = "+accountID;
+			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+","+colTransDontReport+" FROM "+transTable+" WHERE "+colTransAccount+" = "+accountID;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -534,6 +544,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
 				transaction.dateTime = theDate;
 				transaction.account = accountID;
+				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
 				transactions.add(transaction);
 				
 	       	    c.moveToNext();
@@ -559,7 +570,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db=this.getReadableDatabase();
 			
-			String sql = "SELECT "+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+" FROM "+transTable+" WHERE "+colTransID+"="+id;
+			String sql = "SELECT "+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+" FROM "+transTable+" WHERE "+colTransID+"="+id;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -572,6 +583,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
 			transaction.dateTime = theDate;
 			transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
+			transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
 			transaction.id = id;
 			
 			c.close();
@@ -602,7 +614,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		String sql = "UPDATE "+transTable+" SET "+colTransValue+" = "+trans.value+", "+colTransDesc+" = '"
 						+desc+"', "+colTransCategory+" = "+trans.category+", "+colTransDate+" = '"
-						+df.format(trans.dateTime)+"', "+colTransAccount+" = "+trans.account+" WHERE "+colTransID+" = "+trans.id;
+						+df.format(trans.dateTime)+"', "+colTransAccount+" = "+trans.account+", "+colTransDontReport+" = "+(trans.dontReport?1:0)+" WHERE "+colTransID+" = "+trans.id;
 		Log.i("SQL", sql);
 		
 		db.execSQL(sql); 

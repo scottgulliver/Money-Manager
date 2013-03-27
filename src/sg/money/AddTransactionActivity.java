@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.*;
 
 public class AddTransactionActivity extends BaseFragmentActivity
 {
@@ -39,6 +40,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
 	Spinner spnType;
 	EditText txtNewCatName; 
 	TextView textView4;
+	CheckBox chkHideFromReports;
 	static Button btnDate;
 	public static Date buttonDate;
 
@@ -73,6 +75,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
         btnDate = (Button)findViewById(R.id.btnDate);
         txtNewCatName = (EditText)findViewById(R.id.txtNewCatName);
         textView4 = (TextView)findViewById(R.id.textView4);
+		chkHideFromReports = (CheckBox)findViewById(R.id.chkHideFromReports);
         
         txtNewCatName.setVisibility(View.GONE);
         textView4.setVisibility(View.GONE);
@@ -166,6 +169,8 @@ public class AddTransactionActivity extends BaseFragmentActivity
             		break; 
             	}
             }
+			
+			chkHideFromReports.setChecked(editTransaction.dontReport);
         }
     }
     
@@ -404,6 +409,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
     	c.setTime(buttonDate);
     	editTransaction.dateTime = c.getTime();
 		editTransaction.account = accountID;
+		editTransaction.dontReport = chkHideFromReports.isChecked();
 		
 		if (!selectedCategory.income)
 			editTransaction.value *= -1.0f;

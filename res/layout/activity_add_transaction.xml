@@ -113,6 +113,22 @@
             android:layout_marginBottom="@dimen/FormViewMargin"
             android:layout_marginTop="@dimen/FormViewSmallMargin"
             android:text="@string/design_addtrans_date" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/FormViewSmallMargin"
+            android:layout_marginTop="@dimen/FormViewMargin"
+            android:text="@string/hide_from_reports" />
+
+        <CheckBox
+            android:id="@+id/chkHideFromReports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/FormViewMargin"
+            android:layout_marginTop="@dimen/FormViewSmallMargin"
+            android:text="@string/hide_from_reports_detail" />
     </LinearLayout>
 
 </ScrollView>
