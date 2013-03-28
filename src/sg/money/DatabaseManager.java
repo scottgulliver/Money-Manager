@@ -101,7 +101,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 17); 
+		super(context, dbName, null, 18); 
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -136,12 +136,6 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		populateDefaultCategories(db);
 		populateDefaultAccounts(db);
-		
-		//db.execSQL("INSERT INTO Transactions (Value,Description,CategoryID,AccountID,Date) VALUES (15,'Entry 1 for November 4, 2011 0:00:00 AM GMT',1,1,'November 4, 2011 0:00:00 AM GMT'");//1
-		//db.execSQL("INSERT INTO Transactions (Value,Description,CategoryID,AccountID,Date) VALUES (-15,'Entry 1 for November 4, 2011 0:00:01 AM GMT',1,1,'November 4, 2011 0:00:01 AM GMT'");//1
-
-
-		
 		
 		clearDatabase();
 	}
@@ -229,6 +223,9 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Misc (Out)',-3343758,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Uncategorized',-3743758,0,1) ";
+		Log.i("SQL", sql);
+		db.execSQL(sql);
 		
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Benefit Recieved',-7473619,1) ";
 		Log.i("SQL", sql);
@@ -255,6 +252,9 @@ public class DatabaseManager extends SQLiteOpenHelper
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Misc (In)',-5416974,1) ";
+		Log.i("SQL", sql);
+		db.execSQL(sql);
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Uncategorized',-1743758,1,1) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 	}
@@ -410,6 +410,41 @@ public class DatabaseManager extends SQLiteOpenHelper
 			String sql = "ALTER TABLE "+transTable+" ADD COLUMN "+colTransDontReport+" INTEGER";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
+		}
+		
+		if (oldVersion <= 17)
+		{
+			//check categories exist
+			ArrayList<Category> categories = GetAllCategories();
+			Category incomeUncategorized = null;
+			Category expenseUncategorized = null;
+			for(Category category : categories)
+			{
+				if (category.name.equals("Uncategorized") && category.income)
+					incomeUncategorized = category;
+				else if (category.name.equals("Uncategorized") && !category.income)
+					expenseUncategorized = category;
+			}
+
+			if (incomeUncategorized == null)
+			{
+				AddCategory(new Category("Uncategorized", -3743758, true, true, true));
+			}
+			else
+			{
+				incomeUncategorized.isPermanent = true;
+				UpdateCategory(incomeUncategorized);
+			}
+
+			if (expenseUncategorized == null)
+			{
+				AddCategory(new Category("Uncategorized", -1743758, false, true, true));
+			}
+			else
+			{
+				expenseUncategorized.isPermanent = true;
+				UpdateCategory(expenseUncategorized);
+			}
 		}
 		
 		clearDatabase();

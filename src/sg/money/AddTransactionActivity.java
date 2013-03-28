@@ -361,10 +361,11 @@ public class AddTransactionActivity extends BaseFragmentActivity
     private Category getSelectedCategory()
     {
     	Category selectedCategory = null;
+    	boolean isIncome = (spnType.getSelectedItemId() == 1);
     	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
     	for(Category category : categories)
     	{
-    		if (category.name.equals(selectedCategoryName))
+    		if (category.name.equals(selectedCategoryName) && category.income == isIncome)
     		{
     			selectedCategory = category;
     			break;
@@ -413,6 +414,8 @@ public class AddTransactionActivity extends BaseFragmentActivity
 		
 		if (!selectedCategory.income)
 			editTransaction.value *= -1.0f;
+			
+		Toast.makeText(AddTransactionActivity.this, "Category id: "+selectedCategory.id, Toast.LENGTH_SHORT).show();
 		
 		if (creatingNew)
 			DatabaseManager.getInstance(AddTransactionActivity.this).InsertTransaction(editTransaction);
