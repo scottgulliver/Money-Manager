@@ -339,6 +339,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
     	
     	if (txtNewCatName.getVisibility() == View.VISIBLE)
     	{
+			boolean isIncome = (spnType.getSelectedItemId() == 1);
     		if (txtNewCatName.getText().toString().trim() == "")
     		{
 	    		Toast.makeText(AddTransactionActivity.this, "Please enter a name for the new category.", Toast.LENGTH_SHORT).show();
@@ -347,7 +348,8 @@ public class AddTransactionActivity extends BaseFragmentActivity
     		
     		for(Category currentCategory : categories)
         	{
-        		if (txtNewCatName.getText().toString().trim().equals(currentCategory.name.trim()))
+        		if (txtNewCatName.getText().toString().trim().equals(currentCategory.name.trim())
+					&& currentCategory.income == isIncome)
             	{
             		Toast.makeText(AddTransactionActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
             		return false;
@@ -414,8 +416,6 @@ public class AddTransactionActivity extends BaseFragmentActivity
 		
 		if (!selectedCategory.income)
 			editTransaction.value *= -1.0f;
-			
-		Toast.makeText(AddTransactionActivity.this, "Category id: "+selectedCategory.id, Toast.LENGTH_SHORT).show();
 		
 		if (creatingNew)
 			DatabaseManager.getInstance(AddTransactionActivity.this).InsertTransaction(editTransaction);

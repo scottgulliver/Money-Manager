@@ -161,7 +161,8 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 	    	{
 	    		if (editCategory != null && (currentCategory.id == editCategory.id)) continue;
 	    		
-	    		if (txtName.getText().toString().trim().equals(currentCategory.name.trim()))
+	    		if (txtName.getText().toString().trim().equals(currentCategory.name.trim())
+					&& currentCategory.income == (spnType.getSelectedItemId() == 1))
 	        	{
 	        		Toast.makeText(AddCategoryActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
 	        		return false;
