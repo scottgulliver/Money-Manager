@@ -1,1 +1,3 @@
-Current sprint: Frisco      Last release: 1.4 (18/03/13)
+Dayton <-- current working version
+Frisco, released 26/03/13 as version 1.5
+v1.4, released 18/03/13 as version 1.4
