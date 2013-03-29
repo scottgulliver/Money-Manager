@@ -11,6 +11,7 @@ public class Transaction
 	public int category;
 	public Date dateTime;
 	public int account;
+	public boolean dontReport;
 	
 	public double getRealValue(Context context)
 	{

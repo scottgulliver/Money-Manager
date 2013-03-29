@@ -1,10 +1,15 @@
 package sg.money;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.DatePickerDialog;
@@ -14,9 +19,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -28,8 +30,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.*;
 
-public class AddTransactionActivity extends FragmentActivity
+public class AddTransactionActivity extends BaseFragmentActivity
 {
 	EditText txtValue;
 	EditText txtDesc; 
@@ -37,6 +40,7 @@ public class AddTransactionActivity extends FragmentActivity
 	Spinner spnType;
 	EditText txtNewCatName; 
 	TextView textView4;
+	CheckBox chkHideFromReports;
 	static Button btnDate;
 	public static Date buttonDate;
 
@@ -47,6 +51,11 @@ public class AddTransactionActivity extends FragmentActivity
 	int accountID = -1; 
 	
 	public static final String ADD_CATEGORY_STRING = "< Add new category >";
+		
+	//Bundle State Data
+	static final String STATE_DATE = "stateDate";
+	static final String STATE_CATEGORY = "stateCategory";
+	static final String STATE_TYPE = "stateType";
 	
     @Override 
     public void onCreate(Bundle savedInstanceState)
@@ -55,7 +64,7 @@ public class AddTransactionActivity extends FragmentActivity
         setContentView(R.layout.activity_add_transaction);
     	setTitle("Add Transaction");
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         accountID = getIntent().getIntExtra("AccountID", -1);
         
@@ -66,6 +75,7 @@ public class AddTransactionActivity extends FragmentActivity
         btnDate = (Button)findViewById(R.id.btnDate);
         txtNewCatName = (EditText)findViewById(R.id.txtNewCatName);
         textView4 = (TextView)findViewById(R.id.textView4);
+		chkHideFromReports = (CheckBox)findViewById(R.id.chkHideFromReports);
         
         txtNewCatName.setVisibility(View.GONE);
         textView4.setVisibility(View.GONE);
@@ -159,7 +169,48 @@ public class AddTransactionActivity extends FragmentActivity
             		break; 
             	}
             }
+			
+			chkHideFromReports.setChecked(editTransaction.dontReport);
         }
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    	String sDate = dateFormat.format(buttonDate);
+        savedInstanceState.putString(STATE_DATE, sDate);
+
+    	Category selectedCategory = getSelectedCategory();
+    	if (selectedCategory != null)
+    		savedInstanceState.putString(STATE_CATEGORY, selectedCategory.name);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    	String sDate = savedInstanceState.getString(STATE_DATE);
+    	
+    	try {
+			updateDateButtonText(dateFormat.parse(sDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    	
+    	String categoryName = savedInstanceState.getString(STATE_CATEGORY);
+    	if (categoryName != null)
+    	{
+    		for(String name : categoryNames)
+            {
+            	if (name.equals(categoryName))
+            	{
+            		spnCategory.setSelection(categoryNames.indexOf(name));
+            		break; 
+            	}
+            }
+    	}
     }
     
     public void updateDateButtonText(Date date)
@@ -239,7 +290,7 @@ public class AddTransactionActivity extends FragmentActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_add_transaction, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_add_transaction, menu);
         return true;
     }
     
@@ -274,13 +325,13 @@ public class AddTransactionActivity extends FragmentActivity
     
     private boolean Validate()
     {
-    	if (txtValue.getText().toString().trim().isEmpty())
+    	if (txtValue.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddTransactionActivity.this, "Please enter a value.", Toast.LENGTH_SHORT).show();
     		return false;
     	}
     	
-    	if (txtDesc.getText().toString().trim().isEmpty())
+    	if (txtDesc.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddTransactionActivity.this, "Please enter a description.", Toast.LENGTH_SHORT).show();
     		return false;
@@ -288,7 +339,8 @@ public class AddTransactionActivity extends FragmentActivity
     	
     	if (txtNewCatName.getVisibility() == View.VISIBLE)
     	{
-    		if (txtNewCatName.getText().toString().trim().isEmpty())
+			boolean isIncome = (spnType.getSelectedItemId() == 1);
+    		if (txtNewCatName.getText().toString().trim() == "")
     		{
 	    		Toast.makeText(AddTransactionActivity.this, "Please enter a name for the new category.", Toast.LENGTH_SHORT).show();
 	    		return false;
@@ -296,7 +348,8 @@ public class AddTransactionActivity extends FragmentActivity
     		
     		for(Category currentCategory : categories)
         	{
-        		if (txtNewCatName.getText().toString().trim().equals(currentCategory.name.trim()))
+        		if (txtNewCatName.getText().toString().trim().equals(currentCategory.name.trim())
+					&& currentCategory.income == isIncome)
             	{
             		Toast.makeText(AddTransactionActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
             		return false;
@@ -305,6 +358,23 @@ public class AddTransactionActivity extends FragmentActivity
     	}
     	
     	return true;
+    }
+    
+    private Category getSelectedCategory()
+    {
+    	Category selectedCategory = null;
+    	boolean isIncome = (spnType.getSelectedItemId() == 1);
+    	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
+    	for(Category category : categories)
+    	{
+    		if (category.name.equals(selectedCategoryName) && category.income == isIncome)
+    		{
+    			selectedCategory = category;
+    			break;
+    		}
+    	}
+    	
+    	return selectedCategory;
     }
     
     private void OkClicked()
@@ -320,16 +390,7 @@ public class AddTransactionActivity extends FragmentActivity
     		editTransaction = new Transaction();
     	}
     	
-    	Category selectedCategory = null;
-    	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
-    	for(Category category : categories)
-    	{
-    		if (category.name.equals(selectedCategoryName))
-    		{
-    			selectedCategory = category;
-    			break;
-    		}
-    	}
+    	Category selectedCategory = getSelectedCategory();
 
     	//create the category, if it is new
     	if (txtNewCatName.getVisibility() == View.VISIBLE)
@@ -351,6 +412,7 @@ public class AddTransactionActivity extends FragmentActivity
     	c.setTime(buttonDate);
     	editTransaction.dateTime = c.getTime();
 		editTransaction.account = accountID;
+		editTransaction.dontReport = chkHideFromReports.isChecked();
 		
 		if (!selectedCategory.income)
 			editTransaction.value *= -1.0f;

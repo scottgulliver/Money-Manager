@@ -2,12 +2,11 @@ package sg.money;
 
 import java.util.ArrayList;
 import java.util.Random;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -16,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class AddCategoryActivity extends Activity implements ColorPickerDialog.OnColorChangedListener
+public class AddCategoryActivity extends BaseActivity implements ColorPickerDialog.OnColorChangedListener
 {
 	ArrayList<Category> currentCategories;
 	EditText txtName;
@@ -26,6 +25,9 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 	Category editCategory; 
 	int currentColor;
 	
+	//Bundle State Data
+	static final String STATE_COLOUR = "stateColour";
+	
     @Override
     public void onCreate(Bundle savedInstanceState)
     { 
@@ -33,7 +35,7 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
         setContentView(R.layout.activity_add_category);
     	setTitle("Add Category");
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
           
         txtName = (EditText)findViewById(R.id.txtName);
         spnType = (Spinner)findViewById(R.id.spnType1);
@@ -52,8 +54,15 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 		spnType.setAdapter(arrayAdapter);
 		
 
-		Random rnd = new Random(System.currentTimeMillis());
-		currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+		if (savedInstanceState != null)
+    	{
+			currentColor = savedInstanceState.getInt(STATE_COLOUR);
+    	}
+    	else
+    	{
+    		Random rnd = new Random(System.currentTimeMillis());
+    		currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+    	}
         
         //check if we are editing
 		editCategory = null;
@@ -81,10 +90,21 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
     	
     	currentCategories = DatabaseManager.getInstance(this).GetAllCategories();
     }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(STATE_COLOUR, currentColor);
+        
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_add_category, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_add_category, menu);
         return true;
     }
     
@@ -123,7 +143,7 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
     
     private boolean Validate()
     {
-    	if (txtName.getText().toString().trim().isEmpty())
+    	if (txtName.getText().toString().trim().equals(""))
     	{
     		Toast.makeText(AddCategoryActivity.this, "Please enter a name.", Toast.LENGTH_SHORT).show();
     		return false;
@@ -141,7 +161,8 @@ public class AddCategoryActivity extends Activity implements ColorPickerDialog.O
 	    	{
 	    		if (editCategory != null && (currentCategory.id == editCategory.id)) continue;
 	    		
-	    		if (txtName.getText().toString().trim().equals(currentCategory.name.trim()))
+	    		if (txtName.getText().toString().trim().equals(currentCategory.name.trim())
+					&& currentCategory.income == (spnType.getSelectedItemId() == 1))
 	        	{
 	        		Toast.makeText(AddCategoryActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
 	        		return false;

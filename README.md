@@ -1,1 +1,1 @@
-Money Manager Android project - using Git & BitBucket.  
+Current sprint: Frisco      Last release: 1.4 (18/03/13)

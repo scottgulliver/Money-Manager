@@ -1,9 +1,9 @@
 package sg.money;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
 import android.os.Bundle;
 
-public abstract class BaseActivity extends Activity
+public abstract class BaseActivity extends SherlockActivity
 {
 	@Override
 	public void onCreate(Bundle savedInstanceState)

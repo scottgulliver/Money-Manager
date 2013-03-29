@@ -3,26 +3,26 @@ package sg.money;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.support.v4.app.Fragment;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.TextView;
  
-public class TransactionsFragment extends Fragment
+public class TransactionsFragment extends Fragment implements OnItemLongClickListener, OnItemClickListener
 {
     static final int REQUEST_ADDTRANSACTION = 0;
 
@@ -33,6 +33,7 @@ public class TransactionsFragment extends Fragment
 	int accountID;
 	TransactionsListAdapter adapter;
 	public TransactionsActivity parentActivity;
+	ActionMode actionMode;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -53,18 +54,12 @@ public class TransactionsFragment extends Fragment
     	((TextView)v.findViewById(R.id.empty_text)).setText("No transactions");
     	((TextView)v.findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	transactionsList.setEmptyView(emptyView);
-    	
-        transactionsList.setOnItemClickListener( 
-				new OnItemClickListener()
-				{
-					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-					{
-						onListItemClick(arg0, arg1, arg2, arg3);
-					}
-				});
 
-        transactionsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);		
-        transactionsList.setMultiChoiceModeListener(multiChoiceListner);
+        actionMode = null;
+        transactionsList.setItemsCanFocus(false);
+        transactionsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        transactionsList.setOnItemClickListener(this);
+        transactionsList.setOnItemLongClickListener(this);
         
         txtTotal = (TextView)v.findViewById(R.id.txtTotal);
         
@@ -73,6 +68,58 @@ public class TransactionsFragment extends Fragment
         UpdateList();
         
         return v;
+    }
+
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (actionMode == null)
+		{
+			onListItemClick(parent, view, position, id);
+		}
+		else
+		{
+			changeItemCheckState(position, transactionsList.isItemChecked(position));
+		}
+	}
+
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		if (actionMode == null) {
+        	actionMode = parentActivity.startActionMode(new ModeCallback());
+        }
+
+		transactionsList.setItemChecked(position, !transactionsList.isItemChecked(position));
+		changeItemCheckState(position, transactionsList.isItemChecked(position));
+        
+		return true;
+	}
+	
+	public void focusLost()
+	{
+		if (actionMode != null)
+			actionMode.finish();
+	}
+	
+	public void changeItemCheckState(int position, boolean checked) {
+        adapter.SetSelected(position, checked);
+        adapter.notifyDataSetChanged();
+    	final int checkedCount = adapter.GetSelectedItems().size();
+        switch (checkedCount) {
+            case 0:
+                actionMode.setSubtitle(null);
+                break;
+            case 1:
+            	actionMode.getMenu().clear();
+            	actionMode.setSubtitle("" + checkedCount + " selected");
+            	actionMode.getMenuInflater().inflate(R.menu.standard_cab, actionMode.getMenu());
+                break;
+            default:
+            	actionMode.getMenu().clear();
+            	actionMode.getMenuInflater().inflate(R.menu.standard_cab_multiple, actionMode.getMenu());
+            	actionMode.setSubtitle("" + checkedCount + " selected");
+                break;
+        }
+        
+        if (adapter.GetSelectedItems().size() == 0)
+        	actionMode.finish();
     }
     
     public class DateComparator implements Comparator<Transaction> {
@@ -105,56 +152,41 @@ public class TransactionsFragment extends Fragment
     	EditItem(transactions.get(position));
 	}
     
-    MultiChoiceModeListener multiChoiceListner = new MultiChoiceModeListener()
-	{
+    private final class ModeCallback implements ActionMode.Callback {
+   	 
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
+            // Create the menu from the xml file
+            MenuInflater inflater = parentActivity.getSupportMenuInflater();
             inflater.inflate(R.menu.standard_cab, menu);
             return true;
         }
-
+ 
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
-
+ 
+        public void onDestroyActionMode(ActionMode mode) {
+        	adapter.ClearSelected();
+	        adapter.notifyDataSetChanged();
+	        transactionsList.clearChoices();
+ 
+            if (mode == actionMode) {
+            	actionMode = null;
+            }
+        }
+ 
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.cab_edit:
-                	EditItem(adapter.GetSelectedItems().get(0));
-                    mode.finish();
-                    return true;
-                case R.id.cab_delete:
-                	confirmDeleteItems(mode);
-                    return true;
-                default:
-                    return false;
-            }
+            case R.id.cab_edit:
+            	EditItem(adapter.GetSelectedItems().get(0));
+                mode.finish();
+                return true;
+            case R.id.cab_delete:
+            	confirmDeleteItems(mode);
+                return true;
+            default:
+                return false;
         }
-
-        public void onDestroyActionMode(ActionMode mode) {
-			adapter.ClearSelected();
-        }
-        
-        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        	final int checkedCount = transactionsList.getCheckedItemCount();
-            switch (checkedCount) {
-                case 0:
-                    mode.setSubtitle(null);
-                    break;
-                case 1:
-                	mode.getMenu().clear();
-                    mode.setSubtitle("" + checkedCount + " selected");
-                    mode.getMenuInflater().inflate(R.menu.standard_cab, mode.getMenu());
-                    break;
-                default:
-                	mode.getMenu().clear();
-                    mode.getMenuInflater().inflate(R.menu.standard_cab_multiple, mode.getMenu());
-                    mode.setSubtitle("" + checkedCount + " selected");
-                    break;
-            }
-            
-            adapter.SetSelected(position, checked);
-            adapter.notifyDataSetChanged();
         }
     };
 	

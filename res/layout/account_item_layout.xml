@@ -15,7 +15,7 @@
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="8dip"
-        android:text="Cash Account"
+        android:text="@string/design_accounts_name"
         android:textColor="#222222" />
     
 	<TextView
@@ -27,7 +27,7 @@
 	    android:paddingLeft="28dip"
 	    android:paddingRight="8dip"
 	    android:paddingTop="8dip"
-	    android:text="19.99"
+	    android:text="@string/design_accounts_value"
 	    android:textColor="#669900" />
 
 </RelativeLayout>

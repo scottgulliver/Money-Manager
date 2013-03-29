@@ -77,6 +77,9 @@ public class BudgetListAdapter extends BaseAdapter
         double spending = 0;
         for(Transaction transaction : transactions)
         {
+			if (transaction.dontReport)
+				continue;
+			
         	if (!DatabaseManager.getInstance(activity).GetCategory(transaction.category).useInReports)
         		continue;
         	

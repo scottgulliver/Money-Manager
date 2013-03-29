@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sg.money"
-    android:versionCode="7"
-    android:versionName="1.4.2" >
+    android:versionCode="8"
+    android:versionName="1.5" >
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="16" />
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
 
     <application
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -19,7 +20,7 @@
         <activity
             android:name="sg.money.AddTransactionActivity"
             android:label="@string/title_activity_add_transaction"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="sg.money.SettingsActivity"
@@ -31,11 +32,8 @@
         </activity>
         <activity
             android:name="sg.money.AddAccountActivity"
-            android:label="@string/title_activity_add_acount" >
-        </activity>
-        <activity
-            android:name="sg.money.TEST"
-            android:label="@string/title_activity_test" >
+            android:label="@string/title_activity_add_acount"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="sg.money.CategoriesActivity"
@@ -43,31 +41,21 @@
         </activity>
         <activity
             android:name="sg.money.AddCategoryActivity"
-            android:label="@string/title_activity_add_category" >
+            android:label="@string/title_activity_add_category" 
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="sg.money.OverviewActivity"
             android:label="@string/title_activity_overview" >
         </activity>
-        <!--
-        <receiver android:name="MyWidgetProvider" android:exported="false" >
-            <intent-filter >
-                <action 
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widgetinfoxml" />
-        </receiver>
-        -->
         <activity
             android:name="sg.money.BudgetsActivity"
             android:label="@string/title_activity_budgets" >
         </activity>
         <activity
             android:name="sg.money.AddBudgetActivity"
-            android:label="@string/title_activity_add_budget" >
+            android:label="@string/title_activity_add_budget"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
 
         <receiver
@@ -78,7 +66,8 @@
         <activity
             android:name="sg.money.PinEntryActivity"
             android:label=""
-            android:windowSoftInputMode="adjustResize">"
+            android:windowSoftInputMode="adjustResize" >
+
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 

@@ -10,6 +10,10 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Random;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,8 +22,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -48,13 +50,15 @@ public class OverviewActivity extends BaseActivity
 	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 	String currentMonth;
 	
+	//Bundle State Data
+	static final String STATE_MONTH = "stateMonth";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         //get the controls
         txtMonth = (TextView)findViewById(R.id.txtMonth);
@@ -71,7 +75,26 @@ public class OverviewActivity extends BaseActivity
     	Collections.reverse(transactions);    	
     	categories = DatabaseManager.getInstance(OverviewActivity.this).GetAllCategories();
     	
-    	setData("");
+    	if (savedInstanceState != null)
+    	{
+    		currentMonth = savedInstanceState.getString(STATE_MONTH);
+        	setData(currentMonth);
+    	}
+    	else
+    	{
+        	setData("");
+    	}
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(STATE_MONTH, currentMonth);
+        
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
     
     private void setData(String month)
@@ -149,6 +172,9 @@ public class OverviewActivity extends BaseActivity
 		double expenditure = 0;
 		for(Transaction transaction : transactions)
     	{
+			if (transaction.dontReport)
+				continue;
+				
     		Category thisCategory = null;
     		for(Category category : categories)
     		{
@@ -194,6 +220,8 @@ public class OverviewActivity extends BaseActivity
 		double total = 0;
 		for(Transaction transaction : transactions)
 		{
+			if (transaction.dontReport)
+				continue;
 			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports)
 				total -= transaction.value;
 		}
@@ -207,6 +235,8 @@ public class OverviewActivity extends BaseActivity
 			double categoryValue = 0;
 			for(Transaction transaction : transactions)
 			{
+				if (transaction.dontReport)
+					continue;
 				if (transaction.category == category.id)
 					categoryValue -= transaction.value;
 			} 
@@ -294,7 +324,7 @@ public class OverviewActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_overview, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_overview, menu);
         return true;
     }
     

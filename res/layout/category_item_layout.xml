@@ -11,7 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_width="7dp"
         android:layout_height="50dp"
-        android:background="#ffaaaa" />
+        android:background="#ffaaaa"
+        android:contentDescription="@string/category_color" />
 
     <TextView
         android:id="@+id/category_name"
@@ -23,7 +24,7 @@
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="8dip"
-        android:text="Food and drink"
+        android:text="@string/design_categoryitem_name"
         android:textColor="#222222" />
 
     <TextView
@@ -36,7 +37,7 @@
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="2dip"
-        android:text="Expense"
+        android:text="@string/design_categoryitem_type"
         android:textColor="#888888" />
 
 </RelativeLayout>

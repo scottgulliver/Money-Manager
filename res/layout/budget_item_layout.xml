@@ -14,7 +14,7 @@
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="8dip"
-        android:text="Budget Name"
+        android:text="@string/design_budgetitem_name"
         android:textColor="#222222" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="2dip"
-        android:text="Budget Extra"
+        android:text="@string/design_budgetitem_extra"
         android:textColor="#888888" />
     
     <sg.money.BudgetDateView 
