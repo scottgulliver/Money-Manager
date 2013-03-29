@@ -223,7 +223,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Misc (Out)',-3343758,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Uncategorized',-3743758,0,1) ";
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Uncategorised',-3743758,0,1) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -254,7 +254,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Misc (In)',-5416974,1) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Uncategorized',-1743758,1,1) ";
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+") VALUES ('Uncategorised',-1743758,1,1) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 	}
@@ -416,34 +416,34 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			//check categories exist
 			ArrayList<Category> categories = GetAllCategories();
-			Category incomeUncategorized = null;
-			Category expenseUncategorized = null;
+			Category incomeUncategorised = null;
+			Category expenseUncategorised = null;
 			for(Category category : categories)
 			{
-				if (category.name.equals("Uncategorized") && category.income)
-					incomeUncategorized = category;
-				else if (category.name.equals("Uncategorized") && !category.income)
-					expenseUncategorized = category;
+				if (category.name.equals("Uncategorised") && category.income)
+					incomeUncategorised = category;
+				else if (category.name.equals("Uncategorised") && !category.income)
+					expenseUncategorised = category;
 			}
 
-			if (incomeUncategorized == null)
+			if (incomeUncategorised == null)
 			{
-				AddCategory(new Category("Uncategorized", -3743758, true, true, true));
+				AddCategory(new Category("Uncategorised", -3743758, true, true, true));
 			}
 			else
 			{
-				incomeUncategorized.isPermanent = true;
-				UpdateCategory(incomeUncategorized);
+				incomeUncategorised.isPermanent = true;
+				UpdateCategory(incomeUncategorised);
 			}
 
-			if (expenseUncategorized == null)
+			if (expenseUncategorised == null)
 			{
-				AddCategory(new Category("Uncategorized", -1743758, false, true, true));
+				AddCategory(new Category("Uncategorised", -1743758, false, true, true));
 			}
 			else
 			{
-				expenseUncategorized.isPermanent = true;
-				UpdateCategory(expenseUncategorized);
+				expenseUncategorised.isPermanent = true;
+				UpdateCategory(expenseUncategorised);
 			}
 		}
 		
