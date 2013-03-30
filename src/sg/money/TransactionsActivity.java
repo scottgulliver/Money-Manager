@@ -23,6 +23,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 {
     static final int REQUEST_ADDTRANSACTION = 0;
     static final int REQUEST_VIEWACCOUNTS = 1;
+	static final int REQUEST_VIEWCATEGORIES = 2;
     static final int REQUEST_SETTINGS = 10;
     
     static final String SETTING_LASTACCOUNTVIEWED = "SETTING_LASTACCOUNTVIEWED";
@@ -246,7 +247,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 	    	
 	    	case R.id.menu_managecategories:{
 	    		Intent intent = new Intent(this, CategoriesActivity.class);
-	        	startActivity(intent);
+	        	startActivityForResult(intent, REQUEST_VIEWCATEGORIES);
 	        	break;
 	    		}
 	    	
@@ -312,6 +313,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 				}
 				break;
 			}
+			case REQUEST_VIEWCATEGORIES:
 			case REQUEST_SETTINGS:
 			{
 				UpdateTransactions();
