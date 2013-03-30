@@ -821,11 +821,25 @@ public class DatabaseManager extends SQLiteOpenHelper
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
+		Category uncategorisedCategory = null;
+		ArrayList<Category> categories = GetAllCategories();
+		for(Category testCategory : categories)
+		{
+			if (testCategory.name.equals("Uncategorised") && (testCategory.income == category.income))
+			{
+				uncategorisedCategory = testCategory;
+				break;
+			}
+		}
+		
 		ArrayList<Transaction> transactions = GetAllTransactions();
 		for(Transaction transaction : transactions)
 		{
 			if (transaction.category == category.id)
-				DeleteTransaction(transaction);
+			{
+				transaction.category = uncategorisedCategory.id;
+				UpdateTransaction(transaction);
+			}
 		}
 		
 		clearDatabase();
