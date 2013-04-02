@@ -179,6 +179,8 @@ public class AddTransactionActivity extends BaseFragmentActivity
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
     	String sDate = dateFormat.format(buttonDate);
         savedInstanceState.putString(STATE_DATE, sDate);
+        
+        savedInstanceState.putInt(STATE_TYPE, spnType.getSelectedItemPosition());
 
     	Category selectedCategory = getSelectedCategory();
     	if (selectedCategory != null)
@@ -198,6 +200,9 @@ public class AddTransactionActivity extends BaseFragmentActivity
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+
+        spnType.setSelection(savedInstanceState.getInt(STATE_TYPE));
+        PopulateCategories();
     	
     	String categoryName = savedInstanceState.getString(STATE_CATEGORY);
     	if (categoryName != null)
