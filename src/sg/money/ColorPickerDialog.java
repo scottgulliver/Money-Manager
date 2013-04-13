@@ -23,10 +23,12 @@ public class ColorPickerDialog extends Dialog {
 
 	private static class ColorPickerView extends View {
 		private Paint mPaint;
+		private Paint mPaintBlackWhite;
 		private Paint oldPaint;
 		private Paint newPaint;
 		private Paint highlightPaint;
 		private final int[] mColors;
+		private final int[] mColorsBlackWhite;
 		private OnColorChangedListener mListener;
 		private Rect gradientRect;
 		private Rect oldRect;
@@ -38,12 +40,21 @@ public class ColorPickerDialog extends Dialog {
 			mColors = new int[] { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF,
 					0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000 };
 
+			mColorsBlackWhite = new int[] { 0xFF000000, 0x00AAAAAA, 0xFFFFFFFF };
+
 			Shader s = new LinearGradient(0, 0, 0, 0, mColors, null,
+					Shader.TileMode.CLAMP);
+
+			Shader sBlackWhite = new LinearGradient(0, 0, 0, 0, mColorsBlackWhite, null,
 					Shader.TileMode.CLAMP);
 
 			mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			mPaint.setShader(s);
 			mPaint.setStyle(Paint.Style.FILL);
+
+			mPaintBlackWhite = new Paint(Paint.ANTI_ALIAS_FLAG);
+			mPaintBlackWhite.setShader(sBlackWhite);
+			mPaintBlackWhite.setStyle(Paint.Style.FILL);
 
 			oldPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			oldPaint.setColor(color);
@@ -66,6 +77,7 @@ public class ColorPickerDialog extends Dialog {
 		protected void onDraw(Canvas canvas) {
 
 			canvas.drawRect(gradientRect, mPaint);
+			canvas.drawRect(gradientRect, mPaintBlackWhite);
 
 			canvas.drawRect(oldRect, oldPaint);
 			canvas.drawRect(newRect, newPaint);
@@ -97,13 +109,18 @@ public class ColorPickerDialog extends Dialog {
 					gradientRect.right, gradientRect.top, mColors, null,
 					Shader.TileMode.CLAMP);
 			mPaint.setShader(s);
+
+			Shader sBlackWhite = new LinearGradient(gradientRect.left, gradientRect.top,
+					gradientRect.left, gradientRect.bottom, mColorsBlackWhite, null,
+					Shader.TileMode.CLAMP);
+			mPaintBlackWhite.setShader(sBlackWhite);
 		};
 
-		private int ave(int s, int d, float p) {
+		private static int ave(int s, int d, float p) {
 			return s + java.lang.Math.round(p * (d - s));
 		}
 
-		private int interpColor(int colors[], float unit) {
+		private static int interpColor(int colors[], float unit) {
 			if (unit <= 0) {
 				return colors[0];
 			}
@@ -164,7 +181,15 @@ public class ColorPickerDialog extends Dialog {
 				} else if (m_onSelector && onSelector) {
 					x -= gradientRect.left;
 					x = (x / (float) gradientRect.width());
-					newPaint.setColor(interpColor(mColors, x));
+					y -= gradientRect.top;
+					y = (y / (float) gradientRect.height());
+					int new1 = interpColor(mColors, x);
+					int addColor = (int)((510f * y) - 255f);
+					newPaint.setColor(Color.argb(
+							255,
+							clamp(Color.red(new1) + addColor, 0, 255),
+							clamp(Color.green(new1) + addColor, 0, 255),
+							clamp(Color.blue(new1) + addColor, 0, 255)));
 					invalidate();
 				}
 				break;
@@ -190,6 +215,15 @@ public class ColorPickerDialog extends Dialog {
 			return true;
 		}
 	}
+	
+	private static int clamp(int source, int min, int max)
+	{
+		if (source < min)
+			return min;
+		if (source > max)
+			return max;
+		return source;
+	}
 
 	public ColorPickerDialog(Context context, OnColorChangedListener listener,
 			int initialColor) {
@@ -214,8 +248,7 @@ public class ColorPickerDialog extends Dialog {
 		setContentView(colorPicker);
 		LayoutParams params = colorPicker.getLayoutParams();
 		params.width = LayoutParams.MATCH_PARENT;
-		params.height = (int) Misc.dipsToPixels(getContext().getResources(),
-				150);
+		params.height = (int) Misc.dipsToPixels(getContext().getResources(), 200);
 		colorPicker.setLayoutParams(params);
 		setTitle("Pick a color");
 	}
