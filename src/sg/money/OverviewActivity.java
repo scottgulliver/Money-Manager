@@ -138,6 +138,9 @@ public class OverviewActivity extends BaseActivity
     	
     	for(Transaction transaction : transactions)
     	{
+			if (transaction.dontReport)
+				continue;
+				
     		Category thisCategory = null;
     		for(Category category : categories)
     		{

@@ -85,7 +85,9 @@ public class TransactionsListAdapter extends BaseAdapter {
  
         //set values
         descText.setText(transactionData.description);
-        categoryText.setText(getCategory(transactionData.category).name);
+    	categoryText.setText(transactionData.isTransfer
+    			? transactionData.getTransferDescription(activity)
+    			: getCategory(transactionData.category).name);
         valueText.setText(Misc.formatValue(activity, transactionData.value));
 
         try

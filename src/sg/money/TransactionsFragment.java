@@ -220,9 +220,15 @@ public class TransactionsFragment extends Fragment implements OnItemLongClickLis
 		ArrayList<Transaction> selectedItems = adapter.GetSelectedItems();
 		for(Transaction selectedItem : selectedItems)
 		{
+			if (selectedItem.isTransfer)
+			{
+				Transaction releatedTransaction = selectedItem.getRelatedTransferTransaction(getActivity());
+				DatabaseManager.getInstance(getActivity()).DeleteTransaction(releatedTransaction);
+			}
+			
 			DatabaseManager.getInstance(getActivity()).DeleteTransaction(selectedItem);
 		}
-		UpdateList();
+		UpdateParentUI();
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
