@@ -97,6 +97,7 @@ public class TransactionsListAdapter extends BaseAdapter {
         TextView dateText = (TextView)vi.findViewById(R.id.transaction_date);
         TextView valueText = (TextView)vi.findViewById(R.id.transaction_value);
 		CheckBox chkReconciled = (CheckBox)vi.findViewById(R.id.chkReconciled);
+		RelativeLayout layoutReconciled = (RelativeLayout)vi.findViewById(R.id.layoutReconciled);
  
         Transaction transactionData = new Transaction();
         transactionData = transactions.get(position);
@@ -124,7 +125,7 @@ public class TransactionsListAdapter extends BaseAdapter {
 
         descText.setTextColor(transactionData.reconciled && greyOutReconciled ? Color.argb(255, 100, 100, 100) : Color.argb(255, 34, 34, 34));
 
-		chkReconciled.setVisibility(showReconcileOptions ? View.VISIBLE : View.GONE);
+        layoutReconciled.setVisibility(showReconcileOptions ? View.VISIBLE : View.GONE);
 		chkReconciled.setChecked(transactionData.reconciled);
 		final int id = transactionData.id;
 		chkReconciled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()

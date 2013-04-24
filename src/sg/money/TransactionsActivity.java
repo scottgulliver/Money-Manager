@@ -74,8 +74,6 @@ public class TransactionsActivity extends BaseFragmentActivity
     {
     	tabsAdapter = new TabsAdapter(this, viewPager);
     	actionBar.removeAllTabs();
-		
-		updateCanReconcile(true);
         
         accounts = DatabaseManager.getInstance(TransactionsActivity.this).GetAllAccounts();
         
@@ -94,6 +92,8 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        tabsAdapter.addTab(actionBar.newTab().setText("(No accounts)"), EmptyListFragment.class, tabBundle, null);
         	viewPager.setCurrentItem(0);
         }
+		 
+		updateCanReconcile(true);
         
         selectedAccount = !accounts.isEmpty() ? accounts.get(0) : null;
 
@@ -243,10 +243,10 @@ public class TransactionsActivity extends BaseFragmentActivity
         reconcileTransactions.setVisible(useReconcile);
 		showHideReconciled.setVisible(useReconcile && !inReconcileMode);
 		reconcileTransactions.setTitle(inReconcileMode ? "Finish Reconciling" : "Reconcile Transactions");
-		showHideReconciled.setTitle(showReconciled ? "Hide Reconciled Transactions" : "Show Reconciled Transactions");
+		showHideReconciled.setTitle(showReconciled ? "Hide Reconciled" : "Show Reconciled");
         
 		this.menu = menu;
-        return true; 
+        return true;
     }
     
     @Override
