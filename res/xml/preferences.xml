@@ -38,4 +38,10 @@
             android:title="@string/pref_disablepin_title" />
     </PreferenceScreen>
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/pref_usereconcile_key"
+        android:summary="@string/pref_usereconcile_summ"
+        android:title="@string/pref_usereconcile_title" />
+
 </PreferenceScreen>

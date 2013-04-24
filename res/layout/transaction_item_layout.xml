@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemlinearlayout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
+	
+	<CheckBox
+		android:id="@+id/chkReconciled"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+	
+	<RelativeLayout 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal" >
 
-    <TextView
+  	  	<TextView
         android:id="@+id/transaction_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +28,7 @@
         android:text="@string/design_transaction_desc"
         android:textColor="#222222" />
     
-    <TextView
+    	<TextView
         android:id="@+id/transaction_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +40,7 @@
         android:text="@string/design_transaction_cat"
         android:textColor="#888888" />
     
-    <TextView
+    	<TextView
         android:id="@+id/transaction_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +52,7 @@
         android:text="@string/design_transaction_date"
         android:textColor="#888888" />
 
-	<TextView
+		<TextView
 	    android:id="@+id/transaction_value"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -55,4 +65,5 @@
 	    android:text="@string/design_transaction_value"
 	    android:textColor="#669900" />
 
-</RelativeLayout>
+	</RelativeLayout>
+</LinearLayout>

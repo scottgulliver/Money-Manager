@@ -27,6 +27,7 @@ public class TransactionsActivity extends BaseFragmentActivity
     static final int REQUEST_SETTINGS = 10;
     
     static final String SETTING_LASTACCOUNTVIEWED = "SETTING_LASTACCOUNTVIEWED";
+	static final String SETTING_SHOWRECONCILED = "SETTING_SHOWRECONCILED";
     
     ViewPager viewPager;
     static TabsAdapter tabsAdapter;
@@ -39,6 +40,10 @@ public class TransactionsActivity extends BaseFragmentActivity
     ActionBar actionBar;
     
     Menu menu;
+	
+	private boolean useReconcile;
+	private boolean inReconcileMode;
+	private boolean showReconciled;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -53,6 +58,9 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        viewPager.setOffscreenPageLimit(3);
 
 	        actionBar = getSupportActionBar();
+			
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+			showReconciled = sharedPref.getBoolean(SETTING_SHOWRECONCILED, true);
 	        
 	        UpdateUI();
     	}
@@ -66,6 +74,8 @@ public class TransactionsActivity extends BaseFragmentActivity
     {
     	tabsAdapter = new TabsAdapter(this, viewPager);
     	actionBar.removeAllTabs();
+		
+		updateCanReconcile(true);
         
         accounts = DatabaseManager.getInstance(TransactionsActivity.this).GetAllAccounts();
         
@@ -184,10 +194,6 @@ public class TransactionsActivity extends BaseFragmentActivity
 		
 		public void onPageScrollStateChanged(int state)
 		{
-			if (state ==1)
-			{
-				
-			}
 		}
 		
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -206,13 +212,40 @@ public class TransactionsActivity extends BaseFragmentActivity
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		}
 	}
+	
+	private void updateCanReconcile(boolean updateMenu)
+	{
+		boolean oldValue = useReconcile;
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		useReconcile = sharedPref.getBoolean(getString(R.string.pref_usereconcile_key), false);
+		
+		if (!useReconcile)
+			inReconcileMode = false;
+			
+		if ((oldValue != useReconcile) && updateMenu)
+		{
+			menu.clear();
+			onCreateOptionsMenu(menu);
+		}
+	}
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_transactions, menu);
-        MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
+       
+	    MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
         addTransaction.setVisible(accounts.size() > 0);
-        this.menu = menu;
+		
+		updateCanReconcile(false);
+
+        MenuItem reconcileTransactions = menu.findItem(R.id.menu_reconcile);
+		MenuItem showHideReconciled = menu.findItem(R.id.menu_showhidereconciled);
+        reconcileTransactions.setVisible(useReconcile);
+		showHideReconciled.setVisible(useReconcile && !inReconcileMode);
+		reconcileTransactions.setTitle(inReconcileMode ? "Finish Reconciling" : "Reconcile Transactions");
+		showHideReconciled.setTitle(showReconciled ? "Hide Reconciled Transactions" : "Show Reconciled Transactions");
+        
+		this.menu = menu;
         return true; 
     }
     
@@ -264,6 +297,29 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        	startActivity(Intent.createChooser(emailIntent, "Send mail..."));
                 break;
             	}
+				
+			case R.id.menu_reconcile:{
+				inReconcileMode = !inReconcileMode;
+				UpdateTransactions();
+				menu.clear();
+				onCreateOptionsMenu(this.menu);
+				break;
+				}
+				
+			case R.id.menu_showhidereconciled:{
+					showReconciled = !showReconciled;
+					
+				// can this be done on exit / async?
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+				Editor editor = sharedPref.edit();
+				editor.putBoolean(SETTING_SHOWRECONCILED, showReconciled);
+				editor.commit();
+					
+				UpdateTransactions();
+				menu.clear();
+				onCreateOptionsMenu(this.menu);
+				break;
+			}
 	    	
 	        case R.id.menu_exit:{
 	        	finish();
@@ -271,6 +327,21 @@ public class TransactionsActivity extends BaseFragmentActivity
             	}
 	    }
 	    return true;
+	}
+	
+	public boolean isInReconcileMode()
+	{
+		return inReconcileMode;
+	}
+	
+	public boolean showReconciledTransactions()
+	{
+		return showReconciled || inReconcileMode || !useReconcile;
+	}
+	
+	public boolean useReconcile()
+	{
+		return useReconcile;
 	}
     
     protected void onListItemClick(AdapterView<?> l, View v, int position, long id)
@@ -327,6 +398,8 @@ public class TransactionsActivity extends BaseFragmentActivity
 	{
 		if (accounts.isEmpty())
 			return;
+			
+		updateCanReconcile(true);
 		
 		for(Fragment fragment : tabsAdapter.fragments)
 		{

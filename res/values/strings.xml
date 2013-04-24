@@ -33,6 +33,9 @@
     <string name="pref_disablepin_key">DISABLEPIN</string>
     <string name="pref_disablepin_title">Disable Pin Protection</string>
     <string name="pref_pinnumber_key">SAVEDPINNUMBER</string>
+    <string name="pref_usereconcile_key">USERECONCILE</string>
+    <string name="pref_usereconcile_title">Enable Reconciliation</string>
+    <string name="pref_usereconcile_summ">Allow for transactions to be manually reconciled.</string>
 
     <string-array name="Currencies_Entries">
         <item>$ (USD)</item>
@@ -124,5 +127,7 @@
 	<string name="hide_from_reports">Hide from reports</string>
 	<string name="hide_from_reports_detail">Hide from Overview and Budgets</string>
 	<string name="transfer_to">Transfer to</string>
+	<string name="reconcile_transactions">Reconcile Transactions</string>
+	<string name="show_hide_reconciled">Show Reconciled Transactions"</string>
 
 </resources>

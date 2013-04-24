@@ -15,6 +15,7 @@ public class Transaction
 	public boolean isTransfer;
 	public int transferToTransaction;
 	public int transferFromTransaction;
+	public boolean reconciled;
 	
 	public double getRealValue(Context context)
 	{
