@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -43,6 +44,7 @@ public class OverviewActivity extends BaseActivity
 	ScrollView scrollView;
 	TextView txtMonth;
 	TextView txtSpendingByCategory;
+	CheckBox chkShowSubcategories;
 	
 	PopupWindow popupWindow;
 	TextView txtTitle;
@@ -62,12 +64,13 @@ public class OverviewActivity extends BaseActivity
         
         //get the controls
         txtMonth = (TextView)findViewById(R.id.txtMonth);
-        lstCategories = (ListView)findViewById(R.id.lstCategories);
+        lstCategories = (ListView)findViewById(R.id.lstCategories1);
 		txtIncome = (TextView)findViewById(R.id.txtIncome);
 		txtExpenditure = (TextView)findViewById(R.id.txtExpenditure);
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 		pieChartView = (PieChartView)findViewById(R.id.pieChartView);
 		txtSpendingByCategory = (TextView)findViewById(R.id.txtSpendingByCategory);
+		chkShowSubcategories = (CheckBox)findViewById(R.id.chkShowSubcategories);
         
         //set up the collections
         transactions = DatabaseManager.getInstance(OverviewActivity.this).GetAllTransactions();
@@ -128,12 +131,14 @@ public class OverviewActivity extends BaseActivity
     		txtSpendingByCategory.setText("(No spending to show)");
     		pieChartView.setVisibility(View.GONE);
     		lstCategories.setVisibility(View.GONE);
+    		chkShowSubcategories.setVisibility(View.GONE);
     	}
     	else
     	{
     		txtSpendingByCategory.setText("Spending per category");
     		pieChartView.setVisibility(View.VISIBLE);
     		lstCategories.setVisibility(View.VISIBLE);
+    		chkShowSubcategories.setVisibility(View.VISIBLE);
     	}
     	
     	for(Transaction transaction : transactions)

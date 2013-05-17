@@ -20,16 +20,6 @@
         android:textColor="#333333"
         android:textSize="20sp"
         tools:context=".OverviewActivity" />
-    
-    <ListView
-        android:id="@+id/lstCategories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/pieChartView"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="15dp"
-        tools:ignore="NestedScrolling" />
 
     <TextView
         android:id="@+id/textView2"
@@ -83,6 +73,23 @@
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignLeft="@+id/txtIncome"
         android:text="@string/design_overview_spend" />
+    
+    <ListView
+        android:id="@+id/lstCategories1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/chkShowSubcategories"
+        android:layout_centerVertical="true"
+        tools:ignore="NestedScrolling" />
+
+    <CheckBox
+        android:id="@+id/chkShowSubcategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/pieChartView"
+        android:text="Show Subcategories" />
 
 </RelativeLayout>
 </ScrollView>

@@ -6,24 +6,28 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
+import android.os.Handler;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public class CategoriesActivity extends BaseActivity implements OnItemLongClickListener, OnItemClickListener
+public class CategoriesActivity extends BaseActivity implements OnItemLongClickListener, OnGroupClickListener, OnChildClickListener
 {
 	static final int REQUEST_ADDCATEGORY = 0;
 
-	ListView categoriesList;
+	ExpandableListView categoriesList;
 	ArrayList<Category> categories;
-	CategoryListAdapter adapter;
+	CategoriesExpandableListAdapter adapter;
 	ActionMode actionMode;
 	
 	@Override
@@ -32,38 +36,45 @@ public class CategoriesActivity extends BaseActivity implements OnItemLongClickL
 		setContentView(R.layout.activity_categories);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		categoriesList = (ListView) findViewById(R.id.categoriesList);
+		categoriesList = (ExpandableListView)findViewById(R.id.categoriesList);
         
         View emptyView = findViewById(android.R.id.empty);
     	((TextView)findViewById(R.id.empty_text)).setText("No categories");
     	((TextView)findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
     	categoriesList.setEmptyView(emptyView);
+    	
 
         actionMode = null;
         categoriesList.setItemsCanFocus(false);
         categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        categoriesList.setOnItemClickListener(this);
+        categoriesList.setOnGroupClickListener(this);
+        categoriesList.setOnChildClickListener(this);
         categoriesList.setOnItemLongClickListener(this);
 
+        /*(new Handler()).post(new Runnable() {
+            public void run() {
+                categoriesList.setIndicatorBounds((int)(categoriesList.getRight()- Misc.dipsToPixels(getResources(), 40)), categoriesList.getRight());
+            }
+        });*/
 		UpdateList();
 	}
-
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (actionMode == null)
+	
+	private Category getCategoryFromId(int id)
+	{
+		for(Category category : categories)
 		{
-			onListItemClick(parent, view, position, id);
+			if (category.id == id)
+				return category;
 		}
-		else
-		{
-			changeItemCheckState(position, categoriesList.isItemChecked(position));
-		}
+		
+		return null;
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		if (actionMode == null) {
         	actionMode = startActionMode(new ModeCallback());
         }
-
+		
 		categoriesList.setItemChecked(position, !categoriesList.isItemChecked(position));
 		changeItemCheckState(position, categoriesList.isItemChecked(position));
         
@@ -104,8 +115,10 @@ public class CategoriesActivity extends BaseActivity implements OnItemLongClickL
 		categories = DatabaseManager.getInstance(CategoriesActivity.this)
 				.GetAllCategories();
 
-		adapter = new CategoryListAdapter(this, categories);
+		adapter = new CategoriesExpandableListAdapter(this, categories);
 		categoriesList.setAdapter(adapter);
+		for(int i = 0; i < adapter.getGroupCount(); i++)
+			categoriesList.expandGroup(i);
 	}
 
 	@Override
@@ -131,10 +144,6 @@ public class CategoriesActivity extends BaseActivity implements OnItemLongClickL
 		}
 		}
 		return true;
-	}
-
-	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
-    	EditItem(categories.get(position));
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -230,5 +239,28 @@ public class CategoriesActivity extends BaseActivity implements OnItemLongClickL
                 return false;
         }
         }
-    };
+    }
+
+	public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
+		onItemClick((int)adapter.getChildId(groupPosition, childPosition), adapter.getPosition(groupPosition, childPosition));
+		return true;
+	}
+
+	public boolean onGroupClick(ExpandableListView parent, View view, int groupPosition, long id) {
+		onItemClick((int)adapter.getGroupId(groupPosition), adapter.getPosition(groupPosition, -1));
+		return true;
+	}
+	
+	private void onItemClick(int categoryId, int position)
+	{
+		if (actionMode == null)
+		{
+	    	EditItem(getCategoryFromId(categoryId));
+		}
+		else
+		{
+			categoriesList.setItemChecked(position, !categoriesList.isItemChecked(position));
+			changeItemCheckState(position, categoriesList.isItemChecked(position));
+		}
+	}
 }

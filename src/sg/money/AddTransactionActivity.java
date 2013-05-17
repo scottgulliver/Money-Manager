@@ -90,6 +90,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
 		updateDateButtonText(c.getTime());
 
     	categories = DatabaseManager.getInstance(AddTransactionActivity.this).GetAllCategories();
+    	categories = Misc.getCategoriesInGroupOrder(categories);
     	
     	btnDate.setOnClickListener(new OnClickListener() {
     		 
@@ -326,7 +327,21 @@ public class AddTransactionActivity extends BaseFragmentActivity
     	for(Category category : categories)
     	{
     		if (category.income == isIncome)
-    			categoryNames.add(category.name);
+    		{
+    			String name = category.name;
+    			if (category.parentCategoryId != -1)
+    			{
+    				for(Category parentCategory : categories)
+    				{
+    					if (parentCategory.id == category.parentCategoryId)
+    					{
+    						name = parentCategory.name + " >> " + name;
+    						break;
+    					}
+    				}
+    			}
+    			categoryNames.add(name);
+    		}
     	}
     	
     	categoryNames.add(ADD_CATEGORY_STRING);

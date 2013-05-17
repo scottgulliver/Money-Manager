@@ -44,7 +44,7 @@ public class CategoryListAdapter extends BaseAdapter {
     
     public void SetSelected(int position, boolean selected)
     {
-    	Category item = categories.get(position);
+    	Category item = (Category)getItem(position);
     	if (selected && !selectedItems.contains(item))
     		selectedItems.add(item);
     	else if (!selected && selectedItems.contains(item))
@@ -75,10 +75,24 @@ public class CategoryListAdapter extends BaseAdapter {
         ImageView colorField = (ImageView)vi.findViewById(R.id.category_color);
  
         Category category = categories.get(position);
- 
+
         //set values
-        nameText.setText(category.name);
-        
+        if (category.parentCategoryId == -1)
+        {
+            nameText.setText(category.name);
+        }
+        else
+        {
+        	for(Category parentCategory : categories)
+        	{
+        		if (parentCategory.id == category.parentCategoryId)
+        		{
+                    nameText.setText(parentCategory.name + " >> " + category.name);
+        			break;
+        		}
+        	}
+        }
+ 
         if (customStrings == null)
         	typeText.setText(category.income ? "Income" : "Expense");
         else

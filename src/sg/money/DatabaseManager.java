@@ -50,6 +50,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	static final String colCategoriesIsIncome="IsIncome";
 	static final String colCategoriesIsPermanent="IsPermanent";
 	static final String colCategoriesUseInReports="UseInReports";
+	static final String colCategoriesParent="ParentCategory";
 
 	static final String accountsTable="Accounts";
 	static final String colAccountsID="AccountID";
@@ -105,7 +106,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 20); 
+		super(context, dbName, null, 21); 
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -137,7 +138,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		sql = "CREATE TABLE "+categoriesTable+" ("+colCategoriesID+ " INTEGER PRIMARY KEY , "+
 		colCategoriesName+ " TEXT , "+colCategoriesColor+" INTEGER , "+colCategoriesIsIncome+" INTEGER, "+
-		colCategoriesIsPermanent+" INTEGER default 0, "+colCategoriesUseInReports+" INTEGER default 1)";
+		colCategoriesIsPermanent+" INTEGER default 0, "+colCategoriesUseInReports+" INTEGER default 1, "+colCategoriesParent+" INTEGER default -1)";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -375,7 +376,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (incomeStartBalance == null)
 			{
-				AddCategory(new Category("Starting Balance", -2416974, true, true, false));
+				AddCategory(new Category("Starting Balance", -2416974, true, true, false, -1));
 			}
 			else
 			{
@@ -385,7 +386,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			
 			if (expenseStartBalance == null)
 			{
-				AddCategory(new Category("Starting Balance", -1416974, false, true, false));
+				AddCategory(new Category("Starting Balance", -1416974, false, true, false, -1));
 			}
 			else
 			{
@@ -442,7 +443,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (incomeUncategorised == null)
 			{
-				AddCategory(new Category("Uncategorised", -3743758, true, true, true));
+				AddCategory(new Category("Uncategorised", -3743758, true, true, true, -1));
 			}
 			else
 			{
@@ -452,7 +453,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (expenseUncategorised == null)
 			{
-				AddCategory(new Category("Uncategorised", -1743758, false, true, true));
+				AddCategory(new Category("Uncategorised", -1743758, false, true, true, -1));
 			}
 			else
 			{
@@ -471,6 +472,11 @@ public class DatabaseManager extends SQLiteOpenHelper
 		if (oldVersion <= 19)
 		{
 			execSQL(db, "ALTER TABLE "+transTable+" ADD COLUMN "+colTransReconciled+" INTEGER default 0");
+		}
+		
+		if (oldVersion <= 20)
+		{
+			execSQL(db, "ALTER TABLE "+categoriesTable+" ADD COLUMN "+colCategoriesParent+" INTEGER default -1");
 		}
 
 		clearDatabase();
@@ -792,13 +798,15 @@ public class DatabaseManager extends SQLiteOpenHelper
 										+colCategoriesColor+","
 										+colCategoriesIsIncome+","
 										+colCategoriesIsPermanent+","
-										+colCategoriesUseInReports+
+										+colCategoriesUseInReports+","
+										+colCategoriesParent+
 											") VALUES ('"
 										+name+"',"
 										+category.color+","
 										+(category.income?1:0)+","
 										+(category.isPermanent?1:0)+","
-										+(category.useInReports?1:0)
+										+(category.useInReports?1:0)+","
+										+category.parentCategoryId
 										+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
@@ -825,7 +833,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colCategoriesID+","+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+" FROM "+categoriesTable+"";
+			String sql = "SELECT "+colCategoriesID+","+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+","+colCategoriesParent+" FROM "+categoriesTable+"";
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -842,6 +850,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				caetgory.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
 				caetgory.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
 				caetgory.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
+				caetgory.parentCategoryId = c.getInt((c.getColumnIndex(colCategoriesParent)));
 				categories.add(caetgory);
 				
 	       	    c.moveToNext();
@@ -867,7 +876,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db=this.getReadableDatabase();
 			
-			String sql = "SELECT "+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+" FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+id;
+			String sql = "SELECT "+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+","+colCategoriesParent+" FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+id;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -883,6 +892,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				category.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
 				category.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
 				category.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
+				category.parentCategoryId = c.getInt((c.getColumnIndex(colCategoriesParent)));
 				
 	       	    c.moveToNext();
 	        }
@@ -941,6 +951,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 							+","+colCategoriesIsPermanent+" = "+(category.isPermanent?"1":"0")
 							+","+colCategoriesUseInReports+" = "+(category.useInReports?"1":"0")
 							+","+colCategoriesColor+" = "+(category.color)
+							+","+colCategoriesParent+" = "+(category.parentCategoryId)
 							+" WHERE "+colCategoriesID+" = "+category.id;
 		Log.i("SQL", sql);
 		db.execSQL(sql);
