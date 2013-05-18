@@ -148,12 +148,10 @@ public class CategoriesActivity extends BaseActivity implements OnItemLongClickL
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case REQUEST_ADDCATEGORY: {
-			if (resultCode == RESULT_OK) {
-				UpdateList();
+			case REQUEST_ADDCATEGORY: {
+					UpdateList();
+				break;
 			}
-			break;
-		}
 		}
 	}
 	

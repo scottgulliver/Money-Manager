@@ -19,8 +19,10 @@ public class CategoryListAdapter extends BaseAdapter {
     private static LayoutInflater inflater=null;
     private ArrayList<Category> selectedItems;
     final int COLOR_SELECTED = Color.rgb(133, 194, 215);
+    private Activity activity;
  
     public CategoryListAdapter(Activity activity, ArrayList<Category> categories) {
+    	this.activity = activity;
         this.categories = categories;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         selectedItems = new ArrayList<Category>();
@@ -64,6 +66,11 @@ public class CategoryListAdapter extends BaseAdapter {
         return position;
     }
     
+    private String getCategoryName(Category category)
+    {
+    	return Misc.getCategoryName(category, activity);
+    }
+    
     @SuppressLint("NewApi")
 	public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
@@ -77,21 +84,7 @@ public class CategoryListAdapter extends BaseAdapter {
         Category category = categories.get(position);
 
         //set values
-        if (category.parentCategoryId == -1)
-        {
-            nameText.setText(category.name);
-        }
-        else
-        {
-        	for(Category parentCategory : categories)
-        	{
-        		if (parentCategory.id == category.parentCategoryId)
-        		{
-                    nameText.setText(parentCategory.name + " >> " + category.name);
-        			break;
-        		}
-        	}
-        }
+        nameText.setText(getCategoryName(category));
  
         if (customStrings == null)
         	typeText.setText(category.income ? "Income" : "Expense");

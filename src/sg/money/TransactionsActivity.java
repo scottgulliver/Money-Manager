@@ -2,15 +2,11 @@ package sg.money;
 
 import java.util.ArrayList;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +14,11 @@ import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class TransactionsActivity extends BaseFragmentActivity
 {
@@ -48,26 +49,19 @@ public class TransactionsActivity extends BaseFragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	try
-    	{
-	        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-	        setContentView(R.layout.activity_transactions);
-	        viewPager = (ViewPager) findViewById(R.id.pager);
-	        titleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
-	        viewPager.setOffscreenPageLimit(3);
+        setContentView(R.layout.activity_transactions);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        titleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
+        viewPager.setOffscreenPageLimit(3);
 
-	        actionBar = getSupportActionBar();
-			
-			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-			showReconciled = sharedPref.getBoolean(SETTING_SHOWRECONCILED, true);
-	        
-	        UpdateUI();
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
+        actionBar = getSupportActionBar();
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		showReconciled = sharedPref.getBoolean(SETTING_SHOWRECONCILED, true);
+        
+        UpdateUI();
     }
     
     private void UpdateUI()
@@ -106,8 +100,11 @@ public class TransactionsActivity extends BaseFragmentActivity
 	        selectedAccount = accounts.get(selectedPosition);
         }
         
-        this.menu.clear();
-        this.onCreateOptionsMenu(this.menu);
+        if (menu != null)
+        {
+	        this.menu.clear();
+	        this.onCreateOptionsMenu(this.menu);
+        }
     }
     
     @Override
@@ -222,7 +219,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 		if (!useReconcile)
 			inReconcileMode = false;
 			
-		if ((oldValue != useReconcile) && updateMenu)
+		if ((oldValue != useReconcile) && updateMenu && menu != null)
 		{
 			menu.clear();
 			onCreateOptionsMenu(menu);
@@ -354,11 +351,8 @@ public class TransactionsActivity extends BaseFragmentActivity
 		{
 			case REQUEST_ADDTRANSACTION:
 			{
-				if (resultCode == RESULT_OK)
-				{
-					UpdateTransactions();
-					//((TransactionsFragment)currentFragment).UpdateList(); FIX THIS AND ADD BACK IN
-				}
+				UpdateTransactions();
+				//((TransactionsFragment)currentFragment).UpdateList(); FIX THIS AND ADD BACK IN
 				break;
 			}
 			case REQUEST_VIEWACCOUNTS:
@@ -387,6 +381,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 			case REQUEST_VIEWCATEGORIES:
 			case REQUEST_SETTINGS:
 			{
+				UpdateUI();
 				UpdateTransactions();
 				break;
 			}

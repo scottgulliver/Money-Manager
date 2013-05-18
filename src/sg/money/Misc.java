@@ -57,7 +57,7 @@ public class Misc
 		else if (currencyCode.equals("TWD"))
 			formattedValue = "$" + formattedValue;
 		else if (currencyCode.equals("INR"))
-			formattedValue = "p" + formattedValue;
+			formattedValue = "₹" + formattedValue;
 		else if (currencyCode.equals("VND"))
 			formattedValue = "d" + formattedValue;
 		
@@ -133,6 +133,29 @@ public class Misc
     	}
     	
     	return orderedList;
+    }
+    
+    static String getCategoryName(Category category, Context context)
+    {
+    	ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
+    	return getCategoryName(category, categories);
+    }
+    
+    static String getCategoryName(Category category, ArrayList<Category> categories)
+    {
+    	String name = category.name;
+		if (category.parentCategoryId != -1)
+		{
+			for(Category parentCategory : categories)
+			{
+				if (parentCategory.id == category.parentCategoryId)
+				{
+					name = parentCategory.name + " >> " + name;
+					break;
+				}
+			}
+		}
+		return name;
     }
 
     static class CategoryComparator implements Comparator<Category> {

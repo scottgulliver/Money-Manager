@@ -126,16 +126,17 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         	}
     		else
     		{
-    			for(Category category : currentCategories)
+    			if (editCategory.isPermanent)
+    				spnParent.setEnabled(false);
+    			else
     			{
-    				if (category.parentCategoryId == editCategory.id)
-    				{
-    					spnParent.setEnabled(false);
-    					/*spnParent.setOnClickListener(new OnClickListener() {
-							public void onClick(View v) {
-								Toast.makeText(AddCategoryActivity.this, "This category contains subcategories, so cannot be made a subcategory.", Toast.LENGTH_SHORT).show();
-							} });*/
-    				}
+	    			for(Category category : currentCategories)
+	    			{
+	    				if (category.parentCategoryId == editCategory.id)
+	    				{
+	    					spnParent.setEnabled(false);
+	    				}
+	    			}
     			}
     		}
         }
@@ -201,7 +202,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
     	parentOptions.add("< None >");
     	for(Category category : currentCategories)
     	{
-    		if (category.parentCategoryId == -1 && category.income == isIncome)
+    		if (category.parentCategoryId == -1 && category.income == isIncome && !category.isPermanent)
     		{
     			parentOptions.add(category.name);
     		}

@@ -295,6 +295,11 @@ public class AddTransactionActivity extends BaseFragmentActivity
 		}
     }
     
+    private String getCategoryName(Category category)
+    {
+    	return Misc.getCategoryName(category, categories);
+    }
+    
     private void PopulateCategories()
     {
     	setNewCategoryFieldsVisible(false);
@@ -328,19 +333,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
     	{
     		if (category.income == isIncome)
     		{
-    			String name = category.name;
-    			if (category.parentCategoryId != -1)
-    			{
-    				for(Category parentCategory : categories)
-    				{
-    					if (parentCategory.id == category.parentCategoryId)
-    					{
-    						name = parentCategory.name + " >> " + name;
-    						break;
-    					}
-    				}
-    			}
-    			categoryNames.add(name);
+    			categoryNames.add(getCategoryName(category));
     		}
     	}
     	
@@ -355,9 +348,27 @@ public class AddTransactionActivity extends BaseFragmentActivity
 		//go to last selected category
 		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(AddTransactionActivity.this);
-		String lastSelectedCategory = isIncome ? sharedPref.getString("lastIncomeCategory", "") : sharedPref.getString("lastExpenseCategory", "");
-
-		if (!lastSelectedCategory.equals("") && categoryNames.contains(lastSelectedCategory))
+		String lastSelectedCategory = isIncome ? sharedPref.getString("lastIncomeCategory", "") : sharedPref.getString("lastExpenseCategory", ""); // legacy, preferred is id
+		int lastSelectedCategoryId = isIncome ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
+		
+		if (lastSelectedCategoryId != -1)
+		{
+			Category category = null;
+			for(Category cat : categories)
+			{
+				if (cat.id == lastSelectedCategoryId)
+				{
+					category = cat;
+					break;
+				}
+			}
+			
+			if (category != null)
+			{
+				spnCategory.setSelection(categoryNames.indexOf(getCategoryName(category)));
+			}
+		}
+		else if (!lastSelectedCategory.equals("") && categoryNames.contains(lastSelectedCategory))
 			spnCategory.setSelection(categoryNames.indexOf(lastSelectedCategory));
     }
     
@@ -446,7 +457,7 @@ public class AddTransactionActivity extends BaseFragmentActivity
     	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
     	for(Category category : categories)
     	{
-    		if (category.name.equals(selectedCategoryName) && category.income == isIncome)
+    		if (getCategoryName(category).equals(selectedCategoryName) && category.income == isIncome)
     		{
     			selectedCategory = category;
     			break;
@@ -508,9 +519,9 @@ public class AddTransactionActivity extends BaseFragmentActivity
     		Editor editor = sharedPref.edit();
     		
     		if (selectedCategory.income)
-    			editor.putString("lastIncomeCategory", selectedCategory.name);
+    			editor.putInt("lastIncomeCategoryId", selectedCategory.id);
     		else
-    			editor.putString("lastExpenseCategory", selectedCategory.name);
+    			editor.putInt("lastExpenseCategoryId", selectedCategory.id);
     					
     		editor.commit();
     	}
@@ -532,25 +543,36 @@ public class AddTransactionActivity extends BaseFragmentActivity
 						: editTransaction.getRelatedTransferTransaction(this);
     		}
     		
-    		//transfer from transaction
-    		fromTransaction.value = Double.valueOf(txtValue.getText().toString()) * -1.0f;
-    		fromTransaction.description = txtDesc.getText().toString().trim();
+    		double value = Double.valueOf(txtValue.getText().toString());
+
         	Calendar c = Calendar.getInstance();
         	c.setTime(buttonDate);
+    		
+    		//transfer from transaction
+    		fromTransaction.value = value * -1.0f;
+    		fromTransaction.description = txtDesc.getText().toString().trim();
         	fromTransaction.dateTime = c.getTime();
-        	fromTransaction.account = accountID;
-        	fromTransaction.dontReport = true;
-        	fromTransaction.transferFromTransaction = -1;
-        	fromTransaction.isTransfer = true;
 
     		//transfer to transaction
-        	toTransaction.value = Double.valueOf(txtValue.getText().toString());
+        	toTransaction.value = value;
         	toTransaction.description = txtDesc.getText().toString().trim();
         	toTransaction.dateTime = c.getTime();
-        	toTransaction.account = accountsMap.get(spnTransferAccount.getSelectedItem()).id;
-        	toTransaction.dontReport = true;
-    		toTransaction.transferToTransaction = -1;
-    		toTransaction.isTransfer = true;
+    		
+        	if (creatingNew)
+        	{
+        		fromTransaction.transferFromTransaction = -1;
+        		toTransaction.transferToTransaction = -1;
+            	fromTransaction.dontReport = true; 
+            	fromTransaction.isTransfer = true;
+            	toTransaction.dontReport = true;
+        		toTransaction.isTransfer = true;
+        	}
+        	
+        	if (creatingNew || !editTransaction.isReceivingParty())
+        	{
+            	fromTransaction.account = accountID;
+            	toTransaction.account = accountsMap.get(spnTransferAccount.getSelectedItem()).id;
+        	}
     		
     		if (creatingNew)
     		{
