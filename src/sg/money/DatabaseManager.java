@@ -33,6 +33,10 @@ public class DatabaseManager extends SQLiteOpenHelper
 	static final String colTransDate="Date";
 	static final String colTransAccount="AccountID";
 	static final String colTransDontReport="DontReport";
+	static final String colTransIsTransfer="IsTransfer";
+	static final String colTransToTrans="ToTrans";
+	static final String colTransFromTrans="FromTrans";
+	static final String colTransReconciled="Reconciled";
 
 	static final String configTable="Config";
 	static final String colConfigID="ConfigID";
@@ -46,6 +50,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	static final String colCategoriesIsIncome="IsIncome";
 	static final String colCategoriesIsPermanent="IsPermanent";
 	static final String colCategoriesUseInReports="UseInReports";
+	static final String colCategoriesParent="ParentCategory";
 
 	static final String accountsTable="Accounts";
 	static final String colAccountsID="AccountID";
@@ -101,7 +106,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 18); 
+		super(context, dbName, null, 21); 
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -110,9 +115,19 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		declareDatabase(db);
 		
-		String sql = "CREATE TABLE "+transTable+" ("+colTransID+ " INTEGER PRIMARY KEY , "+
-		colTransValue+ " REAL , "+colTransDesc+" TEXT , "+colTransCategory+" INTEGER , " +colTransDate+" DATETIME , "+
-		colTransAccount + " INTEGER, "+colTransDontReport+" INTEGER )";
+		String sql = "CREATE TABLE "+transTable+" ("+
+						colTransID+ " INTEGER PRIMARY KEY , "+
+						colTransValue+ " REAL , "+
+						colTransDesc+" TEXT , "+
+						colTransCategory+" INTEGER , "+
+						colTransDate+" DATETIME , "+
+						colTransAccount + " INTEGER, "+
+						colTransDontReport+" INTEGER ,"+
+						colTransIsTransfer + " INTEGER, "+
+						colTransFromTrans + " INTEGER, "+
+						colTransToTrans + " INTEGER, "+
+						colTransReconciled + " INTEGER default 0"+
+					")";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -123,7 +138,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		sql = "CREATE TABLE "+categoriesTable+" ("+colCategoriesID+ " INTEGER PRIMARY KEY , "+
 		colCategoriesName+ " TEXT , "+colCategoriesColor+" INTEGER , "+colCategoriesIsIncome+" INTEGER, "+
-		colCategoriesIsPermanent+" INTEGER default 0, "+colCategoriesUseInReports+" INTEGER default 1)";
+		colCategoriesIsPermanent+" INTEGER default 0, "+colCategoriesUseInReports+" INTEGER default 1, "+colCategoriesParent+" INTEGER default -1)";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -361,7 +376,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (incomeStartBalance == null)
 			{
-				AddCategory(new Category("Starting Balance", -2416974, true, true, false));
+				AddCategory(new Category("Starting Balance", -2416974, true, true, false, -1));
 			}
 			else
 			{
@@ -371,7 +386,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			
 			if (expenseStartBalance == null)
 			{
-				AddCategory(new Category("Starting Balance", -1416974, false, true, false));
+				AddCategory(new Category("Starting Balance", -1416974, false, true, false, -1));
 			}
 			else
 			{
@@ -428,7 +443,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (incomeUncategorised == null)
 			{
-				AddCategory(new Category("Uncategorised", -3743758, true, true, true));
+				AddCategory(new Category("Uncategorised", -3743758, true, true, true, -1));
 			}
 			else
 			{
@@ -438,7 +453,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 			if (expenseUncategorised == null)
 			{
-				AddCategory(new Category("Uncategorised", -1743758, false, true, true));
+				AddCategory(new Category("Uncategorised", -1743758, false, true, true, -1));
 			}
 			else
 			{
@@ -447,7 +462,30 @@ public class DatabaseManager extends SQLiteOpenHelper
 			}
 		}
 		
+		if (oldVersion <= 18)
+		{
+			execSQL(db, "ALTER TABLE "+transTable+" ADD COLUMN "+colTransIsTransfer+" INTEGER");
+			execSQL(db, "ALTER TABLE "+transTable+" ADD COLUMN "+colTransFromTrans+" INTEGER");
+			execSQL(db, "ALTER TABLE "+transTable+" ADD COLUMN "+colTransToTrans+" INTEGER");
+		}
+
+		if (oldVersion <= 19)
+		{
+			execSQL(db, "ALTER TABLE "+transTable+" ADD COLUMN "+colTransReconciled+" INTEGER default 0");
+		}
+		
+		if (oldVersion <= 20)
+		{
+			execSQL(db, "ALTER TABLE "+categoriesTable+" ADD COLUMN "+colCategoriesParent+" INTEGER default -1");
+		}
+
 		clearDatabase();
+	}
+	
+	private void execSQL(SQLiteDatabase db, String sql)
+	{
+		Log.i("SQL", sql);
+		db.execSQL(sql);
 	}
 	
 	
@@ -458,11 +496,38 @@ public class DatabaseManager extends SQLiteOpenHelper
 		String desc = trans.description.replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
-		String sql = "INSERT INTO "+transTable+" ("+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+","+colTransAccount+","+colTransDontReport+") VALUES ("+
-								trans.value+",'"+desc+"',"+trans.category+",'"+df.format(trans.dateTime)+"',"+trans.account+","+(trans.dontReport?1:0)+")";
+		String sql = "INSERT INTO "+transTable+" ("
+						+colTransValue+","
+						+colTransDesc+","
+						+colTransCategory+","
+						+colTransDate+","
+						+colTransAccount+","
+						+colTransDontReport+","
+						+colTransIsTransfer+","
+						+colTransToTrans+","
+						+colTransFromTrans+","
+						+colTransReconciled
+						+") VALUES ("
+						+trans.value+",'"
+						+desc+"',"
+						+trans.category+",'"
+						+df.format(trans.dateTime)+"',"
+						+trans.account+","
+						+(trans.dontReport?1:0)+","
+						+(trans.dontReport?1:0)+","
+						+trans.transferToTransaction+","
+						+trans.transferFromTransaction+","
+						+(trans.reconciled?1:0)
+						+")";
 		Log.i("SQL", sql);
 		
 		db.execSQL(sql);
+		
+		sql = "SELECT MAX("+colTransID+") FROM "+transTable;
+		Cursor c = db.rawQuery(sql, null);
+		c.moveToFirst();
+		trans.id = c.getInt(0);
+		c.close();
 	}
 	
 	public ArrayList<Transaction> GetAllTransactions(Date startDate, Date endDate)
@@ -471,7 +536,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+" FROM "+transTable;
+			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+","+colTransIsTransfer+","+colTransToTrans+","+colTransFromTrans+","+colTransReconciled+" FROM "+transTable;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -490,6 +555,10 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.dateTime = theDate;
 				transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
 				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+				transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+				transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
+				transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
+				transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 				
 				if (transaction.dateTime.compareTo(startDate) >= 0 && transaction.dateTime.compareTo(endDate) <= 0)
 					transactions.add(transaction);
@@ -517,7 +586,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+" FROM "+transTable+"";
+			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+","+colTransIsTransfer+","+colTransToTrans+","+colTransFromTrans+","+colTransReconciled+" FROM "+transTable+"";
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -534,8 +603,12 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.category = c.getInt((c.getColumnIndex(colTransCategory)));
 				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
 				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+				transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+				transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
+				transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
 				transaction.dateTime = theDate;
 				transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
+				transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 				transactions.add(transaction);
 				
 	       	    c.moveToNext();
@@ -561,7 +634,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+","+colTransDontReport+" FROM "+transTable+" WHERE "+colTransAccount+" = "+accountID;
+			String sql = "SELECT "+colTransID+","+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransDate+","+colTransDontReport+","+colTransIsTransfer+","+colTransToTrans+","+colTransFromTrans+","+colTransReconciled+" FROM "+transTable+" WHERE "+colTransAccount+" = "+accountID;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -580,6 +653,10 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.dateTime = theDate;
 				transaction.account = accountID;
 				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+				transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+				transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
+				transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
+				transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 				transactions.add(transaction);
 				
 	       	    c.moveToNext();
@@ -605,7 +682,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db=this.getReadableDatabase();
 			
-			String sql = "SELECT "+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+" FROM "+transTable+" WHERE "+colTransID+"="+id;
+			String sql = "SELECT "+colTransValue+","+colTransDesc+","+colTransCategory+","+colTransAccount+","+colTransDate+","+colTransDontReport+","+colTransIsTransfer+","+colTransToTrans+","+colTransFromTrans+","+colTransReconciled+" FROM "+transTable+" WHERE "+colTransID+"="+id;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -619,6 +696,10 @@ public class DatabaseManager extends SQLiteOpenHelper
 			transaction.dateTime = theDate;
 			transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
 			transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+			transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+			transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
+			transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
+			transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 			transaction.id = id;
 			
 			c.close();
@@ -647,9 +728,18 @@ public class DatabaseManager extends SQLiteOpenHelper
 		String desc = trans.description.replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
-		String sql = "UPDATE "+transTable+" SET "+colTransValue+" = "+trans.value+", "+colTransDesc+" = '"
-						+desc+"', "+colTransCategory+" = "+trans.category+", "+colTransDate+" = '"
-						+df.format(trans.dateTime)+"', "+colTransAccount+" = "+trans.account+", "+colTransDontReport+" = "+(trans.dontReport?1:0)+" WHERE "+colTransID+" = "+trans.id;
+		String sql = "UPDATE "+transTable+" SET "+
+						colTransValue+" = "+trans.value+", "+
+						colTransDesc+" = '"+desc+"', "+
+						colTransCategory+" = "+trans.category+", "+
+						colTransDate+" = '"+df.format(trans.dateTime)+"', "+
+						colTransAccount+" = "+trans.account+", "+
+						colTransDontReport+" = "+(trans.dontReport?1:0)+", "+
+						colTransIsTransfer+" = "+(trans.isTransfer?1:0)+", "+
+						colTransFromTrans+" = "+trans.transferFromTransaction+", "+
+						colTransToTrans+" = "+trans.transferToTransaction+", "+
+						colTransReconciled+" = "+(trans.reconciled?1:0)+
+						" WHERE "+colTransID+" = "+trans.id;
 		Log.i("SQL", sql);
 		
 		db.execSQL(sql); 
@@ -708,13 +798,15 @@ public class DatabaseManager extends SQLiteOpenHelper
 										+colCategoriesColor+","
 										+colCategoriesIsIncome+","
 										+colCategoriesIsPermanent+","
-										+colCategoriesUseInReports+
+										+colCategoriesUseInReports+","
+										+colCategoriesParent+
 											") VALUES ('"
 										+name+"',"
 										+category.color+","
 										+(category.income?1:0)+","
 										+(category.isPermanent?1:0)+","
-										+(category.useInReports?1:0)
+										+(category.useInReports?1:0)+","
+										+category.parentCategoryId
 										+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
@@ -741,7 +833,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 			
-			String sql = "SELECT "+colCategoriesID+","+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+" FROM "+categoriesTable+"";
+			String sql = "SELECT "+colCategoriesID+","+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+","+colCategoriesParent+" FROM "+categoriesTable+"";
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -758,6 +850,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				caetgory.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
 				caetgory.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
 				caetgory.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
+				caetgory.parentCategoryId = c.getInt((c.getColumnIndex(colCategoriesParent)));
 				categories.add(caetgory);
 				
 	       	    c.moveToNext();
@@ -783,7 +876,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			SQLiteDatabase db=this.getReadableDatabase();
 			
-			String sql = "SELECT "+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+" FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+id;
+			String sql = "SELECT "+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+","+colCategoriesIsPermanent+","+colCategoriesUseInReports+","+colCategoriesParent+" FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+id;
 			Log.i("SQL", sql);
 			
 			Cursor c = db.rawQuery(sql , null);
@@ -799,6 +892,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				category.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
 				category.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
 				category.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
+				category.parentCategoryId = c.getInt((c.getColumnIndex(colCategoriesParent)));
 				
 	       	    c.moveToNext();
 	        }
@@ -821,11 +915,25 @@ public class DatabaseManager extends SQLiteOpenHelper
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
+		Category uncategorisedCategory = null;
+		ArrayList<Category> categories = GetAllCategories();
+		for(Category testCategory : categories)
+		{
+			if (testCategory.name.equals("Uncategorised") && (testCategory.income == category.income))
+			{
+				uncategorisedCategory = testCategory;
+				break;
+			}
+		}
+		
 		ArrayList<Transaction> transactions = GetAllTransactions();
 		for(Transaction transaction : transactions)
 		{
 			if (transaction.category == category.id)
-				DeleteTransaction(transaction);
+			{
+				transaction.category = uncategorisedCategory.id;
+				UpdateTransaction(transaction);
+			}
 		}
 		
 		clearDatabase();
@@ -843,6 +951,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 							+","+colCategoriesIsPermanent+" = "+(category.isPermanent?"1":"0")
 							+","+colCategoriesUseInReports+" = "+(category.useInReports?"1":"0")
 							+","+colCategoriesColor+" = "+(category.color)
+							+","+colCategoriesParent+" = "+(category.parentCategoryId)
 							+" WHERE "+colCategoriesID+" = "+category.id;
 		Log.i("SQL", sql);
 		db.execSQL(sql);
@@ -947,16 +1056,45 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db=getDatabase(this, DATABASE_WRITE_MODE);
 		
-		String sql = "DELETE FROM "+accountsTable+" WHERE "+colAccountsID+" = "+account.id;
-		Log.i("SQL", sql);
-		db.execSQL(sql);
+		Category incomeUncategorised = null;
+		Category expenseUncategorised = null;
+		ArrayList<Category> categories = GetAllCategories();
+		for(Category category : categories)
+		{
+			if (category.name.equals("Uncategorised"))
+			{
+				if (category.income)
+					incomeUncategorised = category;
+				else
+					expenseUncategorised = category;
+			}
+		}
 		
 		ArrayList<Transaction> transactions = GetAllTransactions();
 		for(Transaction transaction : transactions)
 		{
 			if (transaction.account == account.id)
+			{
+				if (transaction.isTransfer)
+				{
+					//update the related entry, so that it still shows as an entry, but doesn't act as a transfer.
+					Transaction relatedTransaction = transaction.getRelatedTransferTransaction(_context);
+					relatedTransaction.description += " (" + relatedTransaction.getTransferDescription(_context) + ")";
+					relatedTransaction.category = relatedTransaction.isReceivingParty() 
+														? incomeUncategorised.id
+														: expenseUncategorised.id;
+					relatedTransaction.isTransfer = false;
+					relatedTransaction.transferToTransaction = -1;
+					relatedTransaction.transferFromTransaction = -1;
+					UpdateTransaction(relatedTransaction);
+				}
 				DeleteTransaction(transaction);
+			}
 		}
+		
+		String sql = "DELETE FROM "+accountsTable+" WHERE "+colAccountsID+" = "+account.id;
+		Log.i("SQL", sql);
+		db.execSQL(sql);
 		
 		clearDatabase();
 	}

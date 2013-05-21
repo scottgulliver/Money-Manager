@@ -2,9 +2,11 @@ package sg.money;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -55,7 +57,7 @@ public class Misc
 		else if (currencyCode.equals("TWD"))
 			formattedValue = "$" + formattedValue;
 		else if (currencyCode.equals("INR"))
-			formattedValue = "p" + formattedValue;
+			formattedValue = "₹" + formattedValue;
 		else if (currencyCode.equals("VND"))
 			formattedValue = "d" + formattedValue;
 		
@@ -110,4 +112,55 @@ public class Misc
 	    builder.setNegativeButton("Cancel", cancelClick);
 	    builder.create().show();
     }
+    
+    static ArrayList<Category> getCategoriesInGroupOrder(ArrayList<Category> categories)
+    {
+    	ArrayList<Category> orderedList = new ArrayList<Category>();
+    	
+    	Collections.sort(categories, new CategoryComparator());
+    	
+    	for(Category category : categories)
+    	{
+    		if (category.parentCategoryId == -1)
+    		{
+        		orderedList.add(category);
+    			for(Category subCategory : categories)
+    			{
+    				if (subCategory.parentCategoryId == category.id)
+    					orderedList.add(subCategory);
+    			}
+    		}
+    	}
+    	
+    	return orderedList;
+    }
+    
+    static String getCategoryName(Category category, Context context)
+    {
+    	ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
+    	return getCategoryName(category, categories);
+    }
+    
+    static String getCategoryName(Category category, ArrayList<Category> categories)
+    {
+    	String name = category.name;
+		if (category.parentCategoryId != -1)
+		{
+			for(Category parentCategory : categories)
+			{
+				if (parentCategory.id == category.parentCategoryId)
+				{
+					name = parentCategory.name + " >> " + name;
+					break;
+				}
+			}
+		}
+		return name;
+    }
+
+    static class CategoryComparator implements Comparator<Category> {
+	    public int compare(Category o1, Category o2) {
+	        return Double.compare(o1.id, o2.id);
+	    }
+	}
 }

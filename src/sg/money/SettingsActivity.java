@@ -8,10 +8,15 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.widget.*;
+import android.content.DialogInterface.OnClickListener;
+import android.content.*;
 
 public class SettingsActivity extends SherlockPreferenceActivity 
 {
 	CheckBoxPreference usePinProtectionPreference;
+	CheckBoxPreference useReconcilePreference;
 	EditTextPreference pinNumberPreference;
 	Preference enablePinPref;
 	Preference changePinPref;
@@ -25,9 +30,11 @@ public class SettingsActivity extends SherlockPreferenceActivity
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 
-		enablePinPref = (Preference) findPreference(resString(R.string.pref_enablepin_key));
-		changePinPref = (Preference) findPreference(resString(R.string.pref_changepin_key));
-		disablePinPref = (Preference) findPreference(resString(R.string.pref_disablepin_key));
+		// check deprecation?
+		enablePinPref = findPreference(resString(R.string.pref_enablepin_key));
+		changePinPref = findPreference(resString(R.string.pref_changepin_key));
+		disablePinPref = findPreference(resString(R.string.pref_disablepin_key));
+		useReconcilePreference = (CheckBoxPreference)findPreference(resString(R.string.pref_usereconcile_key));
 
 		conditionPreferences();
 
@@ -65,6 +72,18 @@ public class SettingsActivity extends SherlockPreferenceActivity
 						return false;
 					}
 				});
+				
+		useReconcilePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+			{
+
+				public boolean onPreferenceChange(Preference p1, Object p2)
+				{
+					boolean setting = (Boolean)p2;
+					if (setting)
+						showReconcileTransactionsDialog();
+					return true;
+				}
+		});
 	}
 
 	@Override
@@ -85,4 +104,22 @@ public class SettingsActivity extends SherlockPreferenceActivity
 	private String resString(int resId) {
 		return getResources().getString(resId);
 	}
+
+	private void showReconcileTransactionsDialog()
+	{
+		Misc.showConfirmationDialog(this, 
+			"Mark all existing transactions as reconciled?", 
+			new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
+					for(Transaction transaction : DatabaseManager.getInstance(SettingsActivity.this).GetAllTransactions())
+					{
+						if (!transaction.reconciled)
+						{
+							transaction.reconciled = true;
+							DatabaseManager.getInstance(SettingsActivity.this).UpdateTransaction(transaction);
+						}
+					}
+				}
+			});
+	}
+	
 }

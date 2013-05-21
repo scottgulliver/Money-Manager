@@ -23,11 +23,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class OverviewActivity extends BaseActivity
 {
@@ -43,6 +47,7 @@ public class OverviewActivity extends BaseActivity
 	ScrollView scrollView;
 	TextView txtMonth;
 	TextView txtSpendingByCategory;
+	CheckBox chkShowSubcategories;
 	
 	PopupWindow popupWindow;
 	TextView txtTitle;
@@ -62,18 +67,27 @@ public class OverviewActivity extends BaseActivity
         
         //get the controls
         txtMonth = (TextView)findViewById(R.id.txtMonth);
-        lstCategories = (ListView)findViewById(R.id.lstCategories);
+        lstCategories = (ListView)findViewById(R.id.lstCategories1);
 		txtIncome = (TextView)findViewById(R.id.txtIncome);
 		txtExpenditure = (TextView)findViewById(R.id.txtExpenditure);
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 		pieChartView = (PieChartView)findViewById(R.id.pieChartView);
 		txtSpendingByCategory = (TextView)findViewById(R.id.txtSpendingByCategory);
+		chkShowSubcategories = (CheckBox)findViewById(R.id.chkShowSubcategories);
         
         //set up the collections
         transactions = DatabaseManager.getInstance(OverviewActivity.this).GetAllTransactions();
     	Collections.sort(transactions, new DateComparator());
     	Collections.reverse(transactions);    	
     	categories = DatabaseManager.getInstance(OverviewActivity.this).GetAllCategories();
+    	categories = Misc.getCategoriesInGroupOrder(categories);
+    	
+    	chkShowSubcategories.setChecked(true);
+    	chkShowSubcategories.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				setData(currentMonth);
+			}}
+    	);
     	
     	if (savedInstanceState != null)
     	{
@@ -128,30 +142,16 @@ public class OverviewActivity extends BaseActivity
     		txtSpendingByCategory.setText("(No spending to show)");
     		pieChartView.setVisibility(View.GONE);
     		lstCategories.setVisibility(View.GONE);
+    		chkShowSubcategories.setVisibility(View.GONE);
     	}
     	else
     	{
     		txtSpendingByCategory.setText("Spending per category");
     		pieChartView.setVisibility(View.VISIBLE);
     		lstCategories.setVisibility(View.VISIBLE);
+    		chkShowSubcategories.setVisibility(View.VISIBLE);
     	}
     	
-    	for(Transaction transaction : transactions)
-    	{
-    		Category thisCategory = null;
-    		for(Category category : categories)
-    		{
-    			if (category.id == transaction.category)
-    			{
-    				thisCategory = category;
-    				break;
-    			}
-    		}
-    		if (!thisCategory.income)
-    		{
-    		}
-    	}
-		
     	
 		{RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) pieChartView.getLayoutParams();
 		DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -208,11 +208,46 @@ public class OverviewActivity extends BaseActivity
 		});
     }
     
+    private class CategoryValuePair
+    {
+    	public Category category;
+    	public double value;
+    	
+    	public CategoryValuePair(Category cat, double val)
+    	{
+    		category = cat;
+    		value = val;
+    	}
+    }
+    
+    private double getCategoryValue(Category category, boolean getSubcategoryValue)
+    {
+    	//get my value
+		double categoryValue = 0;
+		for(Transaction transaction : transactions)
+		{
+			if (transaction.dontReport)
+				continue;
+			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports && transaction.category == category.id)
+				categoryValue -= transaction.value;
+		} 
+		
+		if (getSubcategoryValue && category.parentCategoryId == -1)
+		{
+			for(Category subCat : categories)
+			{
+				if (subCat.parentCategoryId == category.id)
+					categoryValue += getCategoryValue(subCat, false);
+			}
+		}
+		
+		return categoryValue;
+    }
+    
     private void setSegments()
     {
 		categoriesShown = new ArrayList<Category>();
 		categoryStringsShown = new ArrayList<String>();
-		Random rnd = new Random(System.currentTimeMillis());
 		
 		ArrayList<PieChartSegment> categorySegments = new ArrayList<PieChartSegment>();
 		
@@ -226,31 +261,41 @@ public class OverviewActivity extends BaseActivity
 				total -= transaction.value;
 		}
 		
-		//add each category in turn
+		ArrayList<CategoryValuePair> segmentList = new ArrayList<CategoryValuePair>();
+		
 		for(Category category : categories)
 		{
 			if (category.income || !category.useInReports)
 				continue;
 			
-			double categoryValue = 0;
-			for(Transaction transaction : transactions)
-			{
-				if (transaction.dontReport)
-					continue;
-				if (transaction.category == category.id)
-					categoryValue -= transaction.value;
-			} 
+			if (!chkShowSubcategories.isChecked() && category.parentCategoryId != -1)
+				continue; // we will pick this up in the value of the parent
 			
-			if (categoryValue > 0d)
+			segmentList.add(new CategoryValuePair(
+					category, getCategoryValue(category, !chkShowSubcategories.isChecked())));
+		}
+		
+		total = 0;
+		for(CategoryValuePair catValPair : segmentList)
+		{
+			if (catValPair.value > 0d)
+			{
+				total += catValPair.value;
+			}
+		}
+		
+		//add each category in turn
+		for(CategoryValuePair catValPair : segmentList)
+		{
+			if (catValPair.value > 0d)
 			{
 				PieChartSegment categorySegment = new PieChartSegment();
-				categorySegment.angle = (float) ((categoryValue / total) * 360d);
-				categorySegment.color = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
-				categorySegment.color = category.color;
+				categorySegment.angle = (float) ((catValPair.value / total) * 360d);
+				categorySegment.color = catValPair.category.color;
 				categorySegments.add(categorySegment);
-				categoriesShown.add(category);
+				categoriesShown.add(catValPair.category);
 				DecimalFormat df = new DecimalFormat("#.##");
-				categoryStringsShown.add(Misc.formatValue(OverviewActivity.this, categoryValue) + "  -  " + df.format((categoryValue / total)*100) + "%");
+				categoryStringsShown.add(Misc.formatValue(OverviewActivity.this, catValPair.value) + "  -  " + df.format((catValPair.value / total)*100) + "%");
 			}
 		}
 		

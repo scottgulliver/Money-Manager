@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/categoriesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:groupIndicator="@null"
         tools:listitem="@layout/category_item_layout" />
 
     <include
@@ -17,4 +18,4 @@
         android:layout_height="match_parent"
         layout="@layout/empty_listview" />
 
-</RelativeLayout>
+</RelativeLayout> 

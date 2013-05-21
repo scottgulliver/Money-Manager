@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,8 +22,10 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 	ArrayList<Category> currentCategories;
 	EditText txtName;
 	Spinner spnType;
+	Spinner spnParent;
 	ImageView imgColor;
 	ArrayList<String> options;
+	ArrayList<String> parentOptions;
 	Category editCategory; 
 	int currentColor;
 	
@@ -40,6 +44,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         txtName = (EditText)findViewById(R.id.txtName);
         spnType = (Spinner)findViewById(R.id.spnType1);
         imgColor = (ImageView)findViewById(R.id.imgColor);
+        spnParent = (Spinner)findViewById(R.id.spnParent);
         
         imgColor.setOnClickListener(new OnClickListener() { 
 			public void onClick(View v) { ColorClicked(); } });
@@ -52,17 +57,26 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 				this,android.R.layout.simple_spinner_dropdown_item, options);
 
 		spnType.setAdapter(arrayAdapter);
-		
 
-		if (savedInstanceState != null)
-    	{
-			currentColor = savedInstanceState.getInt(STATE_COLOUR);
-    	}
-    	else
-    	{
-    		Random rnd = new Random(System.currentTimeMillis());
-    		currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
-    	}
+    	currentCategories = DatabaseManager.getInstance(this).GetAllCategories();
+    	
+    	spnType.post(new Runnable() {
+			public void run() {
+				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
+					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+						PopulateCategories();
+					}
+
+					public void onNothingSelected(AdapterView<?> arg0) {
+					}
+				});
+			}
+		});
+    	
+    	PopulateCategories();
+
+		Random rnd = new Random(System.currentTimeMillis());
+		currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
         
         //check if we are editing
 		editCategory = null;
@@ -70,6 +84,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         if (editId != -1)
         {
         	editCategory = DatabaseManager.getInstance(AddCategoryActivity.this).GetCategory(editId);
+        	currentCategories.remove(editCategory);
         	txtName.setText(editCategory.name);
         	spnType.setSelection(editCategory.income?1:0);
         	currentColor = editCategory.color;
@@ -84,11 +99,55 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         		spnType.setFocusableInTouchMode(false);
         		spnType.setClickable(false);
         	}
+        	
+        	if (editCategory.parentCategoryId != -1)
+        	{
+        		Category selectedCategory = null;
+        		for(Category category : currentCategories)
+        		{
+        			if (category.id == editCategory.parentCategoryId)
+        			{
+        				selectedCategory = category;
+        			}
+        		}
+        		
+        		if (selectedCategory != null)
+        		{
+        			spnType.setSelection(selectedCategory.income ? 0 : 1);
+        			for(int i = 0; i < parentOptions.size(); i++)
+        			{
+        				if (parentOptions.get(i).equals(selectedCategory.name))
+        				{
+        					spnParent.setSelection(i);
+        					break;
+        				}
+        			}
+        		}
+        	}
+    		else
+    		{
+    			if (editCategory.isPermanent)
+    				spnParent.setEnabled(false);
+    			else
+    			{
+	    			for(Category category : currentCategories)
+	    			{
+	    				if (category.parentCategoryId == editCategory.id)
+	    				{
+	    					spnParent.setEnabled(false);
+	    				}
+	    			}
+    			}
+    		}
+        }
+        
+        if (savedInstanceState != null)
+        {
+        	currentColor = savedInstanceState.getInt(STATE_COLOUR);
         }
 
     	imgColor.setBackgroundColor(currentColor);
     	
-    	currentCategories = DatabaseManager.getInstance(this).GetAllCategories();
     }
     
     @Override
@@ -135,10 +194,43 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 	    return true;
 	}
     
+    private void PopulateCategories()
+    {
+    	boolean isIncome = (spnType.getSelectedItemId() == 1);
+    	
+    	parentOptions = new ArrayList<String>();
+    	parentOptions.add("< None >");
+    	for(Category category : currentCategories)
+    	{
+    		if (category.parentCategoryId == -1 && category.income == isIncome && !category.isPermanent)
+    		{
+    			parentOptions.add(category.name);
+    		}
+    	}
+    	ArrayAdapter<String> parentArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, parentOptions);
+    	spnParent.setAdapter(parentArrayAdapter);
+    }
+    
     private void ColorClicked()
     {
     	//launch the color picker
     	new ColorPickerDialog(this, this, currentColor).show();
+    }
+    
+    private int getSelectedParentId()
+    {
+    	String selectedName = (String)spnParent.getSelectedItem();
+    	boolean isIncome = (spnType.getSelectedItemId() == 1);
+    	
+    	if(selectedName.equals("< None >"));
+    	
+    	for(Category category : currentCategories)
+    	{
+    		if (category.name.equals(selectedName) && category.income == isIncome)
+    			return category.id;
+    	}
+
+    	return -1; // todo - throw exception here..
     }
     
     private boolean Validate()
@@ -185,6 +277,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 	    	newCategory.name = txtName.getText().toString().trim();
 	    	newCategory.income = (spnType.getSelectedItemId() == 1);
 	    	newCategory.color = currentColor;
+	    	newCategory.parentCategoryId = getSelectedParentId();
 	    	
 			DatabaseManager.getInstance(AddCategoryActivity.this).AddCategory(newCategory);
     	}
@@ -194,6 +287,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
     		editCategory.name = txtName.getText().toString().trim();
     		editCategory.income = (spnType.getSelectedItemId() == 1);
     		editCategory.color = currentColor;
+    		editCategory.parentCategoryId = getSelectedParentId();
 			DatabaseManager.getInstance(AddCategoryActivity.this).UpdateCategory(editCategory);
     	}
     	

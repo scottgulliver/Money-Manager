@@ -76,6 +76,7 @@ public class AddBudgetActivity extends BaseActivity {
 		currentCategories = new ArrayList<Category>();
 		ArrayList<Category> allCategories = DatabaseManager.getInstance(this)
 				.GetAllCategories();
+		allCategories = Misc.getCategoriesInGroupOrder(allCategories);
 		for (Category category : allCategories) {
 			if (!category.income)
 				currentCategories.add(category);
@@ -211,7 +212,7 @@ public class AddBudgetActivity extends BaseActivity {
 			if (!category.useInReports)
 				continue;
 
-			items.add(category.name);
+			items.add(Misc.getCategoryName(category, currentCategories));
 		}
 
 		viewingDialog = CATEGORIESLIST;
@@ -333,7 +334,7 @@ public class AddBudgetActivity extends BaseActivity {
 								}
 							} else if (viewingDialog == CATEGORIESLIST) {
 								for (Category category : currentCategories) {
-									if (category.name.equals(items.get(Integer
+									if (Misc.getCategoryName(category, currentCategories).equals(items.get(Integer
 											.parseInt(String.valueOf(item))))) {
 										selectedCategories.add(category);
 										break;

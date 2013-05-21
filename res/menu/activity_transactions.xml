@@ -19,8 +19,18 @@
         android:showAsAction="ifRoom"
         android:title="@string/overview"/>
     <item
-        android:id="@+id/menu_viewbudgets"
+        android:id="@+id/menu_reconcile"
         android:orderInCategory="4"
+        android:showAsAction="never"
+        android:title="@string/reconcile_transactions"/>
+    <item
+        android:id="@+id/menu_showhidereconciled"
+        android:orderInCategory="5"
+        android:showAsAction="never"
+        android:title="@string/show_hide_reconciled"/>
+    <item
+        android:id="@+id/menu_viewbudgets"
+        android:orderInCategory="6"
         android:showAsAction="never"
         android:title="@string/budgets"/>
     <item

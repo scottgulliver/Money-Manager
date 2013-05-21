@@ -130,21 +130,28 @@ public class TransactionsFragment extends Fragment implements OnItemLongClickLis
     
     public void UpdateList()
     {
-    	transactions = DatabaseManager.getInstance(TransactionsFragment.this.getActivity()).GetAllTransactions(accountID);
+    	ArrayList<Transaction> allTransactions = DatabaseManager.getInstance(TransactionsFragment.this.getActivity()).GetAllTransactions(accountID);
     	categories = DatabaseManager.getInstance(TransactionsFragment.this.getActivity()).GetAllCategories();
+
+		Double total = 0.0;
+		for(Transaction transaction : allTransactions)
+			total += transaction.value;
+
+		txtTotal.setText(Misc.formatValue(parentActivity, total));
+		
+		transactions = new ArrayList<Transaction>();
+		for(Transaction transaction : allTransactions)
+		{
+			if (parentActivity.showReconciledTransactions() || !transaction.reconciled)
+				transactions.add(transaction);
+		}
 
 		Collections.sort(transactions, new DateComparator());
     	Collections.reverse(transactions);
     	 
         // Getting adapter by passing xml data ArrayList
-		adapter=new TransactionsListAdapter(parentActivity, transactions, categories);
+		adapter=new TransactionsListAdapter(parentActivity, transactions, categories, parentActivity.isInReconcileMode(), parentActivity.useReconcile());
 		transactionsList.setAdapter(adapter);
-		
-		Double total = 0.0;
-		for(Transaction transaction : transactions)
-			total += transaction.value;
-		
-		txtTotal.setText(Misc.formatValue(parentActivity, total));
     }
     
     protected void onListItemClick(AdapterView<?> l, View v, int position, long id)
@@ -220,9 +227,15 @@ public class TransactionsFragment extends Fragment implements OnItemLongClickLis
 		ArrayList<Transaction> selectedItems = adapter.GetSelectedItems();
 		for(Transaction selectedItem : selectedItems)
 		{
+			if (selectedItem.isTransfer)
+			{
+				Transaction releatedTransaction = selectedItem.getRelatedTransferTransaction(getActivity());
+				DatabaseManager.getInstance(getActivity()).DeleteTransaction(releatedTransaction);
+			}
+			
 			DatabaseManager.getInstance(getActivity()).DeleteTransaction(selectedItem);
 		}
-		UpdateList();
+		UpdateParentUI();
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data)

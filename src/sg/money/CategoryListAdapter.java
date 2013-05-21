@@ -19,8 +19,10 @@ public class CategoryListAdapter extends BaseAdapter {
     private static LayoutInflater inflater=null;
     private ArrayList<Category> selectedItems;
     final int COLOR_SELECTED = Color.rgb(133, 194, 215);
+    private Activity activity;
  
     public CategoryListAdapter(Activity activity, ArrayList<Category> categories) {
+    	this.activity = activity;
         this.categories = categories;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         selectedItems = new ArrayList<Category>();
@@ -44,7 +46,7 @@ public class CategoryListAdapter extends BaseAdapter {
     
     public void SetSelected(int position, boolean selected)
     {
-    	Category item = categories.get(position);
+    	Category item = (Category)getItem(position);
     	if (selected && !selectedItems.contains(item))
     		selectedItems.add(item);
     	else if (!selected && selectedItems.contains(item))
@@ -64,6 +66,11 @@ public class CategoryListAdapter extends BaseAdapter {
         return position;
     }
     
+    private String getCategoryName(Category category)
+    {
+    	return Misc.getCategoryName(category, activity);
+    }
+    
     @SuppressLint("NewApi")
 	public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
@@ -75,10 +82,10 @@ public class CategoryListAdapter extends BaseAdapter {
         ImageView colorField = (ImageView)vi.findViewById(R.id.category_color);
  
         Category category = categories.get(position);
- 
+
         //set values
-        nameText.setText(category.name);
-        
+        nameText.setText(getCategoryName(category));
+ 
         if (customStrings == null)
         	typeText.setText(category.income ? "Income" : "Expense");
         else
