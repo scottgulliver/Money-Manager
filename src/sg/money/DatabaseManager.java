@@ -106,7 +106,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	 
 	protected DatabaseManager(Context context)
 	{
-		super(context, dbName, null, 21); 
+		super(context, dbName, null, 22);
 		
 		df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
 	}
@@ -190,7 +190,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Music',-1111693,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
-		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Resturants & Bars',-7757600,0) ";
+		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Restaurants & Bars',-7757600,0) ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		sql = "INSERT INTO "+categoriesTable+" ("+colCategoriesName+","+colCategoriesColor+","+colCategoriesIsIncome+") VALUES ('Sports & Fitness',-13370380,0) ";
@@ -478,6 +478,22 @@ public class DatabaseManager extends SQLiteOpenHelper
 		{
 			execSQL(db, "ALTER TABLE "+categoriesTable+" ADD COLUMN "+colCategoriesParent+" INTEGER default -1");
 		}
+
+        if (oldVersion <= 21)
+        {
+            Category misspeltResAndBars = null;
+            ArrayList<Category> categories = GetAllCategories();
+            for(Category category : categories)
+            {
+                if (category.name.equals("Resturants & Bars") && !category.income)
+                    misspeltResAndBars = category;
+            }
+            if (misspeltResAndBars != null)
+            {
+                misspeltResAndBars.name = "Restaurants & Bars";
+                UpdateCategory(misspeltResAndBars);
+            }
+        }
 
 		clearDatabase();
 	}
