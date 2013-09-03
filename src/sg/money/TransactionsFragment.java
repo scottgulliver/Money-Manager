@@ -211,6 +211,7 @@ public class TransactionsFragment extends Fragment implements OnItemLongClickLis
 				adapter.GetSelectedItems().size() == 1 
 					? "Delete 1 transaction?"
 					: "Delete " + adapter.GetSelectedItems().size() + " transactions?", 
+				DialogButtons.OkCancel,
 				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
 						DeleteItems();
 	                    mode.finish();

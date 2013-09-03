@@ -109,6 +109,7 @@ public class SettingsActivity extends SherlockPreferenceActivity
 	{
 		Misc.showConfirmationDialog(this, 
 			"Mark all existing transactions as reconciled?", 
+			DialogButtons.YesNo,
 			new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
 					for(Transaction transaction : DatabaseManager.getInstance(SettingsActivity.this).GetAllTransactions())
 					{

@@ -283,6 +283,7 @@ public class BudgetsActivity extends BaseActivity implements OnItemLongClickList
 				adapter.GetSelectedItems().size() == 1 
 					? "Delete 1 budget?"
 					: "Delete " + adapter.GetSelectedItems().size() + " budgets?", 
+				DialogButtons.OkCancel,
 				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
 						DeleteItems();
 	                    mode.finish();

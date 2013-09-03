@@ -168,6 +168,7 @@ public class CategoriesActivity extends BaseActivity implements OnItemLongClickL
 				adapter.GetSelectedItems().size() == 1 
 					? "Delete 1 category?"
 					: "Delete " + adapter.GetSelectedItems().size() + " categories?", 
+				DialogButtons.OkCancel,
 				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
 						DeleteItems();
 	                    mode.finish();

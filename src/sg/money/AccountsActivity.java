@@ -223,6 +223,7 @@ public class AccountsActivity extends BaseActivity implements OnItemLongClickLis
 				adapter.GetSelectedItems().size() == 1 
 					? "Delete 1 account?"
 					: "Delete " + adapter.GetSelectedItems().size() + " accounts?", 
+					DialogButtons.OkCancel,
 				new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
 						DeleteItems();
 	                    mode.finish();

@@ -94,9 +94,9 @@ public class Misc
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, resources.getDisplayMetrics());
     }
     
-    static void showConfirmationDialog(Context context, String message, OnClickListener okClick)
+    static void showConfirmationDialog(Context context, String message, DialogButtons buttons, OnClickListener okClick)
     {
-    	showConfirmationDialog(context, message, okClick, 
+    	showConfirmationDialog(context, message, buttons, okClick, 
     			new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
@@ -104,12 +104,21 @@ public class Misc
 				});
     }
     
-    static void showConfirmationDialog(Context context, String message, OnClickListener okClick, OnClickListener cancelClick)
+    static void showConfirmationDialog(Context context, String message, DialogButtons buttons, OnClickListener okClick, OnClickListener cancelClick)
     {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 	    builder.setMessage(message);
-	    builder.setPositiveButton("OK", okClick);
-	    builder.setNegativeButton("Cancel", cancelClick);
+		switch(buttons)
+		{
+			case OkCancel:
+				builder.setPositiveButton("OK", okClick);
+				builder.setNegativeButton("Cancel", cancelClick);
+				break;
+			case YesNo:
+				builder.setPositiveButton("Yes", okClick);
+				builder.setNegativeButton("No", cancelClick);
+				break;
+		}
 	    builder.create().show();
     }
     
