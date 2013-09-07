@@ -1,24 +1,21 @@
 package sg.money;
 
-import java.util.ArrayList;
+import android.content.*;
+import android.content.SharedPreferences.*;
+import android.os.*;
+import android.preference.*;
+import android.support.v4.app.*;
+import android.support.v4.view.*;
+import android.view.*;
+import android.widget.*;
+import com.actionbarsherlock.app.*;
+import com.actionbarsherlock.app.ActionBar.*;
+import com.actionbarsherlock.view.*;
+import java.util.*;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerTitleStrip;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.AdapterView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import android.widget.DrawerLayout;
 
 public class TransactionsActivity extends BaseFragmentActivity
 {
@@ -44,7 +41,12 @@ public class TransactionsActivity extends BaseFragmentActivity
 	
 	private boolean useReconcile;
 	private boolean inReconcileMode;
+	
 	private boolean showReconciled;
+	
+	private String[] mLinks;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -62,7 +64,49 @@ public class TransactionsActivity extends BaseFragmentActivity
 		showReconciled = sharedPref.getBoolean(SETTING_SHOWRECONCILED, true);
         
         UpdateUI();
+
+        mLinks = getResources().getStringArray(R.array.drawer_links_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.left_drawer, mLinks));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
+	
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView parent, View view, int position, long id) {
+			selectItem(position);
+		}
+	}
+
+	/** Swaps fragments in the main content view */
+	private void selectItem(int position) {
+		// Create a new fragment and specify the planet to show based on position
+		Fragment fragment = new PlanetFragment();
+		Bundle args = new Bundle();
+		args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+		fragment.setArguments(args);
+
+		// Insert the fragment by replacing any existing fragment
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+			.replace(R.id.content_frame, fragment)
+			.commit();
+
+		// Highlight the selected item, update the title, and close the drawer
+		mDrawerList.setItemChecked(position, true);
+		setTitle(mPlanetTitles[position]);
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
+	}
     
     private void UpdateUI()
     {
@@ -214,7 +258,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 	{
 		boolean oldValue = useReconcile;
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		useReconcile = sharedPref.getBoolean(getString(R.string.pref_usereconcile_key), false);
+		useReconcile = sharedPref.getBoolean(getString(R.string.pref_usereconcile_key), true);
 		
 		if (!useReconcile)
 			inReconcileMode = false;

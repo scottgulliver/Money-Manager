@@ -130,4 +130,10 @@
 	<string name="reconcile_transactions">Reconcile Transactions</string>
 	<string name="show_hide_reconciled">Show Reconciled Transactions"</string>
 
+	<string-array name="drawer_links_array">
+		<item>Accounts</item>
+		<item>Transactions</item>
+		<item>Categories</item>
+		<item>Overview</item>
+	</string-array>
 </resources>
