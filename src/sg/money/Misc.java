@@ -33,33 +33,8 @@ public class Misc
 		//remove any negative chars - these go before the symbol
 		if (isNegative)
 			formattedValue = formattedValue.replace("-", "");
-		
-		if (currencyCode.equals("USD"))
-			formattedValue = "$" + formattedValue;
-		else if (currencyCode.equals("CAD"))
-			formattedValue = "$" + formattedValue;
-		else if (currencyCode.equals("EUR"))
-			formattedValue = "€" + formattedValue;
-		else if (currencyCode.equals("GBP"))
-			formattedValue = "£" + formattedValue;
-		else if (currencyCode.equals("CHF"))
-			formattedValue = "Fr " + formattedValue;
-		else if (currencyCode.equals("NZD"))
-			formattedValue = "$" + formattedValue;
-		else if (currencyCode.equals("AUD"))
-			formattedValue = "$" + formattedValue;
-		else if (currencyCode.equals("JPY"))
-			formattedValue = "¥" + formattedValue;
-		else if (currencyCode.equals("KRW"))
-			formattedValue = "W" + formattedValue;
-		else if (currencyCode.equals("BRL"))
-			formattedValue = "R$" + formattedValue;
-		else if (currencyCode.equals("TWD"))
-			formattedValue = "$" + formattedValue;
-		else if (currencyCode.equals("INR"))
-			formattedValue = "₹" + formattedValue;
-		else if (currencyCode.equals("VND"))
-			formattedValue = "d" + formattedValue;
+
+        formattedValue = getCurrencySymbol(currencyCode) + formattedValue;
 		
 		//add a negative back on if required
 		if (isNegative)
@@ -72,6 +47,169 @@ public class Misc
 		
 		return formattedValue;
 	}
+
+    public static String getCurrencySymbol(String currencyCode)
+    {
+        if (currencyCode.equals("AED")) return "د.إ";
+        if (currencyCode.equals("AFN")) return "؋";
+        if (currencyCode.equals("ALL")) return "L";
+        if (currencyCode.equals("ANG")) return "ƒ";
+        if (currencyCode.equals("AOA")) return "Kz";
+        if (currencyCode.equals("ARS")) return "$";
+        if (currencyCode.equals("AUD")) return "$";
+        if (currencyCode.equals("AWG")) return "ƒ";
+        if (currencyCode.equals("BAM")) return "KM";
+        if (currencyCode.equals("BBD")) return "$";
+        if (currencyCode.equals("BDT")) return "৳";
+        if (currencyCode.equals("BGN")) return "лв";
+        if (currencyCode.equals("BHD")) return ".د.ب";
+        if (currencyCode.equals("BIF")) return "Fr";
+        if (currencyCode.equals("BMD")) return "$";
+        if (currencyCode.equals("BND")) return "$";
+        if (currencyCode.equals("BOB")) return "Bs.";
+        if (currencyCode.equals("BRL")) return "R$";
+        if (currencyCode.equals("BSD")) return "$";
+        if (currencyCode.equals("BTN")) return "Nu.";
+        if (currencyCode.equals("BWP")) return "P";
+        if (currencyCode.equals("BYR")) return "Br";
+        if (currencyCode.equals("BZD")) return "$";
+        if (currencyCode.equals("CAD")) return "$";
+        if (currencyCode.equals("CDF")) return "Fr";
+        if (currencyCode.equals("CHF")) return "Fr";
+        if (currencyCode.equals("CLP")) return "$";
+        if (currencyCode.equals("CNY")) return "¥";
+        if (currencyCode.equals("COP")) return "$";
+        if (currencyCode.equals("CRC")) return "₡";
+        if (currencyCode.equals("CUC")) return "$";
+        if (currencyCode.equals("CUP")) return "$";
+        if (currencyCode.equals("CVE")) return "$";
+        if (currencyCode.equals("CZK")) return "Kč";
+        if (currencyCode.equals("DJF")) return "Fr";
+        if (currencyCode.equals("DKK")) return "kr";
+        if (currencyCode.equals("DOP")) return "$";
+        if (currencyCode.equals("DZD")) return "د.ج";
+        if (currencyCode.equals("EGP")) return "£";
+        if (currencyCode.equals("ERN")) return "Nfk";
+        if (currencyCode.equals("ETB")) return "Br";
+        if (currencyCode.equals("EUR")) return "€";
+        if (currencyCode.equals("FJD")) return "$";
+        if (currencyCode.equals("FKP")) return "£";
+        if (currencyCode.equals("GBP")) return "£";
+        if (currencyCode.equals("GEL")) return "ლ";
+        if (currencyCode.equals("GGP")) return "£";
+        if (currencyCode.equals("GHS")) return "₵";
+        if (currencyCode.equals("GIP")) return "£";
+        if (currencyCode.equals("GMD")) return "D";
+        if (currencyCode.equals("GNF")) return "Fr";
+        if (currencyCode.equals("GTQ")) return "Q";
+        if (currencyCode.equals("GYD")) return "$";
+        if (currencyCode.equals("HKD")) return "$";
+        if (currencyCode.equals("HNL")) return "L";
+        if (currencyCode.equals("HRK")) return "kn";
+        if (currencyCode.equals("HTG")) return "G";
+        if (currencyCode.equals("HUF")) return "Ft";
+        if (currencyCode.equals("IDR")) return "Rp";
+        if (currencyCode.equals("ILS")) return "₪";
+        if (currencyCode.equals("IMP")) return "£";
+        if (currencyCode.equals("INR")) return "₹";
+        if (currencyCode.equals("IQD")) return "ع.د";
+        if (currencyCode.equals("IRR")) return "﷼";
+        if (currencyCode.equals("ISK")) return "kr";
+        if (currencyCode.equals("JEP")) return "£";
+        if (currencyCode.equals("JMD")) return "$";
+        if (currencyCode.equals("JOD")) return "د.ا";
+        if (currencyCode.equals("JPY")) return "¥";
+        if (currencyCode.equals("KES")) return "Sh";
+        if (currencyCode.equals("KHR")) return "៛";
+        if (currencyCode.equals("KMF")) return "Fr";
+        if (currencyCode.equals("KPW")) return "₩";
+        if (currencyCode.equals("KRW")) return "₩";
+        if (currencyCode.equals("KWD")) return "د.ك";
+        if (currencyCode.equals("KYD")) return "$";
+        if (currencyCode.equals("KZT")) return "₸";
+        if (currencyCode.equals("LAK")) return "₭";
+        if (currencyCode.equals("LBP")) return "ل.ل";
+        if (currencyCode.equals("LKR")) return "Rs";
+        if (currencyCode.equals("LRD")) return "$";
+        if (currencyCode.equals("LSL")) return "L";
+        if (currencyCode.equals("LTL")) return "Lt";
+        if (currencyCode.equals("LVL")) return "Ls";
+        if (currencyCode.equals("LYD")) return "ل.د";
+        if (currencyCode.equals("MAD")) return "د.م.";
+        if (currencyCode.equals("MDL")) return "L";
+        if (currencyCode.equals("MGA")) return "Ar";
+        if (currencyCode.equals("MKD")) return "ден";
+        if (currencyCode.equals("MMK")) return "Ks";
+        if (currencyCode.equals("MNT")) return "₮";
+        if (currencyCode.equals("MOP")) return "P";
+        if (currencyCode.equals("MRO")) return "UM";
+        if (currencyCode.equals("MUR")) return "₨";
+        if (currencyCode.equals("MVR")) return ".ރ";
+        if (currencyCode.equals("MWK")) return "MK";
+        if (currencyCode.equals("MXN")) return "$";
+        if (currencyCode.equals("MYR")) return "RM";
+        if (currencyCode.equals("MZN")) return "MT";
+        if (currencyCode.equals("NAD")) return "$";
+        if (currencyCode.equals("NGN")) return "₦";
+        if (currencyCode.equals("NIO")) return "C$";
+        if (currencyCode.equals("NOK")) return "kr";
+        if (currencyCode.equals("NPR")) return "₨";
+        if (currencyCode.equals("NZD")) return "$";
+        if (currencyCode.equals("OMR")) return "ر.ع.";
+        if (currencyCode.equals("PAB")) return "B/.";
+        if (currencyCode.equals("PEN")) return "S/.";
+        if (currencyCode.equals("PGK")) return "K";
+        if (currencyCode.equals("PHP")) return "₱";
+        if (currencyCode.equals("PKR")) return "₨";
+        if (currencyCode.equals("PLN")) return "zł";
+        if (currencyCode.equals("PRB")) return "р.";
+        if (currencyCode.equals("PYG")) return "₲";
+        if (currencyCode.equals("QAR")) return "ر.ق";
+        if (currencyCode.equals("RON")) return "L";
+        if (currencyCode.equals("RSD")) return "дин.";
+        if (currencyCode.equals("RUB")) return "р.";
+        if (currencyCode.equals("RWF")) return "Fr";
+        if (currencyCode.equals("SAR")) return "ر.س";
+        if (currencyCode.equals("SBD")) return "$";
+        if (currencyCode.equals("SCR")) return "₨";
+        if (currencyCode.equals("SDG")) return "£";
+        if (currencyCode.equals("SEK")) return "kr";
+        if (currencyCode.equals("SGD")) return "$";
+        if (currencyCode.equals("SHP")) return "£";
+        if (currencyCode.equals("SLL")) return "Le";
+        if (currencyCode.equals("SOS")) return "Sh";
+        if (currencyCode.equals("SRD")) return "$";
+        if (currencyCode.equals("SSP")) return "£";
+        if (currencyCode.equals("STD")) return "Db";
+        if (currencyCode.equals("SVC")) return "₡";
+        if (currencyCode.equals("SYP")) return "£";
+        if (currencyCode.equals("SZL")) return "L";
+        if (currencyCode.equals("TJS")) return "ЅМ";
+        if (currencyCode.equals("TMT")) return "m";
+        if (currencyCode.equals("TND")) return "د.ت";
+        if (currencyCode.equals("TOP")) return "T$";
+        if (currencyCode.equals("TTD")) return "$";
+        if (currencyCode.equals("TWD")) return "$";
+        if (currencyCode.equals("TZS")) return "Sh";
+        if (currencyCode.equals("UAH")) return "₴";
+        if (currencyCode.equals("UGX")) return "Sh";
+        if (currencyCode.equals("USD")) return "$";
+        if (currencyCode.equals("UYU")) return "$";
+        if (currencyCode.equals("VEF")) return "Bs F";
+        if (currencyCode.equals("VND")) return "₫";
+        if (currencyCode.equals("VUV")) return "Vt";
+        if (currencyCode.equals("WST")) return "T";
+        if (currencyCode.equals("XAF")) return "Fr";
+        if (currencyCode.equals("XCD")) return "$";
+        if (currencyCode.equals("XOF")) return "Fr";
+        if (currencyCode.equals("XPF")) return "Fr";
+        if (currencyCode.equals("YER")) return "﷼";
+        if (currencyCode.equals("ZAR")) return "R";
+        if (currencyCode.equals("ZMW")) return "ZK";
+        if (currencyCode.equals("ZWL")) return "$";
+
+        return null;
+    }
 	
 	public static String formatDate(Activity activity, Date date) throws Exception
 	{

@@ -26,91 +26,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40ecd59e-797b-4679-8b64-4d5cd0b00da2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-hdpi/drawer_shadow.9.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-mdpi/drawer_shadow.9.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-xhdpi/drawer_shadow.9.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-hdpi/ic_drawer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-mdpi/ic_drawer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-xhdpi/ic_drawer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../actionbarsherlock/actionbarsherlock.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v41.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v42.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/drawer_list_item.xml" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-hdpi\abs__dialog_full_holo_dark.9.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-hdpi\abs__dialog_full_holo_light.9.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-mdpi\abs__dialog_full_holo_dark.9.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-mdpi\abs__dialog_full_holo_light.9.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-xhdpi\abs__dialog_full_holo_dark.9.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-xhdpi\abs__dialog_full_holo_light.9.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\layout\abs__dialog_title_holo.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\layout\abs__list_menu_item_layout.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\values-large\abs__dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\src\com\actionbarsherlock\internal\app\ActionBarWrapper.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\src\com\actionbarsherlock\internal\widget\FakeDialogPhoneWindow.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\test\com\actionbarsherlock\internal\ManifestParsingTest.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/drawable-hdpi/abs__ic_search.png" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/drawable-hdpi/abs__ic_search.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/libs/android-support-v4.jar" afterPath="$PROJECT_DIR$/../actionbarsherlock/libs/android-support-v4.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/libs/android-support-v4.jar" afterPath="$PROJECT_DIR$/libs/android-support-v4.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarContainer.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarContainer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/app/ActionBarImpl.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/app/ActionBarImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockCompat.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockCompat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockNative.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockNative.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/ActionMenuItemView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/ActionMenuItemView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/ActivityChooserView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/ActivityChooserView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/AndroidManifest.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/BuildConfig.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/BuildConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/CapitalizingButton.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/CapitalizingButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsColorDrawable.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsColorDrawable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsLinearLayout.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsLinearLayout.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsListPopupWindow.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsListPopupWindow.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuBuilder.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuPopupHelper.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuPopupHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuWrapper.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuWrapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/R.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ResourcesCompat.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ResourcesCompat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ScrollingTabContainerView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ScrollingTabContainerView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SearchView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SearchView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockDialogFragment.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockExpandableListActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockExpandableListActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragmentActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragmentActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListFragment.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockPreferenceActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockPreferenceActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SuggestionsAdapter.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SuggestionsAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" afterPath="$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/nineoldandroids/animation/ValueAnimator.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/nineoldandroids/animation/ValueAnimator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/android/support/v4/app/Watson.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/android/support/v4/app/Watson.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__action_bar_tab_bar_view.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__action_bar_tab_bar_view.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__attrs.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__attrs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__colors.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__colors.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__dimens.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values-large-mdpi-1024x600/abs__dimens.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values-large-mdpi-1024x600/abs__dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values-sw600dp/abs__dimens.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values-sw600dp/abs__dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar_overlay.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar_overlay.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar_overlay.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar_overlay.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__search_view.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__search_view.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__simple_dropdown_hint.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__simple_dropdown_hint.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__strings.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__styles.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__styles.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__themes.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__themes.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values-v14/abs__themes.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values-v14/abs__themes.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/activity_transactions.xml" afterPath="$PROJECT_DIR$/res/layout/activity_transactions.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/lint.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/lint.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/money-manager.iml" afterPath="$PROJECT_DIR$/money-manager.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/pom.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/project.properties" afterPath="$PROJECT_DIR$/../actionbarsherlock/project.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/Misc.java" afterPath="$PROJECT_DIR$/src/sg/money/Misc.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="money-manager.iws" />
@@ -200,11 +117,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TransactionsActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TransactionsActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="33" selection-start="1460" selection-end="1460" vertical-scroll-proportion="0.42857143" vertical-offset="680" max-vertical-offset="8874">
+            <state line="50" column="48" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="680" max-vertical-offset="8874">
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="e#7528#7538#0" expanded="true" />
               </folding>
             </state>
@@ -234,8 +152,25 @@
       <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="140" column="30" selection-start="6484" selection-end="6484" vertical-scroll-proportion="0.0" vertical-offset="2098" max-vertical-offset="2516">
+            <state line="36" column="20" selection-start="2057" selection-end="2057" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="7429">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Misc.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/Misc.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="41" column="24" selection-start="1464" selection-end="1464" vertical-scroll-proportion="0.84033614" vertical-offset="397" max-vertical-offset="5423">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#794#840#0" expanded="true" />
+                <element signature="e#896#950#0" expanded="true" />
+                <element signature="e#10178#10226#0" expanded="true" />
+                <element signature="e#10999#11120#0" expanded="true" />
+                <element signature="e#11113#11114#0" expanded="true" />
+                <element signature="e#11855#11865#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -311,8 +246,10 @@
         <option value="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" />
         <option value="$PROJECT_DIR$/res/layout/drawer_list_item.xml" />
         <option value="$PROJECT_DIR$/res/layout/activity_transactions.xml" />
-        <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" />
+        <option value="$PROJECT_DIR$/src/sg/money/Currencies.java" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/sg/money/Misc.java" />
       </list>
     </option>
   </component>
@@ -483,30 +420,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="drawable-hdpi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="money-manager" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="money-manager" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="libs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="money-manager" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="actionbarsherlock" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -716,7 +629,7 @@
     <option name="totallyTimeSpent" value="5611000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1366" height="728" extended-state="0" />
+    <frame x="0" y="0" width="1366" height="728" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26363635" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -830,13 +743,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/sg/money/BudgetNotificationReciever.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="127" column="9" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state line="2" column="4" selection-start="14" selection-end="14" vertical-scroll-proportion="0.060714286" vertical-offset="0" max-vertical-offset="0" />
@@ -920,7 +826,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="30" selection-start="6484" selection-end="6484" vertical-scroll-proportion="0.0" vertical-offset="2098" max-vertical-offset="2516">
+        <state line="36" column="20" selection-start="2057" selection-end="2057" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="7429">
           <folding />
         </state>
       </provider>
@@ -929,6 +835,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="0" selection-start="345" selection-end="345" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="323">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="48" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="680" max-vertical-offset="8874">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#7528#7538#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -941,11 +857,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/sg/money/Misc.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="33" selection-start="1460" selection-end="1460" vertical-scroll-proportion="0.42857143" vertical-offset="680" max-vertical-offset="8874">
+        <state line="41" column="24" selection-start="1464" selection-end="1464" vertical-scroll-proportion="0.84033614" vertical-offset="397" max-vertical-offset="5423">
           <folding>
-            <element signature="e#7528#7538#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#794#840#0" expanded="true" />
+            <element signature="e#896#950#0" expanded="true" />
+            <element signature="e#10178#10226#0" expanded="true" />
+            <element signature="e#10999#11120#0" expanded="true" />
+            <element signature="e#11113#11114#0" expanded="true" />
+            <element signature="e#11855#11865#0" expanded="true" />
           </folding>
         </state>
       </provider>
