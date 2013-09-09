@@ -136,4 +136,7 @@
 		<item>Categories</item>
 		<item>Overview</item>
 	</string-array>
+
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 </resources>

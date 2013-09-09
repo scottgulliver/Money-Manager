@@ -2,10 +2,12 @@ package sg.money;
 
 import android.content.*;
 import android.content.SharedPreferences.*;
+import android.content.res.Configuration;
 import android.os.*;
 import android.preference.*;
 import android.support.v4.app.*;
 import android.support.v4.view.*;
+import android.support.v4.widget.*;
 import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.*;
@@ -15,9 +17,8 @@ import java.util.*;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import android.widget.DrawerLayout;
 
-public class TransactionsActivity extends BaseFragmentActivity
+public class TransactionsActivity extends BaseFragmentActivity implements ActionBarDrawerToggle.DelegateProvider
 {
     static final int REQUEST_ADDTRANSACTION = 0;
     static final int REQUEST_VIEWACCOUNTS = 1;
@@ -47,7 +48,9 @@ public class TransactionsActivity extends BaseFragmentActivity
 	private String[] mLinks;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-	
+    SherlockActionBarDrawerToggle mDrawerToggle;
+    private SherlockActionBarDrawerToggleDelegate mDrawerDelegate;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -70,9 +73,50 @@ public class TransactionsActivity extends BaseFragmentActivity
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.left_drawer, mLinks));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mLinks));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        mDrawerDelegate = new SherlockActionBarDrawerToggleDelegate(this);
+        mDrawerToggle = new SherlockActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                //getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                //getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public ActionBarDrawerToggle.Delegate getDrawerToggleDelegate() {
+        return mDrawerDelegate;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 	
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -85,7 +129,7 @@ public class TransactionsActivity extends BaseFragmentActivity
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
-		Fragment fragment = new PlanetFragment();
+		/*Fragment fragment = new PlanetFragment();
 		Bundle args = new Bundle();
 		args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 		fragment.setArguments(args);
@@ -99,13 +143,13 @@ public class TransactionsActivity extends BaseFragmentActivity
 		// Highlight the selected item, update the title, and close the drawer
 		mDrawerList.setItemChecked(position, true);
 		setTitle(mPlanetTitles[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
+		mDrawerLayout.closeDrawer(mDrawerList);*/
 	}
 
 	@Override
 	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getActionBar().setTitle(mTitle);
+		//mTitle = title;
+		//getActionBar().setTitle(mTitle);
 	}
     
     private void UpdateUI()
@@ -289,9 +333,22 @@ public class TransactionsActivity extends BaseFragmentActivity
 		this.menu = menu;
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.menu_addtransaction).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
     
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 	    switch (item.getItemId())
 	    {
 	    	case R.id.menu_addtransaction:{

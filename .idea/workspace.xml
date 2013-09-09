@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="" />
+        <option name="name" value="Unnamed-0" />
+        <option name="packageNamePattern" value="sg.money" />
+        <option name="pid" value="" />
+      </filter>
+    </filters>
+  </component>
   <component name="AndroidLayoutPreviewToolWindow">
     <option name="state">
-      <GlobalState />
+      <GlobalState>
+        <option name="visible" value="false" />
+      </GlobalState>
     </option>
   </component>
   <component name="AndroidLayouts">
@@ -12,21 +26,95 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40ecd59e-797b-4679-8b64-4d5cd0b00da2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" afterPath="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-hdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-mdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-xhdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-hdpi/ic_drawer.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-mdpi/ic_drawer.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable-xhdpi/ic_drawer.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../actionbarsherlock/actionbarsherlock.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v41.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v42.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/drawer_list_item.xml" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-hdpi\abs__dialog_full_holo_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-hdpi\abs__dialog_full_holo_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-mdpi\abs__dialog_full_holo_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-mdpi\abs__dialog_full_holo_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-xhdpi\abs__dialog_full_holo_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\drawable-xhdpi\abs__dialog_full_holo_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\layout\abs__dialog_title_holo.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\layout\abs__list_menu_item_layout.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\res\values-large\abs__dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\src\com\actionbarsherlock\internal\app\ActionBarWrapper.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\src\com\actionbarsherlock\internal\widget\FakeDialogPhoneWindow.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Scott Gulliver\git\actionbarsherlock\test\com\actionbarsherlock\internal\ManifestParsingTest.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/drawable-hdpi/abs__ic_search.png" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/drawable-hdpi/abs__ic_search.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/libs/android-support-v4.jar" afterPath="$PROJECT_DIR$/../actionbarsherlock/libs/android-support-v4.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/libs/android-support-v4.jar" afterPath="$PROJECT_DIR$/libs/android-support-v4.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarContainer.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarContainer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/app/ActionBarImpl.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/app/ActionBarImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockCompat.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockCompat.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockNative.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockNative.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ActionBarView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/ActionMenuItemView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/ActionMenuItemView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/ActivityChooserView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/ActivityChooserView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/AndroidManifest.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/BuildConfig.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/BuildConfig.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/CapitalizingButton.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/CapitalizingButton.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsColorDrawable.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsColorDrawable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsLinearLayout.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsLinearLayout.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsListPopupWindow.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsListPopupWindow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuBuilder.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuBuilder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuPopupHelper.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuPopupHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuWrapper.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/view/menu/MenuWrapper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/R.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/gen/com/actionbarsherlock/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ResourcesCompat.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ResourcesCompat.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ScrollingTabContainerView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/widget/ScrollingTabContainerView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SearchView.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SearchView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockDialogFragment.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockDialogFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockExpandableListActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockExpandableListActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragmentActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragmentActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListFragment.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockListFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockPreferenceActivity.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/app/SherlockPreferenceActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SuggestionsAdapter.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/widget/SuggestionsAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" afterPath="$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/nineoldandroids/animation/ValueAnimator.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/nineoldandroids/animation/ValueAnimator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/src/android/support/v4/app/Watson.java" afterPath="$PROJECT_DIR$/../actionbarsherlock/src/android/support/v4/app/Watson.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__action_bar_tab_bar_view.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__action_bar_tab_bar_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__attrs.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__attrs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__colors.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__colors.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__dimens.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values-large-mdpi-1024x600/abs__dimens.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values-large-mdpi-1024x600/abs__dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values-sw600dp/abs__dimens.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values-sw600dp/abs__dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar_overlay.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__screen_action_bar_overlay.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar_overlay.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout-xlarge/abs__screen_action_bar_overlay.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__search_view.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__search_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__simple_dropdown_hint.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/layout/abs__simple_dropdown_hint.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__strings.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__styles.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__styles.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__themes.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values/abs__themes.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/res/values-v14/abs__themes.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/res/values-v14/abs__themes.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/activity_transactions.xml" afterPath="$PROJECT_DIR$/res/layout/activity_transactions.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/lint.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/lint.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/money-manager.iml" afterPath="$PROJECT_DIR$/money-manager.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/pom.xml" afterPath="$PROJECT_DIR$/../actionbarsherlock/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../actionbarsherlock/project.properties" afterPath="$PROJECT_DIR$/../actionbarsherlock/project.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="money-manager.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369168515312" ignored="false" />
-    <file path="/BudgetNotificationReciever.java" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369166530001" ignored="false" />
-    <file path="/a.dummy" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369165916561" ignored="false" />
-    <file path="$PROJECT_DIR$/../test/.idea/workspace.xml" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369168294127" ignored="false" />
-    <file path="$PROJECT_DIR$/../test/.idea/misc.xml" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369167742438" ignored="false" />
-    <file path="$PROJECT_DIR$/../test/test/src/main/java/com/example/test/MainActivity.java" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369167725767" ignored="false" />
-    <file path="/MainActivity.java" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369167627934" ignored="false" />
-    <file path="/EmptyListFragment.java" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369167899888" ignored="false" />
-    <file path="/fragment.java" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369168251272" ignored="false" />
-    <file path="/.gitignore" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369168780756" ignored="false" />
-    <file path="/DatabaseManager.java" changelist="40ecd59e-797b-4679-8b64-4d5cd0b00da2" time="1369248314032" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +122,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="USE_COMPILE_SERVER" value="false" />
+  </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -78,6 +174,23 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" line="124" class="sg.money.TransactionsActivity.DrawerItemClickListener" package="sg.money">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -87,39 +200,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="styles.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
+      <file leaf-file-name="TransactionsActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="13" selection-end="13" vertical-scroll-proportion="-0.68">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AddAccountActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/AddAccountActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="129" column="49" selection-start="3810" selection-end="3810" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DatabaseManager.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/DatabaseManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="496" column="0" selection-start="19044" selection-end="19044" vertical-scroll-proportion="0.759887">
+            <state line="49" column="33" selection-start="1460" selection-end="1460" vertical-scroll-proportion="0.42857143" vertical-offset="680" max-vertical-offset="8874">
               <folding>
-                <element signature="method#populateDefaultCategories#0;class#DatabaseManager#0" expanded="false" />
+                <element signature="e#7528#7538#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EmptyListFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/EmptyListFragment.java">
+      <file leaf-file-name="BaseFragmentActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/BaseFragmentActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="13" selection-start="225" selection-end="225" vertical-scroll-proportion="-76.5">
+            <state line="14" column="0" selection-start="345" selection-end="345" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="323">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TransactionsFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="22" selection-start="1020" selection-end="1020" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="4488">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -127,31 +231,55 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_accounts.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/activity_accounts.xml">
+      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="140" column="30" selection-start="6484" selection-end="6484" vertical-scroll-proportion="0.0" vertical-offset="2098" max-vertical-offset="2516">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActionBarDrawerToggle.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/android/support/v4/app/ActionBarDrawerToggle.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="11" selection-start="976" selection-end="976" vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="2414">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="drawer_list_item.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/drawer_list_item.xml">
           <provider editor-type-id="android-designer">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="27" selection-start="251" selection-end="251" vertical-scroll-proportion="-2.04">
+            <state line="5" column="36" selection-start="283" selection-end="283" vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="272">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BudgetNotificationReciever.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/BudgetNotificationReciever.java">
+      <file leaf-file-name="activity_transactions.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/activity_transactions.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="127" column="9" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.0">
+            <state line="34" column="41" selection-start="1297" selection-end="1297" vertical-scroll-proportion="0.0" vertical-offset="371" max-vertical-offset="782">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AccountsActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/AccountsActivity.java">
+      <file leaf-file-name="category_item_layout.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/category_item_layout.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="0" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="1576" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="816">
               <folding />
             </state>
           </provider>
@@ -165,6 +293,7 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
+    <option name="SYNC_SETTING" value="DONT" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitLogSettings">
@@ -180,16 +309,18 @@
         <option value="$PROJECT_DIR$/src/sg/money/EmptyListFragment.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" />
+        <option value="$PROJECT_DIR$/res/layout/drawer_list_item.xml" />
+        <option value="$PROJECT_DIR$/res/layout/activity_transactions.xml" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/sg/money/TransactionsActivity.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="width" value="1366" />
+    <option name="height" value="728" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -265,6 +396,120 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable-xhdpi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable-mdpi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable-hdpi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="libs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="actionbarsherlock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane">
@@ -284,19 +529,28 @@
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../actionbarsherlock" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="4df1fa9751d55f99" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="AVD_for_Nexus_One_by_Google" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Scott Gulliver\git\money-manager\res\drawable-xhdpi" />
+      <recent name="C:\Users\Scott Gulliver\git\money-manager\res\drawable-mdpi" />
+      <recent name="C:\Users\Scott Gulliver\git\money-manager\res\drawable-hdpi" />
       <recent name="C:\Users\Scott Gulliver\git\money-manager\libs" />
     </key>
   </component>
@@ -395,7 +649,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
@@ -431,6 +685,23 @@
       <AnalysisUIOptions />
     </option>
   </component>
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="40ecd59e-797b-4679-8b64-4d5cd0b00da2" name="Default" comment="" />
@@ -445,27 +716,28 @@
     <option name="totallyTimeSpent" value="5611000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="0" y="0" width="1366" height="728" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26363635" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902735" sideWeight="0.67235494" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.58361775" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32807016" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935154" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32807016" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7986348" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24621212" sideWeight="0.67064846" order="7" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32935154" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24846625" sideWeight="0.67192984" order="7" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32807016" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -558,83 +830,16 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/AddAccountActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="4" selection-start="541" selection-end="541" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/EmptyListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="1" selection-start="261" selection-end="261" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/BudgetNotificationReciever.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="127" column="9" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/AccountsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="13" selection-end="13" vertical-scroll-proportion="-0.68">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/AccountsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/AddTransactionActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="832" selection-end="832" vertical-scroll-proportion="0.2881356">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../actionbarsherlock/libs/android-support-v4.jar!/android/support/v4/app/NotificationCompat.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="165" selection-end="165" vertical-scroll-proportion="0.25835866" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/BudgetNotificationReciever.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="127" column="9" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.0">
+        <state line="127" column="9" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="4" selection-start="14" selection-end="14" vertical-scroll-proportion="0.060714286">
-          <folding />
-        </state>
+        <state line="2" column="4" selection-start="14" selection-end="14" vertical-scroll-proportion="0.060714286" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/activity_accounts.xml">
@@ -642,39 +847,105 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="27" selection-start="251" selection-end="251" vertical-scroll-proportion="-2.04">
+        <state line="6" column="27" selection-start="251" selection-end="251" vertical-scroll-proportion="-2.04" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/EmptyListFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="225" selection-end="225" vertical-scroll-proportion="-76.5">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="9" column="13" selection-start="225" selection-end="225" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1258">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="1" selection-start="143" selection-end="143" vertical-scroll-proportion="0.2125">
-          <folding />
-        </state>
+        <state line="7" column="1" selection-start="143" selection-end="143" vertical-scroll-proportion="0.2125" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/AddAccountActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="129" column="49" selection-start="3810" selection-end="3810" vertical-scroll-proportion="0.0">
+        <state line="129" column="49" selection-start="3810" selection-end="3810" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/DatabaseManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="496" column="0" selection-start="19044" selection-end="19044" vertical-scroll-proportion="0.759887">
+        <state line="496" column="0" selection-start="19044" selection-end="19044" vertical-scroll-proportion="0.0" vertical-offset="6307" max-vertical-offset="20927">
           <folding>
+            <element signature="imports" expanded="false" />
             <element signature="method#populateDefaultCategories#0;class#DatabaseManager#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/category_item_layout.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="1576" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="816">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/drawer_list_item.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="36" selection-start="283" selection-end="283" vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="272">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/activity_transactions.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="41" selection-start="1297" selection-end="1297" vertical-scroll-proportion="0.0" vertical-offset="371" max-vertical-offset="782">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/android/support/v4/app/ActionBarDrawerToggle.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="11" selection-start="976" selection-end="976" vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="2414">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="140" column="30" selection-start="6484" selection-end="6484" vertical-scroll-proportion="0.0" vertical-offset="2098" max-vertical-offset="2516">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/BaseFragmentActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="345" selection-end="345" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="323">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="22" selection-start="1020" selection-end="1020" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="4488">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/TransactionsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="33" selection-start="1460" selection-end="1460" vertical-scroll-proportion="0.42857143" vertical-offset="680" max-vertical-offset="8874">
+          <folding>
+            <element signature="e#7528#7538#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -755,7 +1026,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>android-support-v4</last-edited>
+          <last-edited>android-support-v41</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
