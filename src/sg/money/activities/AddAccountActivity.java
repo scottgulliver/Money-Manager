@@ -19,8 +19,8 @@ import sg.money.domainobjects.Transaction;
 import sg.money.models.AddAccountModel;
 import sg.money.models.OnChangeListener;
 
-public class AddAccountActivity extends BaseActivity implements OnChangeListener
-{    
+public class AddAccountActivity extends BaseActivity implements OnChangeListener<AddAccountModel>
+{
     EditText txtName;
     EditText txtStartingBalance;
     TextView textView2;
@@ -55,6 +55,23 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         
         txtStartingBalance.setText("0.00");
     }
+	
+	@Override
+	public void onChange(AddAccountModel model)
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				updateUi();
+			}
+		});
+	}
+	
+	private void updateUi()
+	{
+		
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,72 +107,20 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 	    return true;
 	}
     
-    private boolean Validate()
-    {
-    	if (txtName.getText().toString().trim().equals(""))
-    	{
-    		Toast.makeText(AddAccountActivity.this, "Please enter a name.", Toast.LENGTH_SHORT).show();
-    		return false;
-    	}
-    	
-    	for(Account currentAccount : currentAccounts)
-    	{
-    		if (editAccount != null && (currentAccount.id == editAccount.id)) continue;
-    		
-    		if (txtName.getText().toString().trim().equals(currentAccount.name.trim()))
-        	{
-        		Toast.makeText(AddAccountActivity.this, "An account with this name already exists.", Toast.LENGTH_SHORT).show();
-        		return false;
-        	}
-    	}
-    	
-    	return true;
-    }
-    
     private void OkClicked()
     {
-    	if (!Validate())
-    		return;
-    	
-    	if (editAccount == null)
-    	{
-	    	//create the account
-	    	Account newAccount = new Account(txtName.getText().toString().trim());
-	    	newAccount.value = 0;
-	    	
-			DatabaseManager.getInstance(AddAccountActivity.this).AddAccount(newAccount);
+		String validationError = model.validate(AddAccountActivity.this);
+    	if (validationError != null)
+		{
+    		Toast.makeText(AddAccountActivity.this, validationError, Toast.LENGTH_SHORT).show();
+		}
+		else
+		{
+			model.commit(AddAccountActivity.this);
 			
-			double startBalance = Double.valueOf(txtStartingBalance.getText().toString());
-			if (startBalance != 0.0)
-			{
-				Transaction transaction = new Transaction();
-				transaction.account = newAccount.id;
-				transaction.description = "Starting balance for account";
-				transaction.dateTime = Calendar.getInstance().getTime();
-				transaction.value = startBalance;
-				
-				ArrayList<Category> categories = DatabaseManager.getInstance(AddAccountActivity.this).GetAllCategories();
-				for(Category category : categories)
-				{
-					if (category.name.equals("Starting Balance") && category.income == startBalance > 0)
-					{
-						transaction.category = category.id;
-						break;
-					}
-				}
-				
-				DatabaseManager.getInstance(AddAccountActivity.this).InsertTransaction(transaction);
-			}
-    	}
-    	else
-    	{
-	    	//edit the account	    	
-    		editAccount.name = txtName.getText().toString().trim();
-			DatabaseManager.getInstance(AddAccountActivity.this).UpdateAccount(editAccount);
-    	}
-    	
-        setResult(RESULT_OK, new Intent());
-        finish();
+			setResult(RESULT_OK, new Intent());
+			finish();
+		}
     }
 
     private void CancelClicked()
