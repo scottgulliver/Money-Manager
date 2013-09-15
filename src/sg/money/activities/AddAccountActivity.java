@@ -32,6 +32,10 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_account);
 
+        txtName = (EditText)findViewById(R.id.txtName);
+        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
+        textView2 = (TextView)findViewById(R.id.textView2);
+
         Account account = null;
         int editId = getIntent().getIntExtra("ID", -1);
         if (editId != -1)
@@ -48,11 +52,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     	setTitle(model.isNewAccount() ? "Add Account" : "Edit Account");
     	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        txtName = (EditText)findViewById(R.id.txtName);
-        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
-        textView2 = (TextView)findViewById(R.id.textView2);
-        
+
         txtStartingBalance.setText("0.00");
     }
 	
