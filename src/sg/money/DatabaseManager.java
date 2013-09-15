@@ -10,6 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import sg.money.domainobjects.Account;
+import sg.money.domainobjects.Budget;
+import sg.money.domainobjects.Category;
+import sg.money.domainobjects.Transaction;
+
 public class DatabaseManager extends SQLiteOpenHelper
 {
 	static Context _context;
@@ -930,6 +935,8 @@ public class DatabaseManager extends SQLiteOpenHelper
 		String sql = "DELETE FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+category.id;
 		Log.i("SQL", sql);
 		db.execSQL(sql);
+
+        /* Make all associated transactions 'uncategorised' */
 		
 		Category uncategorisedCategory = null;
 		ArrayList<Category> categories = GetAllCategories();
@@ -951,6 +958,17 @@ public class DatabaseManager extends SQLiteOpenHelper
 				UpdateTransaction(transaction);
 			}
 		}
+
+        if (category.parentCategoryId == -1)
+        {
+            for(Category testCategory : GetAllCategories())
+            {
+                if (testCategory.parentCategoryId == category.id)
+                {
+                    DeleteCategory(testCategory);
+                }
+            }
+        }
 		
 		clearDatabase();
 	}

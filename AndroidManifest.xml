@@ -14,57 +14,41 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="sg.money.TransactionsActivity"
-            android:label="@string/title_activity_transactions" >
+                android:name=".activities.ParentActivity"
+                android:label="@string/title_activity_transactions" >
         </activity>
         <activity
-            android:name="sg.money.AddTransactionActivity"
+            android:name=".activities.AddTransactionActivity"
             android:label="@string/title_activity_add_transaction"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="sg.money.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="Settings" >
         </activity>
         <activity
-            android:name="sg.money.AccountsActivity"
-            android:label="@string/title_activity_accounts" >
-        </activity>
-        <activity
-            android:name="sg.money.AddAccountActivity"
+            android:name=".activities.AddAccountActivity"
             android:label="@string/title_activity_add_acount"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="sg.money.CategoriesActivity"
-            android:label="@string/title_activity_categories" >
-        </activity>
-        <activity
-            android:name="sg.money.AddCategoryActivity"
+            android:name=".activities.AddCategoryActivity"
             android:label="@string/title_activity_add_category" 
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="sg.money.OverviewActivity"
-            android:label="@string/title_activity_overview" >
-        </activity>
-        <activity
-            android:name="sg.money.BudgetsActivity"
-            android:label="@string/title_activity_budgets" >
-        </activity>
-        <activity
-            android:name="sg.money.AddBudgetActivity"
+            android:name=".activities.AddBudgetActivity"
             android:label="@string/title_activity_add_budget"
             android:windowSoftInputMode="adjustResize" >
         </activity>
 
         <receiver
-            android:name="sg.money.BudgetNotificationReciever"
+            android:name=".adapters.BudgetNotificationReciever"
             android:process=":remote" >
         </receiver>
 
         <activity
-            android:name="sg.money.PinEntryActivity"
+            android:name=".activities.PinEntryActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" >
 
