@@ -28,6 +28,8 @@ public class AddAccountModel extends SimpleObservable {
 
     public void setAccountName(String accountName) {
         account.name = accountName;
+		startingBalance = 9d;
+		notifyObservers(this);
     }
 
     public Double getStartingBalance() {
@@ -36,6 +38,7 @@ public class AddAccountModel extends SimpleObservable {
 
     public void setStartingBalance(Double startingBalance) {
         this.startingBalance = startingBalance;
+		notifyObservers(this);
     }
 
     public boolean isNewAccount()

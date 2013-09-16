@@ -18,19 +18,29 @@ import sg.money.R;
 import sg.money.domainobjects.Transaction;
 import sg.money.models.AddAccountModel;
 import sg.money.models.OnChangeListener;
+import android.view.View.*;
+import android.location.*;
+import sg.money.controllers.*;
 
 public class AddAccountActivity extends BaseActivity implements OnChangeListener<AddAccountModel>
 {
+	View baseView;
     EditText txtName;
     EditText txtStartingBalance;
     TextView textView2;
     private AddAccountModel model;
+	private AddAccountController controller;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_account);
+
+		baseView = findViewById(R.id.addactivitybase);
+        txtName = (EditText)findViewById(R.id.txtName);
+        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
+        textView2 = (TextView)findViewById(R.id.textView2);
 
         Account account = null;
         int editId = getIntent().getIntExtra("ID", -1);
@@ -41,6 +51,9 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 
         model = new AddAccountModel();
         model.addListener(this);
+		
+		controller = new AddAccountController(this, model);
+		
 
         txtStartingBalance.setVisibility(model.isNewAccount() ? View.VISIBLE : View.GONE);
         textView2.setVisibility(model.isNewAccount() ? View.VISIBLE : View.GONE);
@@ -49,11 +62,29 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        txtName = (EditText)findViewById(R.id.txtName);
-        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
-        textView2 = (TextView)findViewById(R.id.textView2);
-        
         txtStartingBalance.setText("0.00");
+		
+		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
+			{
+				public void onFocusChange(View view, boolean hasFocus)
+				{
+					if (!hasFocus)
+					{
+						controller.onAccountNameChange(txtName.getText().toString());
+					}
+				}			
+			});
+
+		txtStartingBalance.setOnFocusChangeListener(new OnFocusChangeListener()
+			{
+				public void onFocusChange(View view, boolean hasFocus)
+				{
+					if (!hasFocus)
+					{
+						controller.onStartingBalanceChange(Double.parseDouble(txtStartingBalance.getText().toString()));
+					}
+				}			
+			});
     }
 	
 	@Override
@@ -67,10 +98,17 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 			}
 		});
 	}
+
+	private void updateModel()
+	{
+		model.setAccountName(txtName.getText().toString());
+		model.setStartingBalance(Double.parseDouble(txtStartingBalance.getText().toString()));
+	}
 	
 	private void updateUi()
 	{
-		
+		txtName.setText(model.getAccountName());
+		txtStartingBalance.setText(String.valueOf(model.getStartingBalance()));
 	}
 
     @Override
@@ -109,6 +147,8 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     
     private void OkClicked()
     {
+		cancelFocus();
+		
 		String validationError = model.validate(AddAccountActivity.this);
     	if (validationError != null)
 		{
@@ -122,6 +162,11 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 			finish();
 		}
     }
+	
+	private void cancelFocus()
+	{
+		baseView.requestFocus();
+	}
 
     private void CancelClicked()
     {
