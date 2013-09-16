@@ -42,6 +42,10 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
         textView2 = (TextView)findViewById(R.id.textView2);
 
+        txtName = (EditText)findViewById(R.id.txtName);
+        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
+        textView2 = (TextView)findViewById(R.id.textView2);
+
         Account account = null;
         int editId = getIntent().getIntExtra("ID", -1);
         if (editId != -1)
@@ -61,7 +65,11 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     	setTitle(model.isNewAccount() ? "Add Account" : "Edit Account");
     	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> branch 'Lexington' of https://sgulliver@bitbucket.org/pennypresssoftware/money-manager.git
         txtStartingBalance.setText("0.00");
 		
 		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
