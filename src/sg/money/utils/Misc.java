@@ -333,4 +333,9 @@ public class Misc
             throw new RuntimeException(ex);
         }
     }
+
+    public static boolean stringNullEmptyOrWhitespace(final String string)
+    {
+        return string == null || string.isEmpty() || string.trim().isEmpty();
+    }
 }

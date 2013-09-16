@@ -24,6 +24,7 @@ import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
 import sg.money.DatabaseManager;
 import sg.money.fragments.HostActivityFragmentTypes;
+import sg.money.models.AddBudgetModel;
 import sg.money.utils.Misc;
 import sg.money.R;
 
@@ -53,6 +54,8 @@ public class AddBudgetActivity extends BaseActivity {
 	// Bundle State Data
 	static final String STATE_SELECTED_ACCOUNTS = "stateSelectedAccounts";
 	static final String STATE_SELECTED_CATEGORIES = "stateSelectedCategories";
+
+    AddBudgetModel model;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -365,70 +368,31 @@ public class AddBudgetActivity extends BaseActivity {
 		return builder.create();
 	}
 
-	private boolean Validate() {
-		if (txtName.getText().toString().trim().equals("")) {
-			Toast.makeText(AddBudgetActivity.this, "Please enter a name.",
-					Toast.LENGTH_SHORT).show();
-			return false;
-		}
+    public void cancelFocus()
+    {
+        txtName.clearFocus();
+        txtValue.clearFocus();
+    }
 
-		if (txtValue.getText().toString().trim().equals("")) {
-			Toast.makeText(AddBudgetActivity.this, "Please enter a value.",
-					Toast.LENGTH_SHORT).show();
-			return false;
-		}
-
-		if (Double.parseDouble(txtValue.getText().toString().trim()) < 0) {
-			Toast.makeText(AddBudgetActivity.this,
-					"Please enter a positive budget value.", Toast.LENGTH_SHORT)
-					.show();
-			return false;
-		}
-
-		for (Budget currentBudget : currentBudgets) {
-			if (editBudget != null && (currentBudget.id == editBudget.id))
-				continue;
-
-			if (txtName.getText().toString().trim()
-					.equals(currentBudget.name.trim())) {
-				Toast.makeText(AddBudgetActivity.this,
-						"A budget with this name already exists.",
-						Toast.LENGTH_SHORT).show();
-				return false;
-			}
-		}
-
-		return true;
-	}
 
 	private void OkClicked() {
-		if (!Validate())
-			return;
 
-		boolean creatingNew = false;
-		if (editBudget == null) {
-			editBudget = new Budget();
-			creatingNew = true;
-		}
+        cancelFocus();
 
-		// set up values
-		editBudget.name = txtName.getText().toString().trim();
-		editBudget.value = Double.parseDouble(txtValue.getText().toString()
-				.trim());
-		editBudget.categories = selectedCategories;
-		editBudget.accounts = selectedAccounts;
-		editBudget.notifyType = spnNotifyType.getSelectedItemPosition();
+        String validationError = model.validate(this);
+        if (validationError != null)
+        {
+            Toast.makeText(this, validationError, Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            model.commit(this);
 
-		// commit to the db
-		if (creatingNew)
-			DatabaseManager.getInstance(AddBudgetActivity.this).AddBudget(
-					editBudget);
-		else
-			DatabaseManager.getInstance(AddBudgetActivity.this).UpdateBudget(
-					editBudget);
+            setResult(RESULT_OK, new Intent());
+            finish();
+        }
 
-		setResult(RESULT_OK, new Intent());
-		finish();
+		//editBudget.notifyType = spnNotifyType.getSelectedItemPosition();
 	}
 
 	private void CancelClicked() {

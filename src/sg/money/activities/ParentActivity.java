@@ -30,7 +30,7 @@ import sg.money.fragments.TransactionsHolderFragment;
 
 public class ParentActivity extends BaseFragmentActivity implements ActionBarDrawerToggle.DelegateProvider
 {
-    static final String INTENTEXTRA_CONTENTTYPE = "INTENTEXTRA_CONTENTTYPE";
+    public static final String INTENTEXTRA_CONTENTTYPE = "INTENTEXTRA_CONTENTTYPE";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;

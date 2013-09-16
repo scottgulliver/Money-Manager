@@ -21,6 +21,7 @@ import sg.money.models.OnChangeListener;
 import android.view.View.*;
 import android.location.*;
 import sg.money.controllers.*;
+import sg.money.utils.Misc;
 
 public class AddAccountActivity extends BaseActivity implements OnChangeListener<AddAccountModel>
 {
@@ -53,7 +54,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
             account = DatabaseManager.getInstance(AddAccountActivity.this).GetAccount(editId);
         }
 
-        model = new AddAccountModel();
+        model = new AddAccountModel(account);
         model.addListener(this);
 		
 		controller = new AddAccountController(this, model);
@@ -65,11 +66,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     	setTitle(model.isNewAccount() ? "Add Account" : "Edit Account");
     	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> branch 'Lexington' of https://sgulliver@bitbucket.org/pennypresssoftware/money-manager.git
         txtStartingBalance.setText("0.00");
 		
 		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
@@ -89,28 +86,25 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 				{
 					if (!hasFocus)
 					{
+                        if (Misc.stringNullEmptyOrWhitespace(txtStartingBalance.getText().toString()))
+                            txtStartingBalance.setText("0");
+
 						controller.onStartingBalanceChange(Double.parseDouble(txtStartingBalance.getText().toString()));
 					}
 				}			
 			});
+
+        updateUi();
     }
 	
 	@Override
 	public void onChange(AddAccountModel model)
 	{
-		runOnUiThread(new Runnable()
-		{
-			public void run()
-			{
-				updateUi();
-			}
-		});
-	}
-
-	private void updateModel()
-	{
-		model.setAccountName(txtName.getText().toString());
-		model.setStartingBalance(Double.parseDouble(txtStartingBalance.getText().toString()));
+		runOnUiThread(new Runnable() {
+            public void run() {
+                updateUi();
+            }
+        });
 	}
 	
 	private void updateUi()
@@ -124,61 +118,17 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         getSupportMenuInflater().inflate(R.menu.activity_add_account, menu);
         return true;
     }
-    
+
+
+
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId())
-	    {
-	    	case R.id.menu_accepttransaction:{
-	    		OkClicked();
-	    		break;
-	    		}
-
-	    	case R.id.menu_rejecttransaction:{
-	    		CancelClicked();
-	    		break;
-	    		}	    	
-	    	
-	        case R.id.menu_settings:{
-                break;
-            	}
-	        
-	        case android.R.id.home: // up button
-	            Intent intent = new Intent(this, ParentActivity.class);
-                intent.putExtra(ParentActivity.INTENTEXTRA_CONTENTTYPE, HostActivityFragmentTypes.Accounts);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            break;
-	    }
-	    return true;
-	}
-    
-    private void OkClicked()
-    {
-		cancelFocus();
-		
-		String validationError = model.validate(AddAccountActivity.this);
-    	if (validationError != null)
-		{
-    		Toast.makeText(AddAccountActivity.this, validationError, Toast.LENGTH_SHORT).show();
-		}
-		else
-		{
-			model.commit(AddAccountActivity.this);
-			
-			setResult(RESULT_OK, new Intent());
-			finish();
-		}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return controller.onOptionsItemSelected(item);
     }
-	
-	private void cancelFocus()
-	{
-		baseView.requestFocus();
-	}
 
-    private void CancelClicked()
+    public void cancelFocus()
     {
-        setResult(RESULT_CANCELED, new Intent());
-        finish();
+        txtName.clearFocus();
+        txtStartingBalance.clearFocus();
     }
 }

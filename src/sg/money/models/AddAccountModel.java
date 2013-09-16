@@ -13,13 +13,15 @@ public class AddAccountModel extends SimpleObservable {
     private boolean newAccount;
 	private ArrayList<Account> currentAccounts;
 
-    public AddAccountModel() {
-        this(new Account(""));
-        newAccount = true;
-    }
-
     public AddAccountModel(Account account) {
         this.account = account;
+        if (this.account == null)
+        {
+            this.account = new Account("");
+            newAccount = true;
+        }
+
+        startingBalance = 0d;
     }
 
     public String getAccountName() {
@@ -28,7 +30,6 @@ public class AddAccountModel extends SimpleObservable {
 
     public void setAccountName(String accountName) {
         account.name = accountName;
-		startingBalance = 9d;
 		notifyObservers(this);
     }
 
