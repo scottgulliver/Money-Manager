@@ -10,10 +10,17 @@ import sg.money.DatabaseManager;
 
 public class Budget
 {
+	public enum NotificationType{
+		None,
+		Daily,
+		Weekly,
+		Monthly
+	}
+	
 	public int id;
 	public String name;
 	public double value;
-	public int notifyType;
+	public NotificationType notifyType;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
 	

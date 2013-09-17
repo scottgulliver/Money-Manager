@@ -1,16 +1,10 @@
 package sg.money.models;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import sg.money.DatabaseManager;
-import sg.money.domainobjects.Account;
-import sg.money.domainobjects.Budget;
-import sg.money.domainobjects.Category;
-import sg.money.domainobjects.Transaction;
+import android.content.*;
+import java.util.*;
+import sg.money.*;
+import sg.money.domainobjects.*;
+import sg.money.utils.*;
 
 public class AddBudgetModel extends SimpleObservable {
 
@@ -18,8 +12,6 @@ public class AddBudgetModel extends SimpleObservable {
     private ArrayList<Account> currentAccounts;
     private ArrayList<Category> currentCategories;
     private ArrayList<Budget> currentBudgets;
-    private ArrayList<Account> selectedAccounts;
-    private ArrayList<Category> selectedCategories;
     private ArrayList<String> notifyTypeOptions;
     private boolean newBudget;
 
@@ -32,8 +24,22 @@ public class AddBudgetModel extends SimpleObservable {
         }
 
         currentAccounts = DatabaseManager.getInstance(context).GetAllAccounts();
-        currentCategories = DatabaseManager.getInstance(context).GetAllCategories();
         currentBudgets = DatabaseManager.getInstance(context).GetAllBudgets();
+        currentCategories = new ArrayList<Category>();
+		
+		ArrayList<Category> allCategories = DatabaseManager.getInstance(context)
+			.GetAllCategories();
+		allCategories = Misc.getCategoriesInGroupOrder(allCategories);
+		for (Category category : allCategories) {
+			if (!category.income)
+				currentCategories.add(category);
+		}
+
+		notifyTypeOptions = new ArrayList<String>();
+		notifyTypeOptions.add("None");
+		notifyTypeOptions.add("Daily");
+		notifyTypeOptions.add("Weekly");
+		notifyTypeOptions.add("Monthly");
     }
 
     public String getBudgetName() {
@@ -53,7 +59,55 @@ public class AddBudgetModel extends SimpleObservable {
         budget.value = value;
         notifyObservers(this);
     }
+	
+	public ArrayList<String> getNotifyTypeOptions()
+	{
+		return notifyTypeOptions;
+	}
+	
+	public ArrayList<Account> getSelectedAccounts()
+	{
+		return budget.accounts;
+	}
+	
+	public void setSelectedAccounts(ArrayList<Account> accounts)
+	{
+		budget.accounts = accounts;
+		notifyObservers(this);
+	}
 
+	public ArrayList<Category> getSelectedCategories()
+	{
+		return budget.categories;
+	}
+
+	public void setSelectedCategories(ArrayList<Category> categories)
+	{
+		budget.categories = categories;
+		notifyObservers(this);
+	}
+
+	public ArrayList<Account> getCurrentAccounts()
+	{
+		return currentAccounts;
+	}
+
+	public ArrayList<Category> getCurrentCategories()
+	{
+		return currentCategories;
+	}
+	
+	public int getNotifyType()
+	{
+		return budget.notifyType;
+	}
+	
+	public void setNotifyType(int notifyType)
+	{
+		budget.notifyType = notifyType;
+		notifyObservers(this);
+	}
+	
     public boolean isNewBudget()
     {
         return newBudget;
