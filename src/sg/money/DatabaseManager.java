@@ -1204,7 +1204,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				budget.id = c.getInt((c.getColumnIndex(colBudgetsID)));
 				budget.name = c.getString((c.getColumnIndex(colBudgetsName)));
 				budget.value = c.getDouble((c.getColumnIndex(colBudgetsValue)));
-				budget.notifyType = c.getInt((c.getColumnIndex(colBudgetsNotify)));
+				budget.notifyType = Budget.NotificationType.fromInteger(c.getInt((c.getColumnIndex(colBudgetsNotify))));
 				
 				/* find links */
 				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
@@ -1268,7 +1268,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				budget.id = id;
 				budget.name = c.getString((c.getColumnIndex(colBudgetsName)));
 				budget.value = c.getDouble((c.getColumnIndex(colBudgetsValue)));
-				budget.notifyType = c.getInt((c.getColumnIndex(colBudgetsNotify)));
+				budget.notifyType = Budget.NotificationType.fromInteger(c.getInt((c.getColumnIndex(colBudgetsNotify))));
 				
 				/* find links */
 				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;

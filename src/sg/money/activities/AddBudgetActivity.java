@@ -79,10 +79,9 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 		
 		setTitle(model.isNewBudget() ? "Add Budget" : "Edit Budget");
 
-		//todo controller
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-																	 android.R.layout.simple_spinner_dropdown_item,
-																	 model.getNotifyTypeOptions());
+                                                     android.R.layout.simple_spinner_dropdown_item,
+                                                     controller.getNotificationOptions());
 		spnNotifyType.setAdapter(arrayAdapter);
 
 		btnCategories.setOnClickListener(new OnClickListener() {
@@ -124,33 +123,35 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 			
 		spnNotifyType.setOnItemSelectedListener(new OnItemSelectedListener()
 			{
-			public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4)
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
-				controller.onNotifyTypeSelected(not..);
+				controller.onNotifyTypeSelected(Budget.NotificationType.fromInteger(position));
 			}
 
-			public void onNothingSelected(AdapterView<?> p1)
+			public void onNothingSelected(AdapterView<?> parent)
 			{
-				// TODO: Implement this method
-			}			
+                //do nothing
+			}
 		});
+
+        updateUi();
 	}
 
-	@Override
-	public void onChange(AddBudgetModel model)
-	{
-		runOnUiThread(new Runnable() {
-				public void run() {
-					updateUi();
-				}
-			});
-	}
+    @Override
+    public void onChange(AddBudgetModel model)
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                updateUi();
+            }
+        });
+    }
 	
 	public void updateUi()
 	{
 		txtName.setText(model.getBudgetName());
 		txtValue.setText(String.valueOf(model.getBudgetValue()));
-		spnNotifyType.setSelection(model.getNotifyType());
+		spnNotifyType.setSelection(model.getNotifyType().getValue());
 	}
 
 	@Override

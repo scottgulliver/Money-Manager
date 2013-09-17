@@ -90,7 +90,7 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 				
 				for(Budget budget : budgets)
 				{
-					if (budget.notifyType > 0 && budget.notifyType <= highestNotifyType)
+					if (budget.notifyType != Budget.NotificationType.None && budget.notifyType.getValue() <= highestNotifyType)
 						budgetsToShow.add(budget);
 				}
 
@@ -100,8 +100,11 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 				{
 					linesToShow.add(budget.name + " - " + budget.getCompletePercentage(context, startDate, endDate));
 					
-					if (budget.notifyType > 1)
+					if (budget.notifyType == Budget.NotificationType.Weekly
+                            || budget.notifyType == Budget.NotificationType.Monthly)
+                    {
 						onlyDailyBudgets = false;
+                    }
 				}
 				
 				if (onlyDailyBudgets)

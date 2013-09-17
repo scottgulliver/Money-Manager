@@ -15,7 +15,7 @@ import android.view.*;
 
 public class AddBudgetController
 {
-	private enum DialogType
+    private enum DialogType
 	{
 		Accounts,
 		Categories
@@ -40,7 +40,10 @@ public class AddBudgetController
 		model.setBudgetValue(value);
 	}
 
-	@Override
+    public void onNotifyTypeSelected(Budget.NotificationType notificationType) {
+        model.setNotifyType(notificationType);
+    }
+
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_acceptbudget: {
@@ -65,6 +68,11 @@ public class AddBudgetController
 		}
 		return true;
 	}
+
+    public List<String> getNotificationOptions()
+    {
+        return Misc.toStringList(Budget.NotificationType.class);
+    }
 
 	public void CategoriesClicked() {
 		boolean[] checkedItems = new boolean[model.getCurrentCategories().size() + 1];

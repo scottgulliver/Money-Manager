@@ -3,26 +3,30 @@
                 android:id="@+id/itemlinearlayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp">
 
     <ImageView
             android:id="@+id/drawer_item_icon"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"/>
 
     <TextView
             android:id="@+id/drawer_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:paddingLeft="8dip"
+            android:paddingLeft="0dip"
             android:paddingRight="8dip"
-            android:paddingTop="8dip"
+            android:paddingTop="6dip"
             android:text="@string/design_categoryitem_name"
             android:textColor="#222222"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/drawer_item_icon"/>
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/drawer_item_icon"
+            android:layout_marginLeft="10dp"/>
 
 </RelativeLayout>

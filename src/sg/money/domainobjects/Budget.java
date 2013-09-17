@@ -11,10 +11,34 @@ import sg.money.DatabaseManager;
 public class Budget
 {
 	public enum NotificationType{
-		None,
-		Daily,
-		Weekly,
-		Monthly
+		None(0),
+		Daily(1),
+		Weekly(2),
+		Monthly(3);
+
+        // access to values() for casting is expensive, so use this instead..
+        public static NotificationType fromInteger(int x) {
+            switch(x) {
+                case 0:
+                    return None;
+                case 1:
+                    return Daily;
+                case 2:
+                    return Weekly;
+                case 3:
+                    return Monthly;
+            }
+            return null;
+        }
+
+        private final int value;
+        private NotificationType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
 	}
 	
 	public int id;

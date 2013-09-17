@@ -97,12 +97,12 @@ public class AddBudgetModel extends SimpleObservable {
 		return currentCategories;
 	}
 	
-	public int getNotifyType()
+	public Budget.NotificationType getNotifyType()
 	{
 		return budget.notifyType;
 	}
 	
-	public void setNotifyType(int notifyType)
+	public void setNotifyType(Budget.NotificationType notifyType)
 	{
 		budget.notifyType = notifyType;
 		notifyObservers(this);
