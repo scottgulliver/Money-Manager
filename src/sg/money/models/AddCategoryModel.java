@@ -23,6 +23,7 @@ public class AddCategoryModel extends SimpleObservable {
     ArrayList<String> parentOptions;
     int currentColor;
     boolean newCategory;
+	private Category cachedParentCategory;
 
     public AddCategoryModel(Category category, Context context) {
         this.category = category;
@@ -31,7 +32,6 @@ public class AddCategoryModel extends SimpleObservable {
             this.category = new Category();
             newCategory = true;
 
-
             Random rnd = new Random(System.currentTimeMillis());
             currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
         }
@@ -39,24 +39,54 @@ public class AddCategoryModel extends SimpleObservable {
         currentCategories = DatabaseManager.getInstance(context).GetAllCategories();
     }
 
+	public void setIsIncome(boolean incomeSelected)
+	{
+		category.income = incomeSelected;
+		notifyObservers(this);
+	}
+
+	public boolean getIsPermanent()
+	{
+		return category.isPermanent;
+	}
+
     public String getCategoryName()
     {
         return category.name;
     }
 
-    public void setCategoryName(String value)
+    public void setCategoryName(String name)
     {
-        category.name = value;
+        category.name = name;
+		notifyObservers(this);
     }
 
-    public int getParentCategory()
+    public Category getParentCategory()
     {
-        return category.parentCategoryId;
+		if (cachedParentCategory != null 
+			&& cachedParentCategory.id == category.parentCategoryId)
+		{
+			return cachedParentCategory;
+		}
+		
+		cachedParentCategory = null;
+		for(Category category : currentCategories)
+		{
+			if (category.id == category.parentCategoryId)
+			{
+				cachedParentCategory = category;
+			}
+		}
+		
+        return cachedParentCategory;
     }
 
+	
     public void setParentCategory(Category parent)
     {
         category.parentCategoryId = parent.id;
+		cachedParentCategory = parent;
+		notifyObservers(this);
     }
 
     public int getCurrentColor() {
@@ -67,8 +97,9 @@ public class AddCategoryModel extends SimpleObservable {
         return currentCategories;
     }
 
-    public void setCurrentColor(int currentColor) {
-        this.currentColor = currentColor;
+    public void setCurrentColor(int color) {
+        this.currentColor = color;
+		notifyObservers(this);
     }
 
     public String validate()

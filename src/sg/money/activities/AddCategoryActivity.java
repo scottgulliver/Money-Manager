@@ -27,6 +27,8 @@ import sg.money.widgets.ColorPickerDialog;
 import sg.money.DatabaseManager;
 import sg.money.fragments.HostActivityFragmentTypes;
 import sg.money.R;
+import sg.money.controllers.*;
+import android.view.View.*;
 
 public class AddCategoryActivity extends BaseActivity implements ColorPickerDialog.OnColorChangedListener, OnChangeListener<AddCategoryModel>
 {
@@ -35,9 +37,8 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 	Spinner spnParent;
 	ImageView imgColor;
 
-    ArrayList<String> parentOptions; //TODO FIX THIS
-
     AddCategoryModel model;
+	AddCategoryController controller;
 	
 	//Bundle State Data
 	static final String STATE_COLOUR = "stateColour";
@@ -63,9 +64,9 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
             editCategory = DatabaseManager.getInstance(AddCategoryActivity.this).GetCategory(editId);
         }
 
-
         model = new AddCategoryModel(editCategory, this);
         model.addListener(this);
+		controller = new AddCategoryController(this, model);
 
         setTitle(model.isNewCategory() ? "Add Category" : "Edit Category");
 
@@ -77,89 +78,59 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         options.add("Income");
         
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-				this,android.R.layout.simple_spinner_dropdown_item, options);
+				this, android.R.layout.simple_spinner_dropdown_item, options);
 
 		spnType.setAdapter(arrayAdapter);
+
+		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
+			{
+				public void onFocusChange(View view, boolean hasFocus)
+				{
+					if (!hasFocus)
+					{
+						controller.onCategoryNameChange(txtName.getText().toString());
+					}
+				}			
+			});
     	
     	spnType.post(new Runnable() {
 			public void run() {
 				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-						PopulateCategories();
+					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+						controller.onTypeChange(position == 1);
 					}
 
-					public void onNothingSelected(AdapterView<?> arg0) {
+					public void onNothingSelected(AdapterView<?> parent) {
 					}
 				});
 			}
-		});
-    	
-    	PopulateCategories();
+			});
 
-        //check if we are editing
-        if (!model.isNewCategory())
-        {
-        	txtName.setText(editCategory.name);
-        	
-        	if (editCategory.isPermanent)
-        	{
-        		txtName.setFocusable(false);
-        		txtName.setFocusableInTouchMode(false);
-        		txtName.setClickable(false);
-        		spnType.setFocusable(false);
-        		spnType.setFocusableInTouchMode(false);
-        		spnType.setClickable(false);
-        	}
-        	
-        	if (editCategory.parentCategoryId != -1)
-        	{
-        		Category selectedCategory = null;
-        		for(Category category : model.getCurrentCategories())
-        		{
-        			if (category.id == editCategory.parentCategoryId)
-        			{
-        				selectedCategory = category;
-        			}
-        		}
-        		
-        		if (selectedCategory != null)
-        		{
-        			spnType.setSelection(selectedCategory.income ? 0 : 1);
-        			for(int i = 0; i < parentOptions.size(); i++)
-        			{
-        				if (parentOptions.get(i).equals(selectedCategory.name))
-        				{
-        					spnParent.setSelection(i);
-        					break;
-        				}
-        			}
-        		}
-        	}
-    		else
-    		{
-    			if (editCategory.isPermanent)
-    				spnParent.setEnabled(false);
-    			else
-    			{
-	    			for(Category category : model.getCurrentCategories())
-	    			{
-	    				if (category.parentCategoryId == editCategory.id)
-	    				{
-	    					spnParent.setEnabled(false);
-	    				}
-	    			}
-    			}
-    		}
-        }
+    	spnParent.post(new Runnable() {
+				public void run() {
+					spnParent.setOnItemSelectedListener(new OnItemSelectedListener() {
+							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+								controller.onParentChange(position);
+							}
+
+							public void onNothingSelected(AdapterView<?> parent) {
+							}
+						});
+				}
+			});
+		
+		updateUi();
         
         if (savedInstanceState != null)
         {
         	model.setCurrentColor(savedInstanceState.getInt(STATE_COLOUR));
         }
-
-    	imgColor.setBackgroundColor(model.getCurrentColor());
-    	
     }
+
+	public void colorChanged(int color)
+	{
+		controller.colorChanged(color);
+	}
 
     @Override
     public void onChange(AddCategoryModel model)
@@ -176,7 +147,40 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         txtName.setText(model.getCategoryName());
         spnType.setSelection(model.getIsIncome() ? 1 : 0);
         imgColor.setBackgroundColor(model.getCurrentColor());
-        spnParent.setSelection(0); //TODO THIS
+		
+		//load the valid options for the parent
+
+    	ArrayAdapter<String> parentArrayAdapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_spinner_dropdown_item, 
+			controller.getParentCategoryOptions());
+    	spnParent.setAdapter(parentArrayAdapter);
+		
+		//set the parent category selection
+
+		if (model.getParentCategory() != null)
+		{
+			spnType.setSelection(model.getParentCategory().income ? 0 : 1);
+			ArrayList<String> parentOptions = controller.getParentCategoryOptions();
+			for(int i = 0; i < parentOptions.size(); i++)
+			{
+				if (parentOptions.get(i).equals(model.getParentCategory().name))
+				{
+					spnParent.setSelection(i);
+					break;
+				}
+			}
+		}
+		
+		//optionally disable some controls
+		
+		boolean enableControls = !model.getIsPermanent();
+		txtName.setFocusable(enableControls);
+		txtName.setFocusableInTouchMode(enableControls);
+		txtName.setClickable(enableControls);
+		spnType.setFocusable(enableControls);
+		spnType.setFocusableInTouchMode(enableControls);
+		spnType.setClickable(enableControls);
+		spnParent.setEnabled(enableControls);
     }
     
     @Override
@@ -198,100 +202,18 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
     
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId())
-	    {
-	    	case R.id.menu_acceptcategory:{
-	    		OkClicked();
-	    		break;
-	    		}
-
-	    	case R.id.menu_rejectcategory:{
-	    		CancelClicked();
-	    		break;
-	    		}	    	
-	    	
-	        case R.id.menu_settings:{
-                break;
-            	}
-
-	        case android.R.id.home:
-                Intent intent = new Intent(this, ParentActivity.class);
-                intent.putExtra(ParentActivity.INTENTEXTRA_CONTENTTYPE, HostActivityFragmentTypes.Categories);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
-	    }
-	    return true;
+	    return controller.onOptionsItemSelected(item);
 	}
     
-    private void PopulateCategories()
-    {
-    	boolean isIncome = (spnType.getSelectedItemId() == 1);
-    	
-    	parentOptions = new ArrayList<String>();
-    	parentOptions.add("< None >");
-    	for(Category category : model.getCurrentCategories())
-    	{
-    		if (category.parentCategoryId == -1 && category.income == isIncome && !category.isPermanent)
-    		{
-    			parentOptions.add(category.name);
-    		}
-    	}
-    	ArrayAdapter<String> parentArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, parentOptions);
-    	spnParent.setAdapter(parentArrayAdapter);
-    }
-    
+	//TODO move to controller
     private void ColorClicked()
     {
     	//launch the color picker
     	new ColorPickerDialog(this, this, model.getCurrentColor()).show();
-    }
-    
-    private int getSelectedParentId()
-    {
-    	String selectedName = (String)spnParent.getSelectedItem();
-    	boolean isIncome = (spnType.getSelectedItemId() == 1);
-    	
-    	for(Category category : model.getCurrentCategories())
-    	{
-    		if (category.name.equals(selectedName) && category.income == isIncome)
-    			return category.id;
-    	}
-
-    	return -1; // todo - throw exception here..
-    }
-    
-    private void OkClicked()
-    {
-        cancelFocus();
-
-        String validationError = model.validate();
-        if (validationError != null)
-        {
-            Toast.makeText(this, validationError, Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            model.commit(this);
-
-            setResult(RESULT_OK, new Intent());
-            finish();
-        }
     }
 
     public void cancelFocus()
     {
         txtName.clearFocus();
     }
-
-    private void CancelClicked()
-    {
-        setResult(RESULT_CANCELED, new Intent());
-        finish();
-    }
-
-	public void colorChanged(int color) {
-		model.setCurrentColor(color);
-		imgColor.setBackgroundColor(color);
-	}
 }
