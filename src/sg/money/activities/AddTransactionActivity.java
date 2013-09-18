@@ -25,15 +25,19 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.*;
 
+import sg.money.controllers.AddCategoryController;
 import sg.money.domainobjects.Account;
 import sg.money.domainobjects.Category;
 import sg.money.DatabaseManager;
 import sg.money.fragments.HostActivityFragmentTypes;
+import sg.money.models.AddCategoryModel;
+import sg.money.models.AddTransactionModel;
+import sg.money.models.OnChangeListener;
 import sg.money.utils.Misc;
 import sg.money.R;
 import sg.money.domainobjects.Transaction;
 
-public class AddTransactionActivity extends BaseFragmentActivity
+public class AddTransactionActivity extends BaseFragmentActivity implements OnChangeListener<AddTransactionModel>
 {
 	EditText txtValue;
 	EditText txtDesc; 
@@ -49,12 +53,8 @@ public class AddTransactionActivity extends BaseFragmentActivity
 	TextView txtTransferAccount;
 	Spinner spnTransferAccount;
 
-	ArrayList<Category> categories;
-	Map<String, Account> accountsMap = new HashMap<String, Account>();
-	ArrayList<String> categoryNames;
-	Transaction editTransaction;
-	
-	int accountID = -1; 
+    AddTransactionModel model;
+
 	
 	public static final String ADD_CATEGORY_STRING = "< Add new category >";
 	
@@ -72,12 +72,9 @@ public class AddTransactionActivity extends BaseFragmentActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
-    	setTitle("Add Transaction");
 
     	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        accountID = getIntent().getIntExtra("AccountID", -1);
-        
+
         txtValue = (EditText)findViewById(R.id.txtValue);
         txtDesc = (EditText)findViewById(R.id.txtDesc1);
         txtCategory = (TextView)findViewById(R.id.textView3);
@@ -86,13 +83,33 @@ public class AddTransactionActivity extends BaseFragmentActivity
         btnDate = (Button)findViewById(R.id.btnDate);
         txtNewCatName = (EditText)findViewById(R.id.txtNewCatName);
         textView4 = (TextView)findViewById(R.id.textView4);
-		chkHideFromReports = (CheckBox)findViewById(R.id.chkHideFromReports);
-		txtHideFromReports = (TextView)findViewById(R.id.textView6);
-		txtTransferAccount = (TextView)findViewById(R.id.textView7);
-		spnTransferAccount = (Spinner)findViewById(R.id.spnTransferAccount);
-        
+        chkHideFromReports = (CheckBox)findViewById(R.id.chkHideFromReports);
+        txtHideFromReports = (TextView)findViewById(R.id.textView6);
+        txtTransferAccount = (TextView)findViewById(R.id.textView7);
+        spnTransferAccount = (Spinner)findViewById(R.id.spnTransferAccount);
+
         txtNewCatName.setVisibility(View.GONE);
         textView4.setVisibility(View.GONE);
+
+        // check if we are editing
+        Transaction editTransaction = null;
+        int editId = getIntent().getIntExtra("ID", -1);
+        if (editId != -1) {
+            editTransaction = DatabaseManager.getInstance(AddTransactionActivity.this).GetTransaction(editId);
+        }
+
+        model = new AddTransactionModel(editTransaction, this);
+        model.addListener(this);
+        //controller = new AddCategoryController(this, model);
+
+        setTitle(model.isNewTransaction() ? "Add Transaction" : "Edit Transaction");
+
+
+
+
+
+
+
 
 		final Calendar c = Calendar.getInstance();
 		updateDateButtonText(c.getTime());
@@ -216,6 +233,20 @@ public class AddTransactionActivity extends BaseFragmentActivity
         	if (str.contains(".") && str.substring(str.indexOf(".")+1).length() == 1)
         		txtValue.setText(str + 0);
         }
+    }
+
+    @Override
+    public void onChange(AddTransactionModel model)
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                updateUi();
+            }
+        });
+    }
+
+    public void updateUi()
+    {
     }
     
     @Override
