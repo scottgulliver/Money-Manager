@@ -36,6 +36,7 @@ import sg.money.models.OnChangeListener;
 import sg.money.utils.Misc;
 import sg.money.R;
 import sg.money.domainobjects.Transaction;
+import sg.money.controllers.*;
 
 public class AddTransactionActivity extends BaseFragmentActivity implements OnChangeListener<AddTransactionModel>
 {
@@ -54,9 +55,10 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 	Spinner spnTransferAccount;
 
     AddTransactionModel model;
-
+	AddTransactionController controller;
 	
-	public static final String ADD_CATEGORY_STRING = "< Add new category >";
+	
+	
 	
 	private static final int TYPE_EXPENSE = 0;
 	private static final int TYPE_INCOME = 1;
@@ -90,6 +92,15 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
         txtNewCatName.setVisibility(View.GONE);
         textView4.setVisibility(View.GONE);
+		
+		final Calendar c = Calendar.getInstance();
+		updateDateButtonText(c.getTime());
+		
+		int accountId = getIntent().getIntExtra("AccountID", -1);
+		if (accountId == -1)
+		{
+			throw new RuntimeException("AccountID is -1");
+		}
 
         // check if we are editing
         Transaction editTransaction = null;
@@ -98,25 +109,26 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             editTransaction = DatabaseManager.getInstance(AddTransactionActivity.this).GetTransaction(editId);
         }
 
-        model = new AddTransactionModel(editTransaction, this);
+        model = new AddTransactionModel(editTransaction, accountId, this);
         model.addListener(this);
-        //controller = new AddCategoryController(this, model);
+        controller = new AddTransactionController(this, model);
 
         setTitle(model.isNewTransaction() ? "Add Transaction" : "Edit Transaction");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//for controller
+		Calendar c = Calendar.getInstance();
+		c.setTime(buttonDate);
+		editTransaction.dateTime = c.getTime();
 
 
-
-
-
-
-
-
-		final Calendar c = Calendar.getInstance();
-		updateDateButtonText(c.getTime());
-
-    	categories = DatabaseManager.getInstance(AddTransactionActivity.this).GetAllCategories();
-    	categories = Misc.getCategoriesInGroupOrder(categories);
-    	
     	btnDate.setOnClickListener(new OnClickListener() {
     		 
 			public void onClick(View v) {
@@ -125,21 +137,11 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			}
  
 		});
-    	
-    	ArrayList<Account> accounts = DatabaseManager.getInstance(AddTransactionActivity.this).GetAllAccounts();
-    	for(Account account : accounts)
-    	{
-    		if (account.id != accountID)
-    			accountsMap.put(account.name, account);
-    	}
-		ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(
-				this,android.R.layout.simple_spinner_dropdown_item, new ArrayList<String>(accountsMap.keySet()));
-		spnTransferAccount.setAdapter(arrayAdapter1);
 		
 		ArrayList<String> typeChoices = new ArrayList<String>();
 		typeChoices.add(TYPE_EXPENSE, "Expense");
 		typeChoices.add(TYPE_INCOME, "Income");
-		if (accounts.size() > 1)
+		if (model.getAccounts().length > 1)
 			typeChoices.add(TYPE_TRANSFER, "Transfer");
     	
 		ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(
@@ -175,63 +177,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         int editId = getIntent().getIntExtra("ID", -1);
         if (editId != -1)
         {
-        	setTitle("Edit Transaction");
-        	editTransaction = DatabaseManager.getInstance(AddTransactionActivity.this).GetTransaction(editId);
-        	
-        	txtDesc.setText(editTransaction.description);
-        	updateDateButtonText(editTransaction.dateTime);
-			chkHideFromReports.setChecked(editTransaction.dontReport);
-        	
-        	if (!editTransaction.isTransfer)
-        	{
-            	Category editCategory = null;
-                for(Category category : categories)
-                {
-                	if (category.id == editTransaction.category)
-                	{
-                		editCategory = category;
-                		break;
-                	}
-                }
-                
-                if (!editCategory.income)
-                	editTransaction.value *= -1.0;
-
-                spnType.setSelection(editCategory.income ? TYPE_INCOME : TYPE_EXPENSE);
-        		PopulateCategories();
-                
-                for(String name : categoryNames)
-                {
-                	if (name.equals(editCategory.name))
-                	{
-                		spnCategory.setSelection(categoryNames.indexOf(name));
-                		break; 
-                	}
-                }
-        	}
-        	else
-        	{
-        		spnType.setSelection(TYPE_TRANSFER);
-        		spnType.setEnabled(false);
-        		PopulateCategories(); // handles the show/hide logic (but probably shouldn't..)
-        		
-        		boolean isTransferFrom = !editTransaction.isReceivingParty();
-        		
-                if (isTransferFrom)
-                	editTransaction.value *= -1.0; //ensure that the value is positive
-                
-                spnTransferAccount.setEnabled(isTransferFrom);
-                
-                int accountPosition = (new ArrayList<String>(accountsMap.keySet())).indexOf(editTransaction.getRelatedTransferTransaction(this).getAccount(this).name);
-                spnTransferAccount.setSelection(accountPosition);
-        	}
-
-        	txtValue.setText(String.valueOf(editTransaction.value));
-        	
-        	//gah! - change this! do this properly.
-        	String str = txtValue.getText().toString();
-        	if (str.contains(".") && str.substring(str.indexOf(".")+1).length() == 1)
-        		txtValue.setText(str + 0);
         }
     }
 
@@ -247,6 +192,104 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
     public void updateUi()
     {
+		txtDesc.setText(model.getDescription());
+		chkHideFromReports.setChecked(model.getDontReport());
+
+		txtValue.setText(String.valueOf(model.getValue()));
+
+		//gah! - change this! do this properly.
+		String str = txtValue.getText().toString();
+		if (str.contains(".") && str.substring(str.indexOf(".")+1).length() == 1)
+			txtValue.setText(str + 0);
+		
+		try
+		{
+			btnDate.setText(Misc.formatDate(AddTransactionActivity.this, model.getDate()));
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(
+			this,android.R.layout.simple_spinner_dropdown_item, model.getAccountNames());
+		spnTransferAccount.setAdapter(arrayAdapter1);
+
+    	boolean isTransfer = model.getIsTransfer();
+    	txtTransferAccount.setVisibility(isTransfer ? View.VISIBLE : View.GONE);
+    	spnTransferAccount.setVisibility(isTransfer ? View.VISIBLE : View.GONE);
+    	chkHideFromReports.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
+    	txtHideFromReports.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
+    	txtCategory.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
+    	spnCategory.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
+		
+		if (!isTransfer)
+		{
+			//category stuff
+
+			ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, model.getCategoryNames());
+			spnCategory.setAdapter(arrayAdapter);
+
+			//go to last selected category
+
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(AddTransactionActivity.this);
+			int lastSelectedCategoryId = isIncome ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
+
+			if (lastSelectedCategoryId != -1)
+			{
+				Category category = null;
+				for(Category cat : categories)
+				{
+					if (cat.id == lastSelectedCategoryId)
+					{
+						category = cat;
+						break;
+					}
+				}
+
+				if (category != null)
+				{
+					spnCategory.setSelection(categoryNames.indexOf(getCategoryName(category)));
+				}
+			}
+			else if (!lastSelectedCategory.equals("") && categoryNames.contains(lastSelectedCategory))
+				spnCategory.setSelection(categoryNames.indexOf(lastSelectedCategory));
+			
+		}
+
+		if (!model.getIsTransfer())
+		{
+			if (!model.getCategory().income)
+				model.setValue(model.getValue() * -1.0);
+
+			spnType.setSelection(model.getCategory().income ? TYPE_INCOME : TYPE_EXPENSE);
+			PopulateCategories();
+
+			for(String name : model.getCategoryNames())
+			{
+				if (name.equals(model.getCategory().name))
+				{
+					spnCategory.setSelection(model.getCategoryNames().indexOf(name));
+					break; 
+				}
+			}
+		}
+		else
+		{
+			spnType.setSelection(TYPE_TRANSFER);
+			spnType.setEnabled(false);
+			PopulateCategories(); // handles the show/hide logic (but probably shouldn't..)
+
+			boolean isTransferFrom = !editTransaction.isReceivingParty();
+
+			if (isTransferFrom)
+				model.setValue(model.getValue() * -1.0); //ensure that the value is positive
+
+			spnTransferAccount.setEnabled(isTransferFrom);
+
+			int accountPosition = (new ArrayList<String>(accountsMap.keySet())).indexOf(editTransaction.getRelatedTransferTransaction(this).getAccount(this).name);
+			spnTransferAccount.setSelection(accountPosition);
+		}
     }
     
     @Override
@@ -293,18 +336,10 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     	}
     }
     
-    public void updateDateButtonText(Date date)
+    public void updateDate(Date date)
     {
-    	try
-        {
-			btnDate.setText(Misc.formatDate(AddTransactionActivity.this, date));
-	    	buttonDate = date;
-        }
-        catch(Exception e)
-        {
-        	e.printStackTrace();
-        }
-    }
+		controller.onDateChange(date);
+   	}
     
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
     {
@@ -330,85 +365,15 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			c.set(Calendar.MONTH, month);
 			c.set(Calendar.DAY_OF_MONTH, day);
 			
-			((AddTransactionActivity)getActivity()).updateDateButtonText(c.getTime());
+			((AddTransactionActivity)getActivity()).updateDate(c.getTime());
 		}
-    }
-    
-    private String getCategoryName(Category category)
-    {
-    	return Misc.getCategoryName(category, categories);
     }
     
     private void PopulateCategories()
     {
     	setNewCategoryFieldsVisible(false);
-    	
-    	long selectedTypeIndex = spnType.getSelectedItemId();
-    	
-    	if (selectedTypeIndex == TYPE_TRANSFER)
-    	{
-    		txtTransferAccount.setVisibility(View.VISIBLE);
-    		spnTransferAccount.setVisibility(View.VISIBLE);
-    		chkHideFromReports.setVisibility(View.GONE);
-    		txtHideFromReports.setVisibility(View.GONE);
-    		txtCategory.setVisibility(View.GONE);
-    		spnCategory.setVisibility(View.GONE);
-    		return;
-    	}
-    	else
-    	{
-    		txtTransferAccount.setVisibility(View.GONE);
-    		spnTransferAccount.setVisibility(View.GONE);
-    		chkHideFromReports.setVisibility(View.VISIBLE);
-    		txtHideFromReports.setVisibility(View.VISIBLE);
-    		txtCategory.setVisibility(View.VISIBLE);
-    		spnCategory.setVisibility(View.VISIBLE);
-    	}
-    	
-    	boolean isIncome = (selectedTypeIndex == TYPE_INCOME);
 
-    	categoryNames = new ArrayList<String>();
-    	for(Category category : categories)
-    	{
-    		if (category.income == isIncome)
-    		{
-    			categoryNames.add(getCategoryName(category));
-    		}
-    	}
     	
-    	categoryNames.add(ADD_CATEGORY_STRING);
-    	
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
-
-		spnCategory.setAdapter(arrayAdapter);
-		
-		
-		
-		//go to last selected category
-		
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(AddTransactionActivity.this);
-		String lastSelectedCategory = isIncome ? sharedPref.getString("lastIncomeCategory", "") : sharedPref.getString("lastExpenseCategory", ""); // legacy, preferred is id
-		int lastSelectedCategoryId = isIncome ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
-		
-		if (lastSelectedCategoryId != -1)
-		{
-			Category category = null;
-			for(Category cat : categories)
-			{
-				if (cat.id == lastSelectedCategoryId)
-				{
-					category = cat;
-					break;
-				}
-			}
-			
-			if (category != null)
-			{
-				spnCategory.setSelection(categoryNames.indexOf(getCategoryName(category)));
-			}
-		}
-		else if (!lastSelectedCategory.equals("") && categoryNames.contains(lastSelectedCategory))
-			spnCategory.setSelection(categoryNames.indexOf(lastSelectedCategory));
     }
     
     private void setNewCategoryFieldsVisible(boolean visible)
@@ -425,68 +390,8 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId())
-	    {
-	    	case R.id.menu_accepttransaction:{
-	    		OkClicked();
-	    		break;
-	    		}
-
-	    	case R.id.menu_rejecttransaction:{
-	    		CancelClicked();
-	    		break;
-	    		}	    	
-	    	
-	        case R.id.menu_settings:{
-                break;
-            	}
-
-	        case android.R.id.home: // up button
-                Intent intent = new Intent(this, ParentActivity.class);
-                intent.putExtra(ParentActivity.INTENTEXTRA_CONTENTTYPE, HostActivityFragmentTypes.Transactions);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
-	    }
-	    return true;
+	    return controller.onOptionsItemSelected(item);
 	}
-    
-    private boolean Validate()
-    {
-    	if (txtValue.getText().toString().trim().equals(""))
-    	{
-    		Toast.makeText(AddTransactionActivity.this, "Please enter a value.", Toast.LENGTH_SHORT).show();
-    		return false;
-    	}
-    	
-    	if (txtDesc.getText().toString().trim().equals(""))
-    	{
-    		Toast.makeText(AddTransactionActivity.this, "Please enter a description.", Toast.LENGTH_SHORT).show();
-    		return false;
-    	}
-    	
-    	if (txtNewCatName.getVisibility() == View.VISIBLE)
-    	{
-			boolean isIncome = (spnType.getSelectedItemId() == 1);
-    		if (txtNewCatName.getText().toString().trim() == "")
-    		{
-	    		Toast.makeText(AddTransactionActivity.this, "Please enter a name for the new category.", Toast.LENGTH_SHORT).show();
-	    		return false;
-    		}
-    		
-    		for(Category currentCategory : categories)
-        	{
-        		if (txtNewCatName.getText().toString().trim().equals(currentCategory.name.trim())
-					&& currentCategory.income == isIncome)
-            	{
-            		Toast.makeText(AddTransactionActivity.this, "A category with this name already exists.", Toast.LENGTH_SHORT).show();
-            		return false;
-            	}
-        	}
-    	}
-    	
-    	return true;
-    }
     
     private Category getSelectedCategory()
     {
@@ -504,138 +409,9 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     	
     	return selectedCategory;
     }
-    
-    private void OkClicked()
-    {
-    	if (!Validate())
-    		return;
-    	
-    	boolean creatingNew = false;
-    	
-    	if (editTransaction == null)
-    	{
-    		creatingNew = true;
-    		editTransaction = new Transaction();
-    	}
-    	
-    	if (spnType.getSelectedItemPosition() != TYPE_TRANSFER)
-    	{
-    		Category selectedCategory = getSelectedCategory();
-
-        	//create the category, if it is new
-        	if (txtNewCatName.getVisibility() == View.VISIBLE)
-        	{
-        		Random rnd = new Random(System.currentTimeMillis());
-        		Category newCategory = new Category();
-        		newCategory.name = txtNewCatName.getText().toString().trim();
-        		newCategory.income = (spnType.getSelectedItemId() == 1);
-        		newCategory.color = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
-        		DatabaseManager.getInstance(this).AddCategory(newCategory);
-        		selectedCategory = newCategory;
-        	}
-        	
-    		//create the transaction object
-        	editTransaction.category = selectedCategory.id;
-        	editTransaction.value = Double.valueOf(txtValue.getText().toString());
-        	editTransaction.description = txtDesc.getText().toString().trim();
-        	Calendar c = Calendar.getInstance();
-        	c.setTime(buttonDate);
-        	editTransaction.dateTime = c.getTime();
-    		editTransaction.account = accountID;
-    		editTransaction.dontReport = chkHideFromReports.isChecked();
-    		
-    		if (!selectedCategory.income)
-    			editTransaction.value *= -1.0f;
-    		
-    		if (creatingNew)
-    			DatabaseManager.getInstance(AddTransactionActivity.this).InsertTransaction(editTransaction);
-    		else
-    			DatabaseManager.getInstance(AddTransactionActivity.this).UpdateTransaction(editTransaction);
-    		
-    		//save selections to preference, for loading these by default next time
-    		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(AddTransactionActivity.this);
-    		Editor editor = sharedPref.edit();
-    		
-    		if (selectedCategory.income)
-    			editor.putInt("lastIncomeCategoryId", selectedCategory.id);
-    		else
-    			editor.putInt("lastExpenseCategoryId", selectedCategory.id);
-    					
-    		editor.commit();
-    	}
-    	else
-    	{
-    		Transaction fromTransaction, toTransaction;
-    		if (creatingNew)
-    		{
-    			fromTransaction = editTransaction;
-        		toTransaction = new Transaction();
-    		}
-    		else
-    		{
-    			fromTransaction = editTransaction.isReceivingParty() 
-    					? editTransaction.getRelatedTransferTransaction(this) 
-						: editTransaction;
-        		toTransaction = editTransaction.isReceivingParty() 
-    					? editTransaction
-						: editTransaction.getRelatedTransferTransaction(this);
-    		}
-    		
-    		double value = Double.valueOf(txtValue.getText().toString());
-
-        	Calendar c = Calendar.getInstance();
-        	c.setTime(buttonDate);
-    		
-    		//transfer from transaction
-    		fromTransaction.value = value * -1.0f;
-    		fromTransaction.description = txtDesc.getText().toString().trim();
-        	fromTransaction.dateTime = c.getTime();
-
-    		//transfer to transaction
-        	toTransaction.value = value;
-        	toTransaction.description = txtDesc.getText().toString().trim();
-        	toTransaction.dateTime = c.getTime();
-    		
-        	if (creatingNew)
-        	{
-        		fromTransaction.transferFromTransaction = -1;
-        		toTransaction.transferToTransaction = -1;
-            	fromTransaction.dontReport = true; 
-            	fromTransaction.isTransfer = true;
-            	toTransaction.dontReport = true;
-        		toTransaction.isTransfer = true;
-        	}
-        	
-        	if (creatingNew || !editTransaction.isReceivingParty())
-        	{
-            	fromTransaction.account = accountID;
-            	toTransaction.account = accountsMap.get(spnTransferAccount.getSelectedItem()).id;
-        	}
-    		
-    		if (creatingNew)
-    		{
-    			DatabaseManager.getInstance(AddTransactionActivity.this).InsertTransaction(fromTransaction);
-    			DatabaseManager.getInstance(AddTransactionActivity.this).InsertTransaction(toTransaction);
-
-    			fromTransaction.transferToTransaction = toTransaction.id;
-    			toTransaction.transferFromTransaction = fromTransaction.id;
-    			DatabaseManager.getInstance(AddTransactionActivity.this).UpdateTransaction(fromTransaction);
-    			DatabaseManager.getInstance(AddTransactionActivity.this).UpdateTransaction(toTransaction);
-    		}
-    		else
-    		{
-    			DatabaseManager.getInstance(AddTransactionActivity.this).UpdateTransaction(fromTransaction);
-    			DatabaseManager.getInstance(AddTransactionActivity.this).UpdateTransaction(toTransaction);
-    		}
-    	}
-
-        setResult(RESULT_OK, new Intent());
-        finish();
-    }
-
-    private void CancelClicked()
-    {
-        setResult(RESULT_CANCELED, new Intent());
-        finish();
-    }
+	
+	public void cancelFocus()
+	{
+		
+	}
 }
