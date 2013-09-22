@@ -12,53 +12,82 @@ import sg.money.utils.*;
 
 public class AddTransactionModel extends SimpleObservable
 {
-	public static final String ADD_CATEGORY_STRING = "< Add new category >";
 	public static final int NO_CATEGORY_SELECTED = -1;
 	
     Transaction transaction;
     boolean newTransaction;
-    ArrayList<Category> categories;
     Map<String, Account> accountsMap = new HashMap<String, Account>();
-    ArrayList<String> categoryNames;
-    Transaction editTransaction;
+    Map<String, Category> categoriesMap = new HashMap<String, Category>();
 	Category cachedCategory;
+    Transaction relatedTransaction; // other half of a transaction
 	
 	boolean useNewCategory;
 	Category newCategory;
 
+    boolean isIncomeType;
+
     public AddTransactionModel(Transaction transaction, int accountID, Context context) {
         this.transaction = transaction;
+
+        relatedTransaction = new Transaction();
+        relatedTransaction.dontReport = true;
+        relatedTransaction.transferToTransaction = -1;
+
         if (this.transaction == null)
         {
             this.transaction = new Transaction();
 			this.transaction.account = accountID;
 			this.transaction.category = NO_CATEGORY_SELECTED;
 			this.transaction.dateTime = new Date();
+            this.transaction.transferFromTransaction = -1;
+            this.transaction.transferToTransaction = -1;
             newTransaction = true;
+        }
+        else if (transaction.isTransfer)
+        {
+            relatedTransaction = transaction.getRelatedTransferTransaction(context);
         }
 		
 		useNewCategory = false;
 		newCategory = new Category();
-		
-		categories = DatabaseManager.getInstance(context).GetAllCategories();
-    	categories = Misc.getCategoriesInGroupOrder(categories);
+
+        ArrayList<Account> accounts = DatabaseManager.getInstance(context).GetAllAccounts();
+        for(Account account : accounts)
+        {
+            if (account.id != accountID)
+                accountsMap.put(account.name, account);
+        }
 
 
-    	ArrayList<Account> accounts = DatabaseManager.getInstance(context).GetAllAccounts();
-    	for(Account account : accounts)
-    	{
-    		if (account.id != accountID)
-    			accountsMap.put(account.name, account);
-    	}
+        ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
+        categories = Misc.getCategoriesInGroupOrder(categories);
+        for(Category category : categories)
+        {
+            categoriesMap.put(category.name, category);
+        }
+    }
+
+    public boolean getIsReceivingParty()
+    {
+        return transaction.isReceivingParty();
     }
 
 	public double getValue()
 	{
-		return transaction.value;
+        double value = transaction.value;
+        if (isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+        {
+            value *= -1.0f;
+        }
+		return value;
 	}
 	
 	public void setValue(double value)
 	{
+        if (isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+        {
+            value *= -1.0f;
+        }
 		transaction.value = value;
 		notifyObservers(this);
 	}
@@ -82,12 +111,14 @@ public class AddTransactionModel extends SimpleObservable
 	public void setDescription(String description)
 	{
 		transaction.description = description;
+        relatedTransaction.description = description;
 		notifyObservers(this);
 	}
 
 	public void setDate(Date date)
 	{
 		transaction.dateTime = date;
+        relatedTransaction.dateTime = date;
 		notifyObservers(this);
 	}
 	
@@ -114,26 +145,53 @@ public class AddTransactionModel extends SimpleObservable
 	{
 		return accountsMap.keySet().toArray(new String[accountsMap.keySet().size()]);
 	}
-	
-	public ArrayList<String> getCategoryNames()
-	{
-		categoryNames = new ArrayList<String>();
-    	for(Category category : categories)
-    	{
-    		if (category.income == category.income)
-    		{
-    			categoryNames.add(getCategoryName(category));
-    		}
-    	}
 
-    	categoryNames.add(ADD_CATEGORY_STRING);
-		
-		return categoryNames;
+	public ArrayList<String> getValidCategoryNames()
+	{
+        ArrayList<String> categoryNames = new ArrayList<String>();
+        for(Map.Entry<String, Category> entry : categoriesMap.entrySet())
+        {
+            if (entry.getValue().income == isIncomeType)
+            {
+                categoryNames.add(entry.getKey());
+            }
+        }
+
+        return categoryNames;
 	}
+
+    public ArrayList<Category> getValidCategories()
+    {
+        ArrayList<Category> categories = new ArrayList<Category>();
+        for(String categoryName : getValidCategoryNames())
+        {
+            categories.add(categoriesMap.get(categoryName));
+        }
+
+        return categories;
+    }
+
+    public Category[] getAllCategories()
+    {
+        return categoriesMap.values().toArray(new Category[categoriesMap.values().size()]);
+    }
+
+    public String[] getAllCategoryNames()
+    {
+        return categoriesMap.keySet().toArray(new String[categoriesMap.keySet().size()]);
+    }
 
     private String getCategoryName(Category category)
     {
-    	return Misc.getCategoryName(category, categories);
+    	for(Map.Entry<String, Category> entry : categoriesMap.entrySet())
+        {
+            if (entry.getValue().id == category.id)
+            {
+                return entry.getKey();
+            }
+        }
+
+        throw new RuntimeException("Category not found.");
     }
 	
 	public Category getCategory()
@@ -155,7 +213,7 @@ public class AddTransactionModel extends SimpleObservable
 		
 		//cache is invalid, so fetch from collection
 		Category category = null;
-		for(Category testCategory : categories)
+		for(Category testCategory : getAllCategories())
 		{
 			if (testCategory.id == transaction.category)
 			{
@@ -167,6 +225,17 @@ public class AddTransactionModel extends SimpleObservable
 		cachedCategory = category;
 		return cachedCategory;
 	}
+
+    public void setCategory(Category category) {
+        transaction.category = category.id;
+        cachedCategory = category;
+        notifyObservers(this);
+    }
+
+    public void setCategory(String categoryName) {
+        Category category = categoriesMap.get(categoryName);
+        setCategory(category);
+    }
 
     public String validate()
     {
@@ -187,7 +256,7 @@ public class AddTransactionModel extends SimpleObservable
 	   			return "Please enter a name for the new category.";
     		}
 
-    		for(Category currentCategory : categories)
+    		for(Category currentCategory : getAllCategories())
         	{
         		if (newCategory.name.trim().equals(currentCategory.name.trim())
 					&& currentCategory.income == newCategory.income)
@@ -210,81 +279,77 @@ public class AddTransactionModel extends SimpleObservable
       
 			transaction.category = newCategory.id;
 		}
-		
+
 		if (!transaction.isTransfer)
 		{
-    		if (!selectedCategory.income)
-    			editTransaction.value *= -1.0f;
-
     		if (newTransaction)
-    			DatabaseManager.getInstance(context).InsertTransaction(editTransaction);
+    			DatabaseManager.getInstance(context).InsertTransaction(transaction);
     		else
-    			DatabaseManager.getInstance(context).UpdateTransaction(editTransaction);
+    			DatabaseManager.getInstance(context).UpdateTransaction(transaction);
     	}
     	else
     	{
-    		Transaction fromTransaction, toTransaction;
-    		if (creatingNew)
-    		{
-    			fromTransaction = editTransaction;
-        		toTransaction = new Transaction();
-    		}
-    		else
-    		{
-    			fromTransaction = editTransaction.isReceivingParty() 
-					? editTransaction.getRelatedTransferTransaction(this) 
-					: editTransaction;
-        		toTransaction = editTransaction.isReceivingParty() 
-					? editTransaction
-					: editTransaction.getRelatedTransferTransaction(this);
-    		}
-
-    		double value = Double.valueOf(txtValue.getText().toString());
-
-        	Calendar c = Calendar.getInstance();
-        	c.setTime(buttonDate);
-
-    		//transfer from transaction
-    		fromTransaction.value = value * -1.0f;
-    		fromTransaction.description = txtDesc.getText().toString().trim();
-        	fromTransaction.dateTime = c.getTime();
-
-    		//transfer to transaction
-        	toTransaction.value = value;
-        	toTransaction.description = txtDesc.getText().toString().trim();
-        	toTransaction.dateTime = c.getTime();
-
-        	if (creatingNew)
-        	{
-        		fromTransaction.transferFromTransaction = -1;
-        		toTransaction.transferToTransaction = -1;
-            	fromTransaction.dontReport = true; 
-            	fromTransaction.isTransfer = true;
-            	toTransaction.dontReport = true;
-        		toTransaction.isTransfer = true;
-        	}
-
-        	if (creatingNew || !editTransaction.isReceivingParty())
-        	{
-            	fromTransaction.account = accountID;
-            	toTransaction.account = accountsMap.get(spnTransferAccount.getSelectedItem()).id;
-        	}
-
-    		if (creatingNew)
-    		{
-    			DatabaseManager.getInstance(context).InsertTransaction(fromTransaction);
-    			DatabaseManager.getInstance(context).InsertTransaction(toTransaction);
-
-    			fromTransaction.transferToTransaction = toTransaction.id;
-    			toTransaction.transferFromTransaction = fromTransaction.id;
-    			DatabaseManager.getInstance(context).UpdateTransaction(fromTransaction);
-    			DatabaseManager.getInstance(context).UpdateTransaction(toTransaction);
-    		}
-    		else
-    		{
-    			DatabaseManager.getInstance(context).UpdateTransaction(fromTransaction);
-    			DatabaseManager.getInstance(context).UpdateTransaction(toTransaction);
-    		}
+            if (isNewTransaction())
+            {
+                DatabaseManager.getInstance(context).InsertTransaction(transaction);
+                DatabaseManager.getInstance(context).InsertTransaction(relatedTransaction);
+                transaction.transferToTransaction = relatedTransaction.id;
+                relatedTransaction.transferFromTransaction = transaction.id;
+                DatabaseManager.getInstance(context).UpdateTransaction(transaction);
+                DatabaseManager.getInstance(context).UpdateTransaction(relatedTransaction);
+            }
+            else
+            {
+                DatabaseManager.getInstance(context).UpdateTransaction(transaction);
+                DatabaseManager.getInstance(context).UpdateTransaction(relatedTransaction);
+            }
 		}
 	}
+
+    public boolean getUseNewCategory() {
+        return useNewCategory;
+    }
+
+    public void setUseNewCategory(boolean useNewCategory) {
+        this.useNewCategory = useNewCategory;
+    }
+
+    public boolean isIncomeType() {
+        return isIncomeType;
+    }
+
+    public void setIncomeType(boolean incomeType) {
+        this.isIncomeType = incomeType;
+    }
+
+    public void setIsTransfer(boolean isTransfer) {
+        transaction.isTransfer = isTransfer;
+        transaction.dontReport = isTransfer;
+        notifyObservers(this);
+    }
+
+    public boolean isReceivingParty() {
+        return transaction.isReceivingParty();
+    }
+
+    public void setTransferAccount(Account account)
+    {
+        relatedTransaction.account = account.id;
+        notifyObservers(this);
+    }
+
+    public Account getTransferAccount(Context context)
+    {
+        if (relatedTransaction.account != -1)
+        {
+            return relatedTransaction.getAccount(context);
+        }
+
+        return null;
+    }
+
+    public Transaction getRelatedTransferTransaction(AddTransactionActivity addTransactionActivity) {
+        //todo
+        return null;
+    }
 }

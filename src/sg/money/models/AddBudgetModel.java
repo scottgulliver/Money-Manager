@@ -20,6 +20,7 @@ public class AddBudgetModel extends SimpleObservable {
         if (this.budget == null)
         {
             this.budget = new Budget();
+            this.budget.notifyType = Budget.NotificationType.None;
             newBudget = true;
         }
 
@@ -104,8 +105,11 @@ public class AddBudgetModel extends SimpleObservable {
 	
 	public void setNotifyType(Budget.NotificationType notifyType)
 	{
-		budget.notifyType = notifyType;
-		notifyObservers(this);
+        if (budget.notifyType != notifyType)
+        {
+            budget.notifyType = notifyType;
+            notifyObservers(this);
+        }
 	}
 	
     public boolean isNewBudget()

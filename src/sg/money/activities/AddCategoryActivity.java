@@ -87,7 +87,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
-					{
+                    {
 						controller.onCategoryNameChange(txtName.getText().toString());
 					}
 				}			
@@ -97,7 +97,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 			public void run() {
 				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-						controller.onTypeChange(position == 1);
+                        controller.onTypeChange(position == 1);
 					}
 
 					public void onNothingSelected(AdapterView<?> parent) {
@@ -110,7 +110,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 				public void run() {
 					spnParent.setOnItemSelectedListener(new OnItemSelectedListener() {
 							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-								controller.onParentChange(position);
+                                controller.onParentChange(position);
 							}
 
 							public void onNothingSelected(AdapterView<?> parent) {
@@ -129,7 +129,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 
 	public void colorChanged(int color)
 	{
-		controller.colorChanged(color);
+        controller.colorChanged(color);
 	}
 
     @Override
@@ -159,16 +159,22 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 
 		if (model.getParentCategory() != null)
 		{
-			spnType.setSelection(model.getParentCategory().income ? 0 : 1);
+			//spnType.setSelection(model.getParentCategory().income ? 1 : 0);
 			ArrayList<String> parentOptions = controller.getParentCategoryOptions();
+            boolean selectedParent = false;
 			for(int i = 0; i < parentOptions.size(); i++)
 			{
 				if (parentOptions.get(i).equals(model.getParentCategory().name))
 				{
 					spnParent.setSelection(i);
+                    selectedParent = true;
 					break;
 				}
 			}
+            if(!selectedParent)
+            {
+                spnParent.setSelection(0);
+            }
 		}
 		
 		//optionally disable some controls

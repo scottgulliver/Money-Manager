@@ -26,8 +26,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40ecd59e-797b-4679-8b64-4d5cd0b00da2" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java" afterPath="$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java" afterPath="$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/controllers/AddCategoryController.java" afterPath="$PROJECT_DIR$/src/sg/money/controllers/AddCategoryController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/models/AddCategoryModel.java" afterPath="$PROJECT_DIR$/src/sg/money/models/AddCategoryModel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/activities/AddTransactionActivity.java" afterPath="$PROJECT_DIR$/src/sg/money/activities/AddTransactionActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/controllers/AddTransactionController.java" afterPath="$PROJECT_DIR$/src/sg/money/controllers/AddTransactionController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/models/AddTransactionModel.java" afterPath="$PROJECT_DIR$/src/sg/money/models/AddTransactionModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" afterPath="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="money-manager.iws" />
@@ -91,7 +97,68 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/sg/money/controllers/AddCategoryController.java" line="84" class="sg.money.controllers.AddCategoryController" package="sg.money.controllers">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/sg/money/models/AddCategoryModel.java" line="45" class="sg.money.models.AddCategoryModel" package="sg.money.models">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java" line="143" class="sg.money.models.AddBudgetModel" package="sg.money.models">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/sg/money/controllers/AddTransactionController.java" line="52" class="sg.money.controllers.AddTransactionController" package="sg.money.controllers">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -101,36 +168,70 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AddBudgetActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddBudgetActivity.java">
+      <file leaf-file-name="AddCategoryActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="136" column="19" selection-start="4133" selection-end="4133" vertical-scroll-proportion="0.0" vertical-offset="1275" max-vertical-offset="2975">
+            <state line="157" column="43" selection-start="4803" selection-end="4803" vertical-scroll-proportion="0.0" vertical-offset="1797" max-vertical-offset="3298">
               <folding>
-                <element signature="e#2542#2550#0" expanded="true" />
+                <element signature="e#4184#4284#0" expanded="true" />
+                <element signature="e#4273#4274#0" expanded="true" />
+                <element signature="e#4607#4615#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AddCategoryActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java">
+      <file leaf-file-name="AddBudgetModel.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="27" selection-start="2030" selection-end="2030" vertical-scroll-proportion="0.0" vertical-offset="688" max-vertical-offset="3349">
+            <state line="145" column="0" selection-start="3513" selection-end="3513" vertical-scroll-proportion="0.0" vertical-offset="2299" max-vertical-offset="2635">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DatabaseManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/DatabaseManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1336" column="24" selection-start="44902" selection-end="44902" vertical-scroll-proportion="0.0" vertical-offset="22245" max-vertical-offset="23120">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AddBudgetActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddBudgetActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="151" column="0" selection-start="4365" selection-end="4365" vertical-scroll-proportion="0.0" vertical-offset="1874" max-vertical-offset="3247">
               <folding>
-                <element signature="e#2404#2481#0" expanded="true" />
-                <element signature="e#2478#2479#0" expanded="true" />
-                <element signature="e#2534#2542#0" expanded="true" />
-                <element signature="e#2678#2686#0" expanded="true" />
-                <element signature="e#2828#3042#0" expanded="true" />
-                <element signature="e#3033#3034#0" expanded="true" />
-                <element signature="e#3069#3407#0" expanded="true" />
-                <element signature="e#3401#3402#0" expanded="true" />
-                <element signature="e#3431#3783#0" expanded="true" />
-                <element signature="e#3777#3778#0" expanded="true" />
-                <element signature="e#4121#4221#0" expanded="true" />
-                <element signature="e#4210#4211#0" expanded="true" />
-                <element signature="e#4544#4552#0" expanded="true" />
+                <element signature="e#2542#2550#0" expanded="true" />
+                <element signature="e#2826#2931#0" expanded="true" />
+                <element signature="e#2925#2926#0" expanded="true" />
+                <element signature="e#2968#3071#0" expanded="true" />
+                <element signature="e#3065#3066#0" expanded="true" />
+                <element signature="e#3110#3334#0" expanded="true" />
+                <element signature="e#3325#3326#0" expanded="true" />
+                <element signature="e#3374#3747#0" expanded="true" />
+                <element signature="e#3738#3739#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AddBudgetController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddBudgetController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="0" selection-start="868" selection-end="868" vertical-scroll-proportion="0.0" vertical-offset="451" max-vertical-offset="4216">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AddCategoryController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddCategoryController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="0" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0" vertical-offset="314" max-vertical-offset="2023">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -138,10 +239,20 @@
       <file leaf-file-name="AddTransactionActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddTransactionActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="0" selection-start="1718" selection-end="1718" vertical-scroll-proportion="0.60828626" vertical-offset="0" max-vertical-offset="10319">
+            <state line="53" column="34" selection-start="1714" selection-end="1714" vertical-scroll-proportion="0.7544484" vertical-offset="60" max-vertical-offset="5355">
               <folding>
-                <element signature="e#8417#8517#0" expanded="true" />
-                <element signature="e#8506#8507#0" expanded="true" />
+                <element signature="e#3876#3884#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AddTransactionController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddTransactionController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="80" column="0" selection-start="2293" selection-end="2293" vertical-scroll-proportion="0.0" vertical-offset="1114" max-vertical-offset="3162">
+              <folding>
+                <element signature="e#4962#4970#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -150,71 +261,19 @@
       <file leaf-file-name="AddTransactionModel.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddTransactionModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="5" selection-start="856" selection-end="856" vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="697">
+            <state line="209" column="9" selection-start="5268" selection-end="5268" vertical-scroll-proportion="0.0" vertical-offset="3265" max-vertical-offset="6137">
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#480#497#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ParentActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/activities/ParentActivity.java">
+      <file leaf-file-name="Transaction.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sg/money/domainobjects/Transaction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="0" selection-start="1903" selection-end="1903" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="3774">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AddBudgetModel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="9" selection-start="485" selection-end="671" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="2567">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="drawer_list_item.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/drawer_list_item.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="36" selection-start="283" selection-end="283" vertical-scroll-proportion="-3.4" vertical-offset="0" max-vertical-offset="272">
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="drawer_item_layout.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/drawer_item_layout.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="38" selection-start="928" selection-end="928" vertical-scroll-proportion="-6.8" vertical-offset="204" max-vertical-offset="629">
-              <folding>
-                <element signature="e#1032#1066#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Category.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/domainobjects/Category.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="39" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Budget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sg/money/domainobjects/Budget.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="33" selection-start="240" selection-end="930" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1836">
+            <state line="42" column="38" selection-start="1067" selection-end="1090" vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="986">
               <folding />
             </state>
           </provider>
@@ -239,22 +298,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/sg/money/activities/AddAccountActivity.java" />
-        <option value="$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java" />
-        <option value="$PROJECT_DIR$/src/sg/money/domainobjects/Budget.java" />
         <option value="$PROJECT_DIR$/src/sg/money/controllers/AddBudgetController.java" />
-        <option value="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" />
         <option value="$PROJECT_DIR$/src/sg/money/adapters/BudgetNotificationReciever.java" />
         <option value="$PROJECT_DIR$/src/sg/money/controllers/AddAccountController.java" />
         <option value="$PROJECT_DIR$/src/sg/money/activities/AddBudgetActivity.java" />
         <option value="$PROJECT_DIR$/src/sg/money/domainobjects/Category.java" />
         <option value="$PROJECT_DIR$/src/sg/money/domainobjects/CategoryType.java" />
-        <option value="$PROJECT_DIR$/src/sg/money/models/AddCategoryModel.java" />
-        <option value="$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java" />
         <option value="$PROJECT_DIR$/src/sg/money/activities/ParentActivity.java" />
         <option value="$PROJECT_DIR$/res/layout/drawer_item_layout.xml" />
+        <option value="$PROJECT_DIR$/src/sg/money/controllers/AddCategoryController.java" />
+        <option value="$PROJECT_DIR$/src/sg/money/models/AddCategoryModel.java" />
+        <option value="$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java" />
+        <option value="$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java" />
+        <option value="$PROJECT_DIR$/src/sg/money/DatabaseManager.java" />
         <option value="$PROJECT_DIR$/src/sg/money/activities/AddTransactionActivity.java" />
         <option value="$PROJECT_DIR$/src/sg/money/models/AddTransactionModel.java" />
+        <option value="$PROJECT_DIR$/src/sg/money/controllers/AddTransactionController.java" />
       </list>
     </option>
   </component>
@@ -288,7 +347,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -365,12 +423,35 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money-manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="money" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="activities" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -577,33 +658,53 @@
   <component name="TimeTrackingManager">
     <option name="totallyTimeSpent" value="5611000" />
   </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1366" height="728" extended-state="0" />
+    <frame x="0" y="0" width="1366" height="728" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26363635" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902735" sideWeight="0.67235494" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32807016" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.52982455" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4385965" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32807016" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32807016" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7035088" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48596492" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982457" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25843558" sideWeight="0.67017543" order="7" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23542945" sideWeight="0.5614035" order="7" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982457" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902735" sideWeight="0.67235494" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -696,157 +797,135 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddBudgetController.java">
+    <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddCategoryController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="20" selection-start="1524" selection-end="1524" vertical-scroll-proportion="0.38418078" vertical-offset="765" max-vertical-offset="4369">
-          <folding>
-            <element signature="e#2219#2227#0" expanded="true" />
-            <element signature="e#3081#3089#0" expanded="true" />
-            <element signature="e#3478#3486#0" expanded="true" />
-            <element signature="e#4052#5619#0" expanded="true" />
-            <element signature="e#5613#5614#0" expanded="true" />
-            <element signature="e#5678#6696#0" expanded="true" />
-            <element signature="e#6690#6691#0" expanded="true" />
-            <element signature="e#6733#6863#0" expanded="true" />
-            <element signature="e#6857#6858#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/adapters/BudgetNotificationReciever.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="17" selection-start="3645" selection-end="3645" vertical-scroll-proportion="0.0" vertical-offset="1246" max-vertical-offset="2499">
-          <folding>
-            <element signature="e#3252#3260#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddAccountModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="5" selection-start="1759" selection-end="1759" vertical-scroll-proportion="0.0" vertical-offset="1207" max-vertical-offset="1955">
+        <state line="31" column="0" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0" vertical-offset="314" max-vertical-offset="2023">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/DatabaseManager.java">
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/widget/AdapterView.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1267" column="31" selection-start="42759" selection-end="42759" vertical-scroll-proportion="0.0" vertical-offset="21136" max-vertical-offset="23120">
+        <state line="124" column="0" selection-start="5571" selection-end="5571" vertical-scroll-proportion="0.0" vertical-offset="1973" max-vertical-offset="2193">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/java/lang/ThreadGroup.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="0" selection-start="2309" selection-end="2309" vertical-scroll-proportion="0.5622318" vertical-offset="1110" max-vertical-offset="1343">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/java/lang/Override.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="18" selection-start="306" selection-end="306" vertical-scroll-proportion="0.30126584" vertical-offset="0" max-vertical-offset="395">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/widget/AbsSpinner.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="16" selection-start="961" selection-end="961" vertical-scroll-proportion="0.33333334" vertical-offset="242" max-vertical-offset="765">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="157" column="43" selection-start="4803" selection-end="4803" vertical-scroll-proportion="0.0" vertical-offset="1797" max-vertical-offset="3298">
+          <folding>
+            <element signature="e#4184#4284#0" expanded="true" />
+            <element signature="e#4273#4274#0" expanded="true" />
+            <element signature="e#4607#4615#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddBudgetActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="151" column="0" selection-start="4365" selection-end="4365" vertical-scroll-proportion="0.0" vertical-offset="1874" max-vertical-offset="3247">
+          <folding>
+            <element signature="e#2542#2550#0" expanded="true" />
+            <element signature="e#2826#2931#0" expanded="true" />
+            <element signature="e#2925#2926#0" expanded="true" />
+            <element signature="e#2968#3071#0" expanded="true" />
+            <element signature="e#3065#3066#0" expanded="true" />
+            <element signature="e#3110#3334#0" expanded="true" />
+            <element signature="e#3325#3326#0" expanded="true" />
+            <element signature="e#3374#3747#0" expanded="true" />
+            <element signature="e#3738#3739#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddBudgetController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="0" selection-start="868" selection-end="868" vertical-scroll-proportion="0.0" vertical-offset="451" max-vertical-offset="4216">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddAccountController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="5" selection-start="1897" selection-end="1897" vertical-scroll-proportion="0.0" vertical-offset="748" max-vertical-offset="1394">
+        <state line="37" column="20" selection-start="846" selection-end="846" vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="1530">
           <folding />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddBudgetActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="19" selection-start="4133" selection-end="4133" vertical-scroll-proportion="0.0" vertical-offset="1275" max-vertical-offset="2975">
-          <folding>
-            <element signature="e#2542#2550#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/domainobjects/Category.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="39" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddCategoryModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="122" column="23" selection-start="3072" selection-end="3072" vertical-scroll-proportion="0.78125" vertical-offset="1649" max-vertical-offset="2227">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/domainobjects/Budget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="33" selection-start="240" selection-end="930" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1836">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/drawer_list_item.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="36" selection-start="283" selection-end="283" vertical-scroll-proportion="-3.4" vertical-offset="0" max-vertical-offset="272">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/activities/ParentActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="0" selection-start="1903" selection-end="1903" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="3774">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/drawer_item_layout.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="38" selection-start="928" selection-end="928" vertical-scroll-proportion="-6.8" vertical-offset="204" max-vertical-offset="629">
-          <folding>
-            <element signature="e#1032#1066#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddBudgetModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="9" selection-start="485" selection-end="671" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="2567">
+        <state line="145" column="0" selection-start="3513" selection-end="3513" vertical-scroll-proportion="0.0" vertical-offset="2299" max-vertical-offset="2635">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/DatabaseManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1336" column="24" selection-start="44902" selection-end="44902" vertical-scroll-proportion="0.0" vertical-offset="22245" max-vertical-offset="23120">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../actionbarsherlock/src/com/actionbarsherlock/internal/ActionBarSherlockNative.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="0" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.0" vertical-offset="1428" max-vertical-offset="5933">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sg/money/domainobjects/Transaction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="38" selection-start="1067" selection-end="1090" vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="986">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/models/AddTransactionModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="5" selection-start="856" selection-end="856" vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="697">
+        <state line="209" column="9" selection-start="5268" selection-end="5268" vertical-scroll-proportion="0.0" vertical-offset="3265" max-vertical-offset="6137">
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#480#497#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddCategoryActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/sg/money/controllers/AddTransactionController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="27" selection-start="2030" selection-end="2030" vertical-scroll-proportion="0.0" vertical-offset="688" max-vertical-offset="3349">
+        <state line="80" column="0" selection-start="2293" selection-end="2293" vertical-scroll-proportion="0.0" vertical-offset="1114" max-vertical-offset="3162">
           <folding>
-            <element signature="e#2404#2481#0" expanded="true" />
-            <element signature="e#2478#2479#0" expanded="true" />
-            <element signature="e#2534#2542#0" expanded="true" />
-            <element signature="e#2678#2686#0" expanded="true" />
-            <element signature="e#2828#3042#0" expanded="true" />
-            <element signature="e#3033#3034#0" expanded="true" />
-            <element signature="e#3069#3407#0" expanded="true" />
-            <element signature="e#3401#3402#0" expanded="true" />
-            <element signature="e#3431#3783#0" expanded="true" />
-            <element signature="e#3777#3778#0" expanded="true" />
-            <element signature="e#4121#4221#0" expanded="true" />
-            <element signature="e#4210#4211#0" expanded="true" />
-            <element signature="e#4544#4552#0" expanded="true" />
+            <element signature="e#4962#4970#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sg/money/activities/AddTransactionActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="0" selection-start="1718" selection-end="1718" vertical-scroll-proportion="0.60828626" vertical-offset="0" max-vertical-offset="10319">
+        <state line="53" column="34" selection-start="1714" selection-end="1714" vertical-scroll-proportion="0.7544484" vertical-offset="60" max-vertical-offset="5355">
           <folding>
-            <element signature="e#8417#8517#0" expanded="true" />
-            <element signature="e#8506#8507#0" expanded="true" />
+            <element signature="e#3876#3884#0" expanded="true" />
           </folding>
         </state>
       </provider>

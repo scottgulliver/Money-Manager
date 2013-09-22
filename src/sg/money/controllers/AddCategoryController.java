@@ -46,11 +46,6 @@ public class AddCategoryController {
 			}
 		}
 		
-		if (parentCategory == null)
-		{
-			throw new RuntimeException("Selected category does not exist");
-		}
-		
 		model.setParentCategory(parentCategory);
 	}
 

@@ -3,6 +3,7 @@ package sg.money.activities;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,13 +57,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
     AddTransactionModel model;
 	AddTransactionController controller;
-	
-	
-	
-	
-	private static final int TYPE_EXPENSE = 0;
-	private static final int TYPE_INCOME = 1;
-	private static final int TYPE_TRANSFER = 2;
 		
 	//Bundle State Data
 	static final String STATE_DATE = "stateDate";
@@ -93,9 +87,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         txtNewCatName.setVisibility(View.GONE);
         textView4.setVisibility(View.GONE);
 		
-		final Calendar c = Calendar.getInstance();
-		updateDateButtonText(c.getTime());
-		
 		int accountId = getIntent().getIntExtra("AccountID", -1);
 		if (accountId == -1)
 		{
@@ -114,14 +105,32 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         controller = new AddTransactionController(this, model);
 
         setTitle(model.isNewTransaction() ? "Add Transaction" : "Edit Transaction");
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(
+                this,android.R.layout.simple_spinner_dropdown_item, controller.getTypeChoices());
+
+        spnType.setAdapter(arrayAdapter2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		
 		//for controller
 		Calendar c = Calendar.getInstance();
@@ -138,22 +147,11 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
  
 		});
 		
-		ArrayList<String> typeChoices = new ArrayList<String>();
-		typeChoices.add(TYPE_EXPENSE, "Expense");
-		typeChoices.add(TYPE_INCOME, "Income");
-		if (model.getAccounts().length > 1)
-			typeChoices.add(TYPE_TRANSFER, "Transfer");
-    	
-		ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(
-				this,android.R.layout.simple_spinner_dropdown_item, typeChoices);
-
-		spnType.setAdapter(arrayAdapter2);
-		
 		spnType.post(new Runnable() { // set up as a post to stop the initial call on initialising UI
 			public void run() {
 				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-						PopulateCategories();
+					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+						controller.onTypeChange(position);
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
@@ -161,23 +159,16 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 				});
 			}});
 		
-		PopulateCategories();
-		
 		spnCategory.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-						setNewCategoryFieldsVisible(categoryNames.get(pos).equals(ADD_CATEGORY_STRING));
+					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+						controller.onCategoryChange(position);
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
 					}
 		});
 
-        //check if we are editing
-		editTransaction = null;
-        int editId = getIntent().getIntExtra("ID", -1);
-        if (editId != -1)
-        {
-        }
+        updateUi();
     }
 
     @Override
@@ -222,38 +213,25 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     	txtHideFromReports.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
     	txtCategory.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
     	spnCategory.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
+
+        boolean addNewCategory = model.getUseNewCategory();
+        txtNewCatName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
+        textView4.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
+
+
+
+        spnType.setSelection(model.getIsTransfer()
+                ? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Transfer)
+                : model.isIncomeType()
+                ? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Income)
+                : controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Expense));
+
+        spnType.setEnabled(model.getIsTransfer());
 		
 		if (!isTransfer)
 		{
 			//category stuff
 
-			ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, model.getCategoryNames());
-			spnCategory.setAdapter(arrayAdapter);
-
-			//go to last selected category
-
-			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(AddTransactionActivity.this);
-			int lastSelectedCategoryId = isIncome ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
-
-			if (lastSelectedCategoryId != -1)
-			{
-				Category category = null;
-				for(Category cat : categories)
-				{
-					if (cat.id == lastSelectedCategoryId)
-					{
-						category = cat;
-						break;
-					}
-				}
-
-				if (category != null)
-				{
-					spnCategory.setSelection(categoryNames.indexOf(getCategoryName(category)));
-				}
-			}
-			else if (!lastSelectedCategory.equals("") && categoryNames.contains(lastSelectedCategory))
-				spnCategory.setSelection(categoryNames.indexOf(lastSelectedCategory));
 			
 		}
 
@@ -262,54 +240,44 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			if (!model.getCategory().income)
 				model.setValue(model.getValue() * -1.0);
 
-			spnType.setSelection(model.getCategory().income ? TYPE_INCOME : TYPE_EXPENSE);
-			PopulateCategories();
+            ArrayList<String> categoryNames = controller.getCategoryNames();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
+            spnCategory.setAdapter(arrayAdapter);
 
-			for(String name : model.getCategoryNames())
-			{
-				if (name.equals(model.getCategory().name))
-				{
-					spnCategory.setSelection(model.getCategoryNames().indexOf(name));
-					break; 
-				}
-			}
+            spnCategory.setSelection(categoryNames.indexOf(model.getCategory().name));
 		}
 		else
 		{
-			spnType.setSelection(TYPE_TRANSFER);
-			spnType.setEnabled(false);
-			PopulateCategories(); // handles the show/hide logic (but probably shouldn't..)
-
-			boolean isTransferFrom = !editTransaction.isReceivingParty();
+			boolean isTransferFrom = !model.isReceivingParty();
 
 			if (isTransferFrom)
 				model.setValue(model.getValue() * -1.0); //ensure that the value is positive
 
 			spnTransferAccount.setEnabled(isTransferFrom);
 
-			int accountPosition = (new ArrayList<String>(accountsMap.keySet())).indexOf(editTransaction.getRelatedTransferTransaction(this).getAccount(this).name);
+			int accountPosition = (new ArrayList<String>(Arrays.asList(model.getAccountNames()))).indexOf(model.getRelatedTransferTransaction(this).getAccount(this).name);
 			spnTransferAccount.setSelection(accountPosition);
 		}
     }
     
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    	/*SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
     	String sDate = dateFormat.format(buttonDate);
         savedInstanceState.putString(STATE_DATE, sDate);
         
         savedInstanceState.putInt(STATE_TYPE, spnType.getSelectedItemPosition());
 
-    	Category selectedCategory = getSelectedCategory();
+    	Category selectedCategory = model.getCategory();
     	if (selectedCategory != null)
-    		savedInstanceState.putString(STATE_CATEGORY, selectedCategory.name);
+    		savedInstanceState.putString(STATE_CATEGORY, selectedCategory.name);*/
 
         super.onSaveInstanceState(savedInstanceState);
     }
     
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        
+        /*
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
     	String sDate = savedInstanceState.getString(STATE_DATE);
     	
@@ -325,7 +293,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     	String categoryName = savedInstanceState.getString(STATE_CATEGORY);
     	if (categoryName != null)
     	{
-    		for(String name : categoryNames)
+    		for(String name : model.getCategoryNames())
             {
             	if (name.equals(categoryName))
             	{
@@ -333,7 +301,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             		break; 
             	}
             }
-    	}
+    	}*/
     }
     
     public void updateDate(Date date)
@@ -368,19 +336,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			((AddTransactionActivity)getActivity()).updateDate(c.getTime());
 		}
     }
-    
-    private void PopulateCategories()
-    {
-    	setNewCategoryFieldsVisible(false);
-
-    	
-    }
-    
-    private void setNewCategoryFieldsVisible(boolean visible)
-    {
-        txtNewCatName.setVisibility(visible ? View.VISIBLE : View.GONE);
-        textView4.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -392,23 +347,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    return controller.onOptionsItemSelected(item);
 	}
-    
-    private Category getSelectedCategory()
-    {
-    	Category selectedCategory = null;
-    	boolean isIncome = (spnType.getSelectedItemId() == 1);
-    	String selectedCategoryName = categoryNames.get(spnCategory.getSelectedItemPosition());
-    	for(Category category : categories)
-    	{
-    		if (getCategoryName(category).equals(selectedCategoryName) && category.income == isIncome)
-    		{
-    			selectedCategory = category;
-    			break;
-    		}
-    	}
-    	
-    	return selectedCategory;
-    }
 	
 	public void cancelFocus()
 	{

@@ -1153,7 +1153,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		String name = budget.name.replace("'", "''");
 		
 		String sql = "INSERT INTO "+budgetsTable+" ("+colBudgetsName+","+colBudgetsValue+","+colBudgetsNotify+
-													") VALUES ('"+name+"',"+budget.value+","+budget.notifyType+") ";
+													") VALUES ('"+name+"',"+budget.value+","+budget.notifyType.getValue()+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -1332,7 +1332,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		
 		String name = budget.name.replace("'", "''");
 		
-		String sql = "UPDATE "+budgetsTable+" SET "+colBudgetsName+" = '"+name+"', "+colBudgetsValue+" = "+budget.value+", "+colBudgetsNotify+" = "+budget.notifyType+" WHERE "+colBudgetsID+" = "+budget.id;
+		String sql = "UPDATE "+budgetsTable+" SET "+colBudgetsName+" = '"+name+"', "+colBudgetsValue+" = "+budget.value+", "+colBudgetsNotify+" = "+budget.notifyType.getValue()+" WHERE "+colBudgetsID+" = "+budget.id;
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		

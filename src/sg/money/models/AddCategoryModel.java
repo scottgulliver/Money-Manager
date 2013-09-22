@@ -12,6 +12,7 @@ import java.util.Random;
 
 import sg.money.DatabaseManager;
 import sg.money.activities.AddTransactionActivity;
+import sg.money.controllers.AddTransactionController;
 import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
 
@@ -21,7 +22,6 @@ public class AddCategoryModel extends SimpleObservable {
     Category category;
     ArrayList<String> options;
     ArrayList<String> parentOptions;
-    int currentColor;
     boolean newCategory;
 	private Category cachedParentCategory;
 
@@ -33,7 +33,7 @@ public class AddCategoryModel extends SimpleObservable {
             newCategory = true;
 
             Random rnd = new Random(System.currentTimeMillis());
-            currentColor = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+            this.category.color = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
         }
 
         currentCategories = DatabaseManager.getInstance(context).GetAllCategories();
@@ -41,8 +41,11 @@ public class AddCategoryModel extends SimpleObservable {
 
 	public void setIsIncome(boolean incomeSelected)
 	{
-		category.income = incomeSelected;
-		notifyObservers(this);
+        if (category.income != incomeSelected)
+        {
+            category.income = incomeSelected;
+            notifyObservers(this);
+        }
 	}
 
 	public boolean getIsPermanent()
@@ -84,13 +87,16 @@ public class AddCategoryModel extends SimpleObservable {
 	
     public void setParentCategory(Category parent)
     {
-        category.parentCategoryId = parent.id;
-		cachedParentCategory = parent;
-		notifyObservers(this);
+        if (category.parentCategoryId != (parent != null ? parent.id : -1))
+        {
+            category.parentCategoryId = parent != null ? parent.id : -1;
+            cachedParentCategory = parent;
+            notifyObservers(this);
+        }
     }
 
     public int getCurrentColor() {
-        return currentColor;
+        return category.color;
     }
 
     public ArrayList<Category> getCurrentCategories() {
@@ -98,7 +104,7 @@ public class AddCategoryModel extends SimpleObservable {
     }
 
     public void setCurrentColor(int color) {
-        this.currentColor = color;
+        category.color = color;
 		notifyObservers(this);
     }
 
@@ -109,7 +115,7 @@ public class AddCategoryModel extends SimpleObservable {
             return "Please enter a name.";
         }
 
-        if (category.name.trim().equals(AddTransactionActivity.ADD_CATEGORY_STRING))
+        if (category.name.trim().equals(AddTransactionController.ADD_CATEGORY_STRING))
         {
             return "This name is not valid.";
         }
@@ -119,6 +125,7 @@ public class AddCategoryModel extends SimpleObservable {
             for(Category currentCategory : currentCategories)
             {
                 if ((currentCategory.id == category.id))
+
                 {
                     continue;
                 }
