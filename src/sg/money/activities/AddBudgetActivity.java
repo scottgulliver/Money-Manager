@@ -34,7 +34,9 @@ import android.widget.AdapterView.*;
 import android.widget.*;
 
 public class AddBudgetActivity extends BaseActivity implements OnChangeListener<AddBudgetModel> {
-{}
+
+    private final String SIS_KEY_MODEL = "Model";
+
 	EditText txtName;
 	EditText txtValue;
 	Button btnCategories;
@@ -66,14 +68,22 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 		btnAccounts = (Button) findViewById(R.id.btnAccounts);
 		spnNotifyType = (Spinner) findViewById(R.id.spnNotifyType);
 
-		// check if we are editing
-		Budget editBudget = null;
-		int editId = getIntent().getIntExtra("ID", -1);
-		if (editId != -1) {
-			editBudget = DatabaseManager.getInstance(AddBudgetActivity.this).GetBudget(editId);
-		}
-		
-		model = new AddBudgetModel(editBudget, this);
+        if (savedInstanceState != null)
+        {
+            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
+        }
+        else
+        {
+            // check if we are editing
+            Budget editBudget = null;
+            int editId = getIntent().getIntExtra("ID", -1);
+            if (editId != -1) {
+                editBudget = DatabaseManager.getInstance(AddBudgetActivity.this).GetBudget(editId);
+            }
+
+            model = new AddBudgetModel(editBudget, this);
+        }
+
 		model.addListener(this);
 		controller = new AddBudgetController(this, model);
 		
@@ -156,18 +166,8 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		/*ArrayList<Integer> selectedAccountIds = new ArrayList<Integer>();
-		for (Account account : model.selectedAccounts)
-			selectedAccountIds.add(account.id);
-		ArrayList<Integer> selectedCategoryIds = new ArrayList<Integer>();
-		for (Category category : selectedCategories)
-			selectedCategoryIds.add(category.id);
-
-		savedInstanceState.putIntegerArrayList(STATE_SELECTED_ACCOUNTS,
-				selectedAccountIds);
-		savedInstanceState.putIntegerArrayList(STATE_SELECTED_CATEGORIES,
-				selectedCategoryIds);
-		*/
+        cancelFocus();
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 

@@ -2,21 +2,25 @@ package sg.money.models;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import sg.money.DatabaseManager;
 import sg.money.activities.AddTransactionActivity;
 import sg.money.controllers.AddTransactionController;
+import sg.money.domainobjects.Account;
 import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
 
-public class AddCategoryModel extends SimpleObservable {
+public class AddCategoryModel extends SimpleObservable implements Parcelable {
 
     ArrayList<Category> currentCategories;
     Category category;
@@ -60,8 +64,11 @@ public class AddCategoryModel extends SimpleObservable {
 
     public void setCategoryName(String name)
     {
-        category.name = name;
-		notifyObservers(this);
+        if (category.name == null || !category.name.equals(name))
+        {
+            category.name = name;
+            notifyObservers(this);
+        }
     }
 
     public Category getParentCategory()
@@ -160,4 +167,42 @@ public class AddCategoryModel extends SimpleObservable {
     public boolean getIsIncome() {
         return category.income;
     }
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<AddCategoryModel> CREATOR = new Parcelable.Creator<AddCategoryModel>() {
+        public AddCategoryModel createFromParcel(Parcel in) {
+            return new AddCategoryModel(in);
+        }
+
+        public AddCategoryModel[] newArray(int size) {
+            return new AddCategoryModel[size];
+        }
+    };
+
+    private AddCategoryModel(Parcel in) {
+        category = in.readParcelable(Category.class.getClassLoader());
+        currentCategories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
+        options = in.createStringArrayList();
+        parentOptions = in.createStringArrayList();
+        newCategory = in.readInt() == 1;
+        cachedParentCategory = in.readParcelable(Category.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(category, flags);
+        parcel.writeParcelableArray((Parcelable[])currentCategories.toArray(), flags);
+        parcel.writeStringList(options);
+        parcel.writeStringList(parentOptions);
+        parcel.writeInt(newCategory ? 1 : 0);
+        parcel.writeParcelable(cachedParentCategory, flags);
+    }
+
+    /* End Implementation of Parcelable */
 }

@@ -44,6 +44,8 @@ import android.widget.CompoundButton.*;
 
 public class AddTransactionActivity extends BaseFragmentActivity implements OnChangeListener<AddTransactionModel>
 {
+    private final String SIS_KEY_MODEL = "Model";
+
 	EditText txtValue;
 	EditText txtDesc; 
 	TextView txtCategory;
@@ -89,57 +91,51 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
         txtNewCatName.setVisibility(View.GONE);
         textView4.setVisibility(View.GONE);
-		
-		int accountId = getIntent().getIntExtra("AccountID", -1);
-		if (accountId == -1)
-		{
-			throw new RuntimeException("AccountID is -1");
-		}
 
-        // check if we are editing
-        Transaction editTransaction = null;
-        int editId = getIntent().getIntExtra("ID", -1);
-        if (editId != -1) {
-            editTransaction = DatabaseManager.getInstance(AddTransactionActivity.this).GetTransaction(editId);
+        if (savedInstanceState != null)
+        {
+            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
         }
-		
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		//int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
+        else
+        {
+            int accountId = getIntent().getIntExtra("AccountID", -1);
+            if (accountId == -1)
+            {
+                throw new RuntimeException("AccountID is -1");
+            }
 
-		int lastSelectedCategoryId = sharedPref.getInt("lastExpenseCategoryId", -1);
-		
-		if (lastSelectedCategoryId == -1)
-		{
-			for(Category category : DatabaseManager.getInstance(this).GetAllCategories())
-			{
-				lastSelectedCategoryId = category.id;
-			}
+            // check if we are editing
+            Transaction editTransaction = null;
+            int editId = getIntent().getIntExtra("ID", -1);
+            if (editId != -1) {
+                editTransaction = DatabaseManager.getInstance(AddTransactionActivity.this).GetTransaction(editId);
+            }
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            //int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
+
+            int lastSelectedCategoryId = sharedPref.getInt("lastExpenseCategoryId", -1);
+
+            if (lastSelectedCategoryId == -1)
+            {
+                for(Category category : DatabaseManager.getInstance(this).GetAllCategories())
+                {
+                    lastSelectedCategoryId = category.id;
+                }
+            }
+
+            model = new AddTransactionModel(editTransaction, accountId, lastSelectedCategoryId, this);
         }
 
-        model = new AddTransactionModel(editTransaction, accountId, lastSelectedCategoryId, this);
         model.addListener(this);
         controller = new AddTransactionController(this, model);
 
         setTitle(model.isNewTransaction() ? "Add Transaction" : "Edit Transaction");
 
-
-
-
-
         ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(
                 this,android.R.layout.simple_spinner_dropdown_item, controller.getTypeChoices());
 
         spnType.setAdapter(arrayAdapter2);
-
-
-
-
-
-
-		
-		
-		
-
 
     	btnDate.setOnClickListener(new OnClickListener() {
     		 
@@ -154,6 +150,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			public void run() {
 				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        cancelFocus();
 						controller.onTypeChange(position);
 					}
 
@@ -164,6 +161,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 		
 		spnCategory.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        cancelFocus();
 						controller.onCategoryChange(position);
 					}
 
@@ -197,6 +195,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			{
 				public void onCheckedChanged(CompoundButton view, boolean checked)
 				{
+                    cancelFocus();
 					controller.onHideFromReportsChange(checked);
 				}
 			});
@@ -218,9 +217,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     {
 		txtDesc.setText(model.getDescription());
 		chkHideFromReports.setChecked(model.getDontReport());
-		
-		Log.e("sg.money", "UpdateUi");
-		Log.w("sg.money", Log.getStackTraceString(new Throwable()));
 
 		txtValue.setText(String.valueOf(model.getValue()));
 
@@ -256,10 +252,10 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
 		Log.e("sg.money", model.isIncomeType() ? "Income spn" : "Not income spn");
         spnType.setSelection(model.getIsTransfer()
-                ? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Transfer)
+                ? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Transfer.name())
                 : model.isIncomeType()
-                	? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Income)
-                	: controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Expense));
+                	? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Income.name())
+                	: controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Expense.name()));
 
         //spnType.setEnabled(model.getIsTransfer());
 		
@@ -279,7 +275,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
             spnCategory.setAdapter(arrayAdapter);
 
-            spnCategory.setSelection(categoryNames.indexOf(model.getCategory().name));
+            spnCategory.setSelection(categoryNames.indexOf(model.getCategory() != null ? model.getCategory().name : AddTransactionController.ADD_CATEGORY_STRING));
 		}
 		else
 		{
@@ -297,50 +293,18 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-    	/*SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-    	String sDate = dateFormat.format(buttonDate);
-        savedInstanceState.putString(STATE_DATE, sDate);
-        
-        savedInstanceState.putInt(STATE_TYPE, spnType.getSelectedItemPosition());
-
-    	Category selectedCategory = model.getCategory();
-    	if (selectedCategory != null)
-    		savedInstanceState.putString(STATE_CATEGORY, selectedCategory.name);*/
-
+    	cancelFocus();
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
         super.onSaveInstanceState(savedInstanceState);
     }
     
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        /*
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-    	String sDate = savedInstanceState.getString(STATE_DATE);
-    	
-    	try {
-			updateDateButtonText(dateFormat.parse(sDate));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-        spnType.setSelection(savedInstanceState.getInt(STATE_TYPE));
-        PopulateCategories();
-    	
-    	String categoryName = savedInstanceState.getString(STATE_CATEGORY);
-    	if (categoryName != null)
-    	{
-    		for(String name : model.getCategoryNames())
-            {
-            	if (name.equals(categoryName))
-            	{
-            		spnCategory.setSelection(categoryNames.indexOf(name));
-            		break; 
-            	}
-            }
-    	}*/
     }
     
     public void updateDate(Date date)
     {
+        cancelFocus();
 		controller.onDateChange(date);
    	}
     

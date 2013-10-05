@@ -14,17 +14,17 @@ public class AddTransactionController
 {
     public enum TransactionType
     {
-        Income(0),
-        Expense(1),
+        Expense(0),
+        Income(1),
         Transfer(2);
 
         // access to values() for casting is expensive, so use this instead..
         public static TransactionType fromInteger(int x) {
             switch(x) {
                 case 0:
-                    return Income;
-                case 1:
                     return Expense;
+                case 1:
+                    return Income;
                 case 2:
                     return Transfer;
             }
@@ -169,14 +169,19 @@ public class AddTransactionController
         {
             model.setCategory(selectedCategoryName);
         }
+
     }
 
     public void onTypeChange(int position)
     {
+        double transactionValue = model.getValue();
+
         TransactionType type = TransactionType.fromInteger(position);
 
         model.setIncomeType(type == TransactionType.Income);
         model.setIsTransfer(type == TransactionType.Transfer);
+
+        model.setValue(transactionValue); // now that the type may have changed, refresh the value
     }
 
     public ArrayList<String> getCategoryNames() {

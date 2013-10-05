@@ -2,14 +2,18 @@ package sg.money.models;
 
 import android.content.*;
 import android.graphics.*;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.*;
+
+import java.io.Serializable;
 import java.util.*;
 import sg.money.*;
 import sg.money.activities.*;
 import sg.money.domainobjects.*;
 import sg.money.utils.*;
 
-public class AddTransactionModel extends SimpleObservable
+public class AddTransactionModel extends SimpleObservable implements Parcelable
 {	
     Transaction transaction;
     boolean newTransaction;
@@ -45,7 +49,7 @@ public class AddTransactionModel extends SimpleObservable
         {
             relatedTransaction = transaction.getRelatedTransferTransaction(context);
         }
-		
+
 		useNewCategory = false;
 		newCategory = new Category();
 
@@ -63,6 +67,11 @@ public class AddTransactionModel extends SimpleObservable
         {
             categoriesMap.put(category.name, category);
         }
+
+        if (!newTransaction)
+        {
+            isIncomeType = getCategory().income;
+        }
     }
 
     public boolean getIsReceivingParty()
@@ -73,7 +82,7 @@ public class AddTransactionModel extends SimpleObservable
 	public double getValue()
 	{
         double value = transaction.value;
-        if (shouldReverseValue())
+        if (value != 0 && shouldReverseValue())
         {
             value *= -1.0f;
         }
@@ -376,4 +385,48 @@ public class AddTransactionModel extends SimpleObservable
         //todo
         return null;
     }
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<AddTransactionModel> CREATOR = new Parcelable.Creator<AddTransactionModel>() {
+        public AddTransactionModel createFromParcel(Parcel in) {
+            return new AddTransactionModel(in);
+        }
+
+        public AddTransactionModel[] newArray(int size) {
+            return new AddTransactionModel[size];
+        }
+    };
+
+    private AddTransactionModel(Parcel in) {
+        transaction = in.readParcelable(Transaction.class.getClassLoader());
+        newTransaction = in.readInt() == 1;
+        accountsMap = (HashMap<String, Account>)in.readSerializable();
+        categoriesMap = (HashMap<String, Category>)in.readSerializable();
+        cachedCategory = in.readParcelable(Category.class.getClassLoader());
+        relatedTransaction = in.readParcelable(Transaction.class.getClassLoader());
+        useNewCategory = in.readInt() == 1;
+        newCategory = in.readParcelable(Category.class.getClassLoader());
+        isIncomeType = in.readInt() == 1;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(transaction, flags);
+        parcel.writeInt(newTransaction ? 1 : 0);
+        parcel.writeSerializable((Serializable)accountsMap);
+        parcel.writeSerializable((Serializable)categoriesMap);
+        parcel.writeParcelable(cachedCategory, flags);
+        parcel.writeParcelable(relatedTransaction, flags);
+        parcel.writeInt(useNewCategory ? 1 : 0);
+        parcel.writeParcelable(newCategory, flags);
+        parcel.writeInt(isIncomeType ? 1 : 0);
+    }
+
+    /* End Implementation of Parcelable */
 }

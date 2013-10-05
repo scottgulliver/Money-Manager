@@ -26,6 +26,8 @@ import android.util.*;
 
 public class AddAccountActivity extends BaseActivity implements OnChangeListener<AddAccountModel>
 {
+    private final String SIS_KEY_MODEL = "Model";
+
 	View baseView;
     EditText txtName;
     EditText txtStartingBalance;
@@ -48,16 +50,23 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
         textView2 = (TextView)findViewById(R.id.textView2);
 
-        Account account = null;
-        int editId = getIntent().getIntExtra("ID", -1);
-        if (editId != -1)
+        if (savedInstanceState != null)
         {
-            account = DatabaseManager.getInstance(AddAccountActivity.this).GetAccount(editId);
+            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
+        }
+        else
+        {
+            Account account = null;
+            int editId = getIntent().getIntExtra("ID", -1);
+            if (editId != -1)
+            {
+                account = DatabaseManager.getInstance(AddAccountActivity.this).GetAccount(editId);
+            }
+
+            model = new AddAccountModel(account);
         }
 
-        model = new AddAccountModel(account);
         model.addListener(this);
-		
 		controller = new AddAccountController(this, model);
 		
 
@@ -124,6 +133,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 		cancelFocus();
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
         super.onSaveInstanceState(savedInstanceState);
     }
 

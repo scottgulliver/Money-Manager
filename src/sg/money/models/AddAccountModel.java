@@ -2,11 +2,14 @@ package sg.money.models;
 
 import sg.money.domainobjects.Account;
 import android.content.*;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import sg.money.*;
 import sg.money.domainobjects.*;
 import java.util.*;
 
-public class AddAccountModel extends SimpleObservable {
+public class AddAccountModel extends SimpleObservable implements Parcelable {
 
     private Account account;
 	private Double startingBalance;
@@ -110,4 +113,38 @@ public class AddAccountModel extends SimpleObservable {
 			DatabaseManager.getInstance(context).UpdateAccount(account);
 		}
 	}
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<AddAccountModel> CREATOR = new Parcelable.Creator<AddAccountModel>() {
+        public AddAccountModel createFromParcel(Parcel in) {
+            return new AddAccountModel(in);
+        }
+
+        public AddAccountModel[] newArray(int size) {
+            return new AddAccountModel[size];
+        }
+    };
+
+    private AddAccountModel(Parcel in) {
+        account = in.readParcelable(Account.class.getClassLoader());
+        startingBalance = in.readDouble();
+        newAccount = in.readInt() == 1;
+        currentAccounts = new ArrayList<Account>(Arrays.asList((Account[])in.readParcelableArray(Account.class.getClassLoader())));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(account, flags);
+        parcel.writeDouble(startingBalance);
+        parcel.writeInt(newAccount ? 1 : 0);
+        parcel.writeParcelableArray((Parcelable[])currentAccounts.toArray(), flags);
+    }
+
+    /* End Implementation of Parcelable */
 }

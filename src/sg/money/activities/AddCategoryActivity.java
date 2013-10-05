@@ -32,6 +32,8 @@ import android.view.View.*;
 
 public class AddCategoryActivity extends BaseActivity implements ColorPickerDialog.OnColorChangedListener, OnChangeListener<AddCategoryModel>
 {
+    private final String SIS_KEY_MODEL = "Model";
+
 	EditText txtName;
 	Spinner spnType;
 	Spinner spnParent;
@@ -39,9 +41,6 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 
     AddCategoryModel model;
 	AddCategoryController controller;
-	
-	//Bundle State Data
-	static final String STATE_COLOUR = "stateColour";
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -57,14 +56,31 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         spnParent = (Spinner)findViewById(R.id.spnParent);
 
 
-        // check if we are editing
-        Category editCategory = null;
-        int editId = getIntent().getIntExtra("ID", -1);
-        if (editId != -1) {
-            editCategory = DatabaseManager.getInstance(AddCategoryActivity.this).GetCategory(editId);
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("Expense");
+        options.add("Income");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_dropdown_item, options);
+
+        spnType.setAdapter(arrayAdapter);
+
+        if (savedInstanceState != null)
+        {
+            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
+        }
+        else
+        {
+            // check if we are editing
+            Category editCategory = null;
+            int editId = getIntent().getIntExtra("ID", -1);
+            if (editId != -1) {
+                editCategory = DatabaseManager.getInstance(AddCategoryActivity.this).GetCategory(editId);
+            }
+
+            model = new AddCategoryModel(editCategory, this);
         }
 
-        model = new AddCategoryModel(editCategory, this);
         model.addListener(this);
 		controller = new AddCategoryController(this, model);
 
@@ -73,14 +89,6 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         imgColor.setOnClickListener(new OnClickListener() { 
 			public void onClick(View v) { ColorClicked(); } });
 
-        ArrayList<String> options = new ArrayList<String>();
-        options.add("Expense");
-        options.add("Income");
-        
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_dropdown_item, options);
-
-		spnType.setAdapter(arrayAdapter);
 
 		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
@@ -97,6 +105,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 			public void run() {
 				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        cancelFocus();
                         controller.onTypeChange(position == 1);
 					}
 
@@ -110,6 +119,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 				public void run() {
 					spnParent.setOnItemSelectedListener(new OnItemSelectedListener() {
 							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                cancelFocus();
                                 controller.onParentChange(position);
 							}
 
@@ -120,15 +130,11 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 			});
 		
 		updateUi();
-        
-        if (savedInstanceState != null)
-        {
-        	model.setCurrentColor(savedInstanceState.getInt(STATE_COLOUR));
-        }
     }
 
 	public void colorChanged(int color)
 	{
+        cancelFocus();
         controller.colorChanged(color);
 	}
 
@@ -183,16 +189,13 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 		txtName.setFocusable(enableControls);
 		txtName.setFocusableInTouchMode(enableControls);
 		txtName.setClickable(enableControls);
-		spnType.setFocusable(enableControls);
-		spnType.setFocusableInTouchMode(enableControls);
-		spnType.setClickable(enableControls);
+        spnType.setEnabled(enableControls);
 		spnParent.setEnabled(enableControls);
     }
     
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(STATE_COLOUR, model.getCurrentColor());
-        
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
         super.onSaveInstanceState(savedInstanceState);
     }
     

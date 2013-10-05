@@ -2,10 +2,12 @@ package sg.money.domainobjects;
 
 import java.util.Date;
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import sg.money.DatabaseManager;
 
-public class Transaction
+public class Transaction implements Parcelable
 {
 	public int id;
 	public double value;
@@ -18,6 +20,11 @@ public class Transaction
 	public int transferToTransaction;
 	public int transferFromTransaction;
 	public boolean reconciled;
+
+    public Transaction()
+    {
+
+    }
 	
 	public double getRealValue(Context context)
 	{
@@ -52,4 +59,52 @@ public class Transaction
 	{
 		return "Transfer "+(isReceivingParty() ? "from " : "to ")+getRelatedTransferTransaction(context).getAccount(context).name;
 	}
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+        public Transaction createFromParcel(Parcel in) {
+            return new Transaction(in);
+        }
+
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
+
+    private Transaction(Parcel in) {
+        id = in.readInt();
+        value = in.readDouble();
+        description = in.readString();
+        category = in.readInt();
+        dateTime = (Date)in.readSerializable();
+        account = in.readInt();
+        dontReport = in.readInt() == 1;
+        isTransfer = in.readInt() == 1;
+        transferToTransaction = in.readInt();
+        transferFromTransaction = in.readInt();
+        reconciled = in.readInt() == 1;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(id);
+        parcel.writeDouble(value);
+        parcel.writeString(description);
+        parcel.writeInt(category);
+        parcel.writeSerializable(dateTime);
+        parcel.writeInt(account);
+        parcel.writeInt(dontReport ? 1 : 0);
+        parcel.writeInt(isTransfer ? 1 : 0);
+        parcel.writeInt(transferToTransaction);
+        parcel.writeInt(transferFromTransaction);
+        parcel.writeInt(reconciled ? 1 : 0);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /* End Implementation of Parcelable */
 }

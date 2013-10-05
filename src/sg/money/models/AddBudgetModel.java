@@ -1,12 +1,15 @@
 package sg.money.models;
 
 import android.content.*;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.*;
 import sg.money.*;
 import sg.money.domainobjects.*;
 import sg.money.utils.*;
 
-public class AddBudgetModel extends SimpleObservable {
+public class AddBudgetModel extends SimpleObservable implements Parcelable {
 
     private Budget budget;
     private ArrayList<Account> currentAccounts;
@@ -150,4 +153,42 @@ public class AddBudgetModel extends SimpleObservable {
             DatabaseManager.getInstance(context).UpdateBudget(budget);
         }
     }
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<AddBudgetModel> CREATOR = new Parcelable.Creator<AddBudgetModel>() {
+        public AddBudgetModel createFromParcel(Parcel in) {
+            return new AddBudgetModel(in);
+        }
+
+        public AddBudgetModel[] newArray(int size) {
+            return new AddBudgetModel[size];
+        }
+    };
+
+    private AddBudgetModel(Parcel in) {
+        budget = in.readParcelable(Budget.class.getClassLoader());
+        currentAccounts = new ArrayList<Account>(Arrays.asList((Account[]) in.readParcelableArray(Account.class.getClassLoader())));
+        currentCategories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
+        currentBudgets = new ArrayList<Budget>(Arrays.asList((Budget[]) in.readParcelableArray(Budget.class.getClassLoader())));
+        notifyTypeOptions = in.createStringArrayList();
+        newBudget = in.readInt() == 1;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(budget, flags);
+        parcel.writeParcelableArray((Parcelable[])currentAccounts.toArray(), flags);
+        parcel.writeParcelableArray((Parcelable[])currentCategories.toArray(), flags);
+        parcel.writeParcelableArray((Parcelable[])currentBudgets.toArray(), flags);
+        parcel.writeStringList(notifyTypeOptions);
+        parcel.writeInt(newBudget ? 1 : 0);
+    }
+
+    /* End Implementation of Parcelable */
 }

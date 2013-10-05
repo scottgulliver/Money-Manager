@@ -2,13 +2,16 @@ package sg.money.domainobjects;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import sg.money.DatabaseManager;
 
-public class Budget
+public class Budget implements Parcelable
 {
 	public enum NotificationType{
 		None(0),
@@ -47,6 +50,11 @@ public class Budget
 	public NotificationType notifyType;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
+
+    public Budget()
+    {
+
+    }
 	
 	/* test comment for budget class */
 	
@@ -105,4 +113,42 @@ public class Budget
 		percentageConversion *= spent;
 		return df.format(percentageConversion) + "%";
 	}
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<Budget> CREATOR = new Parcelable.Creator<Budget>() {
+        public Budget createFromParcel(Parcel in) {
+            return new Budget(in);
+        }
+
+        public Budget[] newArray(int size) {
+            return new Budget[size];
+        }
+    };
+
+    private Budget(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        value = in.readDouble();
+        notifyType = NotificationType.fromInteger(in.readInt());
+        accounts = new ArrayList<Account>(Arrays.asList((Account[]) in.readParcelableArray(Account.class.getClassLoader())));
+        categories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeDouble(value);
+        parcel.writeInt(notifyType.getValue());
+        parcel.writeParcelableArray((Parcelable[])accounts.toArray(), flags);
+        parcel.writeParcelableArray((Parcelable[])categories.toArray(), flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /* End Implementation of Parcelable */
 }
