@@ -38,6 +38,9 @@ import sg.money.utils.Misc;
 import sg.money.R;
 import sg.money.domainobjects.Transaction;
 import sg.money.controllers.*;
+import android.util.*;
+import android.view.View.*;
+import android.widget.CompoundButton.*;
 
 public class AddTransactionActivity extends BaseFragmentActivity implements OnChangeListener<AddTransactionModel>
 {
@@ -99,8 +102,21 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         if (editId != -1) {
             editTransaction = DatabaseManager.getInstance(AddTransactionActivity.this).GetTransaction(editId);
         }
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		//int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
 
-        model = new AddTransactionModel(editTransaction, accountId, this);
+		int lastSelectedCategoryId = sharedPref.getInt("lastExpenseCategoryId", -1);
+		
+		if (lastSelectedCategoryId == -1)
+		{
+			for(Category category : DatabaseManager.getInstance(this).GetAllCategories())
+			{
+				lastSelectedCategoryId = category.id;
+			}
+        }
+
+        model = new AddTransactionModel(editTransaction, accountId, lastSelectedCategoryId, this);
         model.addListener(this);
         controller = new AddTransactionController(this, model);
 
@@ -120,22 +136,9 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 		
-		//for controller
-		Calendar c = Calendar.getInstance();
-		c.setTime(buttonDate);
-		editTransaction.dateTime = c.getTime();
+		
+		
 
 
     	btnDate.setOnClickListener(new OnClickListener() {
@@ -166,7 +169,37 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
 					public void onNothingSelected(AdapterView<?> arg0) {
 					}
-		});
+			});
+
+		txtValue.setOnFocusChangeListener(new OnFocusChangeListener()
+			{
+				public void onFocusChange(View view, boolean hasFocus)
+				{
+					if (!hasFocus)
+					{
+						controller.onTransactionValueChange(Double.parseDouble(txtValue.getText().toString()));
+					}
+				}			
+			});
+
+		txtDesc.setOnFocusChangeListener(new OnFocusChangeListener()
+			{
+				public void onFocusChange(View view, boolean hasFocus)
+				{
+					if (!hasFocus)
+					{
+						controller.onTransactionDescriptionChange(txtDesc.getText().toString());
+					}
+				}			
+			});
+			
+		chkHideFromReports.setOnCheckedChangeListener(new OnCheckedChangeListener()
+			{
+				public void onCheckedChanged(CompoundButton view, boolean checked)
+				{
+					controller.onHideFromReportsChange(checked);
+				}
+			});
 
         updateUi();
     }
@@ -185,6 +218,9 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     {
 		txtDesc.setText(model.getDescription());
 		chkHideFromReports.setChecked(model.getDontReport());
+		
+		Log.e("sg.money", "UpdateUi");
+		Log.w("sg.money", Log.getStackTraceString(new Throwable()));
 
 		txtValue.setText(String.valueOf(model.getValue()));
 
@@ -218,15 +254,14 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         txtNewCatName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
         textView4.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
 
-
-
+		Log.e("sg.money", model.isIncomeType() ? "Income spn" : "Not income spn");
         spnType.setSelection(model.getIsTransfer()
                 ? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Transfer)
                 : model.isIncomeType()
-                ? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Income)
-                : controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Expense));
+                	? controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Income)
+                	: controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Expense));
 
-        spnType.setEnabled(model.getIsTransfer());
+        //spnType.setEnabled(model.getIsTransfer());
 		
 		if (!isTransfer)
 		{
@@ -237,8 +272,8 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
 		if (!model.getIsTransfer())
 		{
-			if (!model.getCategory().income)
-				model.setValue(model.getValue() * -1.0);
+			//if (!model.getCategory().income)
+			//	model.setValue(model.getValue() * -1.0);
 
             ArrayList<String> categoryNames = controller.getCategoryNames();
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
@@ -309,7 +344,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 		controller.onDateChange(date);
    	}
     
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
+    public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
     {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -317,7 +352,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			// Use the current date as the default date in the picker
 			final Calendar c = Calendar.getInstance();
 			
-			c.setTime(buttonDate);
+			c.setTime(model.getDate());
 			
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
@@ -350,6 +385,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 	
 	public void cancelFocus()
 	{
-		
+		txtValue.clearFocus();
+		txtDesc.clearFocus();
 	}
 }

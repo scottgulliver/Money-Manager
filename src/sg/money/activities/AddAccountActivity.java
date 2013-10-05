@@ -22,6 +22,7 @@ import android.view.View.*;
 import android.location.*;
 import sg.money.controllers.*;
 import sg.money.utils.Misc;
+import android.util.*;
 
 public class AddAccountActivity extends BaseActivity implements OnChangeListener<AddAccountModel>
 {
@@ -86,6 +87,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 				{
 					if (!hasFocus)
 					{
+						Log.i("sg.money", Log.getStackTraceString(new Throwable()));
                         if (Misc.stringNullEmptyOrWhitespace(txtStartingBalance.getText().toString()))
                             txtStartingBalance.setText("0");
 
@@ -119,7 +121,15 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         return true;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+		cancelFocus();
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

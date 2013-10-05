@@ -2,8 +2,7 @@ package sg.money.models;
 
 import android.content.*;
 import android.graphics.*;
-import android.preference.*;
-import android.view.*;
+import android.util.*;
 import java.util.*;
 import sg.money.*;
 import sg.money.activities.*;
@@ -11,9 +10,7 @@ import sg.money.domainobjects.*;
 import sg.money.utils.*;
 
 public class AddTransactionModel extends SimpleObservable
-{
-	public static final int NO_CATEGORY_SELECTED = -1;
-	
+{	
     Transaction transaction;
     boolean newTransaction;
     Map<String, Account> accountsMap = new HashMap<String, Account>();
@@ -26,7 +23,7 @@ public class AddTransactionModel extends SimpleObservable
 
     boolean isIncomeType;
 
-    public AddTransactionModel(Transaction transaction, int accountID, Context context) {
+    public AddTransactionModel(Transaction transaction, int accountID, int defaultCategoryID, Context context) {
         this.transaction = transaction;
 
         relatedTransaction = new Transaction();
@@ -37,10 +34,11 @@ public class AddTransactionModel extends SimpleObservable
         {
             this.transaction = new Transaction();
 			this.transaction.account = accountID;
-			this.transaction.category = NO_CATEGORY_SELECTED;
+			this.transaction.category = defaultCategoryID;
 			this.transaction.dateTime = new Date();
             this.transaction.transferFromTransaction = -1;
             this.transaction.transferToTransaction = -1;
+			this.transaction.description = "";
             newTransaction = true;
         }
         else if (transaction.isTransfer)
@@ -75,21 +73,39 @@ public class AddTransactionModel extends SimpleObservable
 	public double getValue()
 	{
         double value = transaction.value;
-        if (isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+        if (shouldReverseValue())
         {
             value *= -1.0f;
         }
 		return value;
 	}
 	
+	private boolean shouldReverseValue()
+	{
+		if (!getIsTransfer() && !isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void setValue(double value)
 	{
-        if (isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+        if (shouldReverseValue())
         {
             value *= -1.0f;
         }
-		transaction.value = value;
-		notifyObservers(this);
+
+		Log.e("sg.money", isIncomeType ? "isincometype" : "-");
+		Log.e("sg.money", getIsTransfer() ? "istransfer" : "-");
+		Log.e("sg.money", getIsReceivingParty() ? "isreceivingparty" : "-");
+		Log.e("sg.money", "transaction value: " + transaction.value + ", value: " + value);
+		if (transaction.value != value)
+		{
+			transaction.value = value;
+			notifyObservers(this);
+		}
 	}
 
 	public boolean getDontReport()
@@ -110,16 +126,24 @@ public class AddTransactionModel extends SimpleObservable
 	
 	public void setDescription(String description)
 	{
-		transaction.description = description;
-        relatedTransaction.description = description;
-		notifyObservers(this);
+		if (!transaction.description.equals(description)
+			|| !relatedTransaction.description.equals(description))
+		{
+			transaction.description = description;
+        	relatedTransaction.description = description;
+			notifyObservers(this);
+		}
 	}
 
 	public void setDate(Date date)
 	{
-		transaction.dateTime = date;
-        relatedTransaction.dateTime = date;
-		notifyObservers(this);
+		if (transaction.dateTime.compareTo(date) != 0
+			|| relatedTransaction.dateTime.compareTo(date) != 0)
+		{
+			transaction.dateTime = date;
+        	relatedTransaction.dateTime = date;
+			notifyObservers(this);
+		}
 	}
 	
 	public Date getDate()
@@ -196,17 +220,13 @@ public class AddTransactionModel extends SimpleObservable
 	
 	public Category getCategory()
 	{
-		if (transaction.id == NO_CATEGORY_SELECTED)
+		if (useNewCategory)
 		{
-			if (useNewCategory)
-			{
-				return newCategory;
-			}
-			
-			return null;
+			return newCategory;
 		}
 		
-		if (cachedCategory.id == transaction.id)
+		if (cachedCategory != null 
+			&& cachedCategory.id == transaction.id)
 		{
 			return cachedCategory;
 		}
@@ -227,9 +247,13 @@ public class AddTransactionModel extends SimpleObservable
 	}
 
     public void setCategory(Category category) {
-        transaction.category = category.id;
-        cachedCategory = category;
-        notifyObservers(this);
+		
+		if (transaction.category != category.id)
+		{
+        	transaction.category = category.id;
+        	cachedCategory = category;
+        	notifyObservers(this);
+		}
     }
 
     public void setCategory(String categoryName) {

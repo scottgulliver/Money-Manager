@@ -58,7 +58,8 @@ public class AddTransactionController
             //go to last selected category
 
             /*SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view);
-            int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
+            int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", 
+			);
 
             if (lastSelectedCategoryId != -1)
             {
@@ -83,6 +84,21 @@ public class AddTransactionController
 	public void onDateChange(Date date)
 	{
 		model.setDate(date);
+	}
+
+	public void onTransactionValueChange(double value)
+	{
+		model.setValue(value);
+	}
+
+	public void onTransactionDescriptionChange(String description)
+	{
+		model.setDescription(description);
+	}
+
+	public void onHideFromReportsChange(boolean checked)
+	{
+		model.setDontReport(checked);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
