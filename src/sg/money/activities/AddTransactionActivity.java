@@ -286,7 +286,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
 			spnTransferAccount.setEnabled(isTransferFrom);
 
-			int accountPosition = (new ArrayList<String>(Arrays.asList(model.getAccountNames()))).indexOf(model.getRelatedTransferTransaction(this).getAccount(this).name);
+			int accountPosition = (new ArrayList<String>(Arrays.asList(model.getAccountNames()))).indexOf(model.getRelatedTransferTransaction(this).getAccount(this).getName());
 			spnTransferAccount.setSelection(accountPosition);
 		}
     }

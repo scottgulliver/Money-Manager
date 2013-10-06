@@ -145,7 +145,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
         Account account = accounts.get(position);
 
         Intent intent = new Intent();
-        Settings.setDefaultAccount(getActivity(), account.id);
+        Settings.setDefaultAccount(getActivity(), account.getId());
 
         getParentActivity().changeContent(HostActivityFragmentTypes.Transactions);
 	}
@@ -213,7 +213,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	{
 		Account selectedItem = adapter.GetSelectedItems().get(0);
 		Intent intent = new Intent(getParentActivity(), AddAccountActivity.class);
-		intent.putExtra("ID", selectedItem.id);
+		intent.putExtra("ID", selectedItem.getId());
     	startActivityForResult(intent, REQUEST_ADDACCOUNT);
 	}
 	

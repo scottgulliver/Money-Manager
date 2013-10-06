@@ -326,7 +326,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 				for(Category category : categories)
 				{
-					if (category.id == transaction.category)
+					if (category.getId() == transaction.category)
 					{
 						validCategory = true;
 						break;
@@ -334,7 +334,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				}
 				for(Account account : accounts)
 				{
-					if (account.id == transaction.account)
+					if (account.getId() == transaction.account)
 					{
 						validAccount = true;
 						break;
@@ -373,9 +373,9 @@ public class DatabaseManager extends SQLiteOpenHelper
 			Category expenseStartBalance = null;
 			for(Category category : categories)
 			{
-				if (category.name.equals("Starting Balance") && category.income)
+				if (category.getName().equals("Starting Balance") && category.isIncome())
 					incomeStartBalance = category;
-				else if (category.name.equals("Starting Balance") && !category.income)
+				else if (category.getName().equals("Starting Balance") && !category.isIncome())
 					expenseStartBalance = category;
 			}
 
@@ -385,7 +385,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			}
 			else
 			{
-				incomeStartBalance.isPermanent = true;
+				incomeStartBalance.setIsPermanent(true);
 				UpdateCategory(incomeStartBalance);
 			}
 			
@@ -395,7 +395,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			}
 			else
 			{
-				expenseStartBalance.isPermanent = true;
+				expenseStartBalance.setIsPermanent(true);
 				UpdateCategory(expenseStartBalance);
 			}
 		}
@@ -412,16 +412,16 @@ public class DatabaseManager extends SQLiteOpenHelper
 			Category expenseStartBalance = null;
 			for(Category category : categories)
 			{
-				if (category.name.equals("Starting Balance") && category.income)
+				if (category.getName().equals("Starting Balance") && category.isIncome())
 					incomeStartBalance = category;
-				else if (category.name.equals("Starting Balance") && !category.income)
+				else if (category.getName().equals("Starting Balance") && !category.isIncome())
 					expenseStartBalance = category;
 			}
 			
-			incomeStartBalance.useInReports = false;
+			incomeStartBalance.setUseInReports(false);
 			UpdateCategory(incomeStartBalance);
 			
-			expenseStartBalance.useInReports = false;
+			expenseStartBalance.setUseInReports(false);
 			UpdateCategory(expenseStartBalance);
 		}
 		
@@ -440,9 +440,9 @@ public class DatabaseManager extends SQLiteOpenHelper
 			Category expenseUncategorised = null;
 			for(Category category : categories)
 			{
-				if (category.name.equals("Uncategorised") && category.income)
+				if (category.getName().equals("Uncategorised") && category.isIncome())
 					incomeUncategorised = category;
-				else if (category.name.equals("Uncategorised") && !category.income)
+				else if (category.getName().equals("Uncategorised") && !category.isIncome())
 					expenseUncategorised = category;
 			}
 
@@ -452,7 +452,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			}
 			else
 			{
-				incomeUncategorised.isPermanent = true;
+				incomeUncategorised.setIsPermanent(true);
 				UpdateCategory(incomeUncategorised);
 			}
 
@@ -462,7 +462,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			}
 			else
 			{
-				expenseUncategorised.isPermanent = true;
+				expenseUncategorised.setIsPermanent(true);
 				UpdateCategory(expenseUncategorised);
 			}
 		}
@@ -490,12 +490,12 @@ public class DatabaseManager extends SQLiteOpenHelper
             ArrayList<Category> categories = GetAllCategories();
             for(Category category : categories)
             {
-                if (category.name.equals("Resturants & Bars") && !category.income)
+                if (category.getName().equals("Resturants & Bars") && !category.isIncome())
                     misspeltResAndBars = category;
             }
             if (misspeltResAndBars != null)
             {
-                misspeltResAndBars.name = "Restaurants & Bars";
+                misspeltResAndBars.setName("Restaurants & Bars");
                 UpdateCategory(misspeltResAndBars);
             }
         }
@@ -810,7 +810,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	
 	public void AddCategory(Category category)
 	{
-		String name = category.name.replace("'", "''");
+		String name = category.getName().replace("'", "''");
 		
 		SQLiteDatabase db=getDatabase(this, DATABASE_WRITE_MODE);
 		
@@ -823,11 +823,11 @@ public class DatabaseManager extends SQLiteOpenHelper
 										+colCategoriesParent+
 											") VALUES ('"
 										+name+"',"
-										+category.color+","
-										+(category.income?1:0)+","
-										+(category.isPermanent?1:0)+","
-										+(category.useInReports?1:0)+","
-										+category.parentCategoryId
+										+category.getColor()+","
+										+(category.isIncome()?1:0)+","
+										+(category.isPermanent()?1:0)+","
+										+(category.isUseInReports()?1:0)+","
+										+category.getParentCategoryId()
 										+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
@@ -835,12 +835,12 @@ public class DatabaseManager extends SQLiteOpenHelper
 		ArrayList<Category> categories = GetAllCategories();
 		for(Category thisCategory : categories)
 		{
-			if (thisCategory.name.equals(category.name) && 
-				thisCategory.income == category.income && 
-				thisCategory.color == category.color && 
-				thisCategory.isPermanent == category.isPermanent)
+			if (thisCategory.getName().equals(category.getName()) && 
+				thisCategory.isIncome() == category.isIncome() && 
+				thisCategory.getColor() == category.getColor() && 
+				thisCategory.isPermanent() == category.isPermanent())
 			{
-				category.id = thisCategory.id;
+				category.setId(thisCategory.getId());
 				break;
 			}
 		}
@@ -865,13 +865,13 @@ public class DatabaseManager extends SQLiteOpenHelper
 			while (c.isAfterLast() == false)
 			{
 				Category caetgory = new Category();
-				caetgory.id = c.getInt((c.getColumnIndex(colCategoriesID)));
-				caetgory.name = c.getString((c.getColumnIndex(colCategoriesName)));
-				caetgory.color = c.getInt((c.getColumnIndex(colCategoriesColor)));
-				caetgory.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
-				caetgory.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
-				caetgory.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
-				caetgory.parentCategoryId = c.getInt((c.getColumnIndex(colCategoriesParent)));
+				caetgory.setId(c.getInt((c.getColumnIndex(colCategoriesID))));
+				caetgory.setName(c.getString((c.getColumnIndex(colCategoriesName))));
+				caetgory.setColor(c.getInt((c.getColumnIndex(colCategoriesColor))));
+				caetgory.setIncome(c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
+				caetgory.setIsPermanent(c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
+				caetgory.setUseInReports(c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
+				caetgory.setParentCategoryId(c.getInt((c.getColumnIndex(colCategoriesParent))));
 				categories.add(caetgory);
 				
 	       	    c.moveToNext();
@@ -997,11 +997,11 @@ public class DatabaseManager extends SQLiteOpenHelper
 	
 	public void AddAccount(Account account)
 	{
-		String name = account.name.replace("'", "''");
+		String name = account.getName().replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
 		String sql = "INSERT INTO "+accountsTable+" ("+colAccountsName+","+colAccountsValue+
-													") VALUES ('"+name+"',"+account.value+") ";
+													") VALUES ('"+name+"',"+account.getValue()+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -1010,7 +1010,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		Log.i("SQL", sql);
 		Cursor c = db.rawQuery(sql , null);
 		c.moveToFirst();
-		account.id = c.getInt(c.getColumnIndex(colAccountsID));
+		account.setId(c.getInt(c.getColumnIndex(colAccountsID)));
 		c.close();
 	}
 	
@@ -1107,7 +1107,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		ArrayList<Transaction> transactions = GetAllTransactions();
 		for(Transaction transaction : transactions)
 		{
-			if (transaction.account == account.id)
+			if (transaction.account == account.getId())
 			{
 				if (transaction.isTransfer)
 				{
@@ -1126,7 +1126,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			}
 		}
 		
-		String sql = "DELETE FROM "+accountsTable+" WHERE "+colAccountsID+" = "+account.id;
+		String sql = "DELETE FROM "+accountsTable+" WHERE "+colAccountsID+" = "+account.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -1135,10 +1135,10 @@ public class DatabaseManager extends SQLiteOpenHelper
 	
 	public void UpdateAccount(Account account)
 	{
-		String name = account.name.replace("'", "''");
+		String name = account.getName().replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
-		String sql = "UPDATE "+accountsTable+" SET "+colAccountsName+" = '"+name+"' WHERE "+colAccountsID+" = "+account.id;
+		String sql = "UPDATE "+accountsTable+" SET "+colAccountsName+" = '"+name+"' WHERE "+colAccountsID+" = "+account.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 	}
@@ -1176,7 +1176,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		for(Account account : budget.accounts)
 		{
 			sql = "INSERT INTO "+budgetLinksTable+" ("+colBudgetLinksBudgetID+","+colBudgetLinksForeignID+","+colBudgetLinksForeignType+
-					") VALUES ("+budget.id+","+account.id+","+2+") ";
+					") VALUES ("+budget.id+","+account.getId()+","+2+") ";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
 		}
@@ -1351,7 +1351,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		for(Account account : budget.accounts)
 		{
 			sql = "INSERT INTO "+budgetLinksTable+" ("+colBudgetLinksBudgetID+","+colBudgetLinksForeignID+","+colBudgetLinksForeignType+
-					") VALUES ("+budget.id+","+account.id+","+2+") ";
+					") VALUES ("+budget.id+","+account.getId()+","+2+") ";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
 		}

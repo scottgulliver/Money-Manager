@@ -4,33 +4,72 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import sg.money.DatabaseManager;
 
+/**
+* An account holds a value, which is affected by transactions recorded against it.
+*/
 public class Account implements Parcelable
 {  
-	public int id;
-	public String name;
-	public double value; 
+	private int m_id;
+	private String m_name;
+	private double m_value;
+	
+	
+	/* Constructors */
 	
 	public Account(String name)
 	{
-		this.name = name;
+		m_name = name;
 	}
 	
 	public Account(Context context, int id, String name)
 	{
-		this.id = id;
-		this.name = name;
+		m_id = id;
+		m_name = name;
 		
 		if (id > -1)
 		{
 			ArrayList<Transaction> transactions = DatabaseManager.getInstance(context).GetAllTransactions(id);
 			for(Transaction transaction : transactions)
-				value += transaction.value;
+				m_value += transaction.value;
 		}
 	}
+	
+	
+	/* Getters and setters */
 
+	public void setId(int id)
+	{
+		m_id = id;
+	}
+
+	public int getId()
+	{
+		return m_id;
+	}
+
+	public void setName(String name)
+	{
+		m_name = name;
+	}
+
+	public String getName()
+	{
+		return m_name;
+	}
+
+	public void setValue(double value)
+	{
+		m_value = value;
+	}
+
+	public double getValue()
+	{
+		return m_value;
+	}
+
+	
     /* Implementation of Parcelable */
 
     public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<Account>() {
@@ -44,16 +83,16 @@ public class Account implements Parcelable
     };
 
     private Account(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        value = in.readDouble();
+        m_id = in.readInt();
+        m_name = in.readString();
+        m_value = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(id);
-        parcel.writeString(name);
-        parcel.writeDouble(value);
+        parcel.writeInt(m_id);
+        parcel.writeString(m_name);
+        parcel.writeDouble(m_value);
     }
 
     @Override
@@ -62,5 +101,6 @@ public class Account implements Parcelable
     }
 
     /* End Implementation of Parcelable */
+	
 }
 

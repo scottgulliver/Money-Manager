@@ -80,8 +80,8 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
         for(Account account : accounts)
         {
         	Bundle tabBundle = new Bundle();
-        	tabBundle.putInt("AccountID", account.id);
-	        tabsAdapter.addTab(actionBar.newTab().setText(account.name), AccountTransactionsFragment.class, tabBundle, account);
+        	tabBundle.putInt("AccountID", account.getId());
+	        tabsAdapter.addTab(actionBar.newTab().setText(account.getName()), AccountTransactionsFragment.class, tabBundle, account);
         }
         
         if (accounts.isEmpty())
@@ -105,7 +105,7 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
             Account defaultAccount = null;
             for(Account account : accounts)
             {
-                if (account.id == defaultAccountId)
+                if (account.getId() == defaultAccountId)
                 {
                     defaultAccount = account;
                     break;
@@ -195,7 +195,7 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
 			context.selectedAccount = newAccountSelection;
 
 			//save this, so we load it by default next time
-            Settings.setDefaultAccount(context.getActivity(), newAccountSelection.id);
+            Settings.setDefaultAccount(context.getActivity(), newAccountSelection.getId());
 			RemovefragmentsFocus();
 		}
 		
@@ -311,7 +311,7 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
         {
             case R.id.menu_addtransaction:{
                 Intent intent = new Intent(getParentActivity(), AddTransactionActivity.class);
-                intent.putExtra("AccountID", selectedAccount.id);
+                intent.putExtra("AccountID", selectedAccount.getId());
                 startActivityForResult(intent, REQUEST_ADDTRANSACTION);
                 break;
             }
@@ -377,7 +377,7 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
                         int index = -1;
                         for(Account account : accounts)
                         {
-                            if (account.id == accountId)
+                            if (account.getId() == accountId)
                             {
                                 index = accounts.indexOf(account);
                                 break;

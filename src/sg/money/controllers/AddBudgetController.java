@@ -106,7 +106,7 @@ public class AddBudgetController
 		for (int i = 0; i < model.getCurrentAccounts().size(); i++) {
 			boolean alreadySelected = false;
 			for (Account selectedAccount : model.getSelectedAccounts()) {
-				if (selectedAccount.id == model.getCurrentAccounts().get(i).id) {
+				if (selectedAccount.getId() == model.getCurrentAccounts().get(i).getId()) {
 					alreadySelected = true;
 					break;
 				}
@@ -117,7 +117,7 @@ public class AddBudgetController
 		ArrayList<String> items = new ArrayList<String>();
 		items.add("All Accounts");
 		for (Account account : model.getCurrentAccounts())
-			items.add(account.name);
+			items.add(account.getName());
 
 		createDialog("Accounts", items, checkedItems, DialogType.Accounts).show();
 	}
@@ -205,7 +205,7 @@ public class AddBudgetController
 					for (Object item : mSelectedItems) {
 						if (type == DialogType.Accounts) {
 							for (Account account : model.getCurrentAccounts()) {
-								if (account.name.equals(items.get(Integer
+								if (account.getName().equals(items.get(Integer
 																  .parseInt(String.valueOf(item))))) {
 									model.getSelectedAccounts().add(account);
 									break;

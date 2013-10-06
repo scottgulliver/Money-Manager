@@ -57,7 +57,7 @@ public class Transaction implements Parcelable
 	
 	public String getTransferDescription(Context context)
 	{
-		return "Transfer "+(isReceivingParty() ? "from " : "to ")+getRelatedTransferTransaction(context).getAccount(context).name;
+		return "Transfer "+(isReceivingParty() ? "from " : "to ")+getRelatedTransferTransaction(context).getAccount(context).getName();
 	}
 
     /* Implementation of Parcelable */

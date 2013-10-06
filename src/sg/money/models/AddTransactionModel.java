@@ -56,8 +56,8 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         ArrayList<Account> accounts = DatabaseManager.getInstance(context).GetAllAccounts();
         for(Account account : accounts)
         {
-            if (account.id != accountID)
-                accountsMap.put(account.name, account);
+            if (account.getId() != accountID)
+                accountsMap.put(account.getName(), account);
         }
 
 
@@ -367,7 +367,7 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 
     public void setTransferAccount(Account account)
     {
-        relatedTransaction.account = account.id;
+        relatedTransaction.account = account.getId();
         notifyObservers(this);
     }
 

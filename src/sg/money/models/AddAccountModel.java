@@ -28,11 +28,11 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
     }
 
     public String getAccountName() {
-        return account.name;
+        return account.getName();
     }
 
     public void setAccountName(String accountName) {
-        account.name = accountName;
+        account.setName(accountName);
 		notifyObservers(this);
     }
 
@@ -62,17 +62,17 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
 	
 	public String validate(Context context)
 	{
-    	if (account.name.trim().equals(""))
+    	if (account.getName().trim().equals(""))
     	{
     		return "Please enter a name.";
     	}
 
     	for(Account currentAccount : getCurrentAccounts(context))
     	{
-    		if (currentAccount.id == account.id) 
+    		if (currentAccount.getId() == account.getId()) 
 				continue;
 
-    		if (account.name.trim().equals(currentAccount.name.trim()))
+    		if (account.getName().trim().equals(currentAccount.getName().trim()))
         	{
         		return "An account with this name already exists.";
         	}
@@ -90,7 +90,7 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
 			if (startingBalance != 0.0)
 			{
 				Transaction transaction = new Transaction();
-				transaction.account = account.id;
+				transaction.account = account.getId();
 				transaction.description = "Starting balance for account";
 				transaction.dateTime = Calendar.getInstance().getTime();
 				transaction.value = startingBalance;

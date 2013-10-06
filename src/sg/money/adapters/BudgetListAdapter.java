@@ -97,7 +97,7 @@ public class BudgetListAdapter extends BaseAdapter
             	boolean isAccout = false;
             	for(Account account : budget.accounts)
             	{
-            		if (transaction.account == account.id)
+            		if (transaction.account == account.getId())
         			{
         				isAccout = true;
         				break;

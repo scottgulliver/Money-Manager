@@ -73,9 +73,9 @@ public class AccountListAdapter extends BaseAdapter {
         Account account = accounts.get(position);
  
         //set values
-        nameText.setText(account.name);
-        balanceText.setText(Misc.formatValue(activity, account.value));
-        if (account.value >= 0)
+        nameText.setText(account.getName());
+        balanceText.setText(Misc.formatValue(activity, account.getValue()));
+        if (account.getValue() >= 0)
         	balanceText.setTextColor(Color.argb(255, 102, 153, 0));
         else
         	balanceText.setTextColor(Color.argb(255, 204, 0, 0));
