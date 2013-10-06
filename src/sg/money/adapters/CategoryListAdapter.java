@@ -91,11 +91,11 @@ public class CategoryListAdapter extends BaseAdapter {
         nameText.setText(getCategoryName(category));
  
         if (customStrings == null)
-        	typeText.setText(category.income ? "Income" : "Expense");
+        	typeText.setText(category.isIncome() ? "Income" : "Expense");
         else
         	typeText.setText(customStrings.get(position));
         
-        colorField.setBackgroundColor(category.color);
+        colorField.setBackgroundColor(category.getColor());
         
         if (selectedItems.contains(category))
         	vi.setBackgroundColor(COLOR_SELECTED);

@@ -4,61 +4,122 @@ import java.util.Date;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import sg.money.DatabaseManager;
 
+/**
+ * TODO add summary
+ */
 public class Transaction implements Parcelable
 {
-	public int id;
-	public double value;
-	public String description;
-	public int category;
-	public Date dateTime;
-	public int account;
-	public boolean dontReport;
-	public boolean isTransfer;
-	public int transferToTransaction;
-	public int transferFromTransaction;
-	public boolean reconciled;
+	public int m_id;
+	public double m_value;
+	public String m_description;
+	public int m_category;
+	public Date m_dateTime;
+	public int m_account;
+	public boolean m_dontReport;
+	public boolean m_isTransfer;
+	public int m_transferToTransaction;
+	public int m_transferFromTransaction;
+	public boolean m_reconciled;
+
+
+    /* Constructor */
 
     public Transaction()
     {
-
     }
-	
-	public double getRealValue(Context context)
-	{
-		Category category = DatabaseManager.getInstance(context).GetCategory(this.category);
-		return (category.income ? value : value * -1.0);
-	}
-	
-	public Transaction getRelatedTransferTransaction(Context context)
-	{
-		if (!isTransfer)
-			return null; //todo throw exception here.
-		
-		return DatabaseManager.getInstance(context).GetTransaction(transferFromTransaction != -1 
-																	? transferFromTransaction 
-																	: transferToTransaction);
-	}
-	
-	public boolean isReceivingParty()
-	{
-		if (!isTransfer)
-			return false; //todo throw exception here.
-		
-		return transferFromTransaction != -1;
-	}
-	
-	public Account getAccount(Context context)
-	{
-		return DatabaseManager.getInstance(context).GetAccount(account);
-	}
-	
-	public String getTransferDescription(Context context)
-	{
-		return "Transfer "+(isReceivingParty() ? "from " : "to ")+getRelatedTransferTransaction(context).getAccount(context).getName();
-	}
+
+
+    /* Getters / setters */
+
+    public int getId() {
+        return m_id;
+    }
+
+    public void setId(int id) {
+        m_id = id;
+    }
+
+    public double getValue() {
+        return m_value;
+    }
+
+    public void setValue(double value) {
+        m_value = value;
+    }
+
+    public String getDescription() {
+        return m_description;
+    }
+
+    public void setDescription(String description) {
+        m_description = description;
+    }
+
+    public int getCategory() {
+        return m_category;
+    }
+
+    public void setCategory(int category) {
+        m_category = category;
+    }
+
+    public Date getDateTime() {
+        return m_dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        m_dateTime = dateTime;
+    }
+
+    public int getAccount() {
+        return m_account;
+    }
+
+    public void setAccount(int account) {
+        m_account = account;
+    }
+
+    public boolean isDontReport() {
+        return m_dontReport;
+    }
+
+    public void setDontReport(boolean dontReport) {
+        m_dontReport = dontReport;
+    }
+
+    public boolean isTransfer() {
+        return m_isTransfer;
+    }
+
+    public void setTransfer(boolean transfer) {
+        m_isTransfer = transfer;
+    }
+
+    public int getTransferToTransaction() {
+        return m_transferToTransaction;
+    }
+
+    public void setTransferToTransaction(int transferToTransaction) {
+        m_transferToTransaction = transferToTransaction;
+    }
+
+    public int getTransferFromTransaction() {
+        return m_transferFromTransaction;
+    }
+
+    public void setTransferFromTransaction(int transferFromTransaction) {
+        m_transferFromTransaction = transferFromTransaction;
+    }
+
+    public boolean isReconciled() {
+        return m_reconciled;
+    }
+
+    public void setReconciled(boolean reconciled) {
+        m_reconciled = reconciled;
+    }
 
     /* Implementation of Parcelable */
 
@@ -73,32 +134,32 @@ public class Transaction implements Parcelable
     };
 
     private Transaction(Parcel in) {
-        id = in.readInt();
-        value = in.readDouble();
-        description = in.readString();
-        category = in.readInt();
-        dateTime = (Date)in.readSerializable();
-        account = in.readInt();
-        dontReport = in.readInt() == 1;
-        isTransfer = in.readInt() == 1;
-        transferToTransaction = in.readInt();
-        transferFromTransaction = in.readInt();
-        reconciled = in.readInt() == 1;
+        m_id = in.readInt();
+        m_value = in.readDouble();
+        m_description = in.readString();
+        m_category = in.readInt();
+        m_dateTime = (Date)in.readSerializable();
+        m_account = in.readInt();
+        m_dontReport = in.readInt() == 1;
+        m_isTransfer = in.readInt() == 1;
+        m_transferToTransaction = in.readInt();
+        m_transferFromTransaction = in.readInt();
+        m_reconciled = in.readInt() == 1;
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(id);
-        parcel.writeDouble(value);
-        parcel.writeString(description);
-        parcel.writeInt(category);
-        parcel.writeSerializable(dateTime);
-        parcel.writeInt(account);
-        parcel.writeInt(dontReport ? 1 : 0);
-        parcel.writeInt(isTransfer ? 1 : 0);
-        parcel.writeInt(transferToTransaction);
-        parcel.writeInt(transferFromTransaction);
-        parcel.writeInt(reconciled ? 1 : 0);
+        parcel.writeInt(m_id);
+        parcel.writeDouble(m_value);
+        parcel.writeString(m_description);
+        parcel.writeInt(m_category);
+        parcel.writeSerializable(m_dateTime);
+        parcel.writeInt(m_account);
+        parcel.writeInt(m_dontReport ? 1 : 0);
+        parcel.writeInt(m_isTransfer ? 1 : 0);
+        parcel.writeInt(m_transferToTransaction);
+        parcel.writeInt(m_transferFromTransaction);
+        parcel.writeInt(m_reconciled ? 1 : 0);
     }
 
     @Override
@@ -107,4 +168,41 @@ public class Transaction implements Parcelable
     }
 
     /* End Implementation of Parcelable */
+
+
+    /* Methods */
+
+    public double getRealValue(Context context)
+    {
+        Category category = DatabaseManager.getInstance(context).GetCategory(m_category);
+        return (category.isIncome() ? m_value : m_value * -1.0);
+    }
+
+    public Transaction getRelatedTransferTransaction(Context context)
+    {
+        if (!m_isTransfer)
+            return null; //todo throw exception here.
+
+        return DatabaseManager.getInstance(context).GetTransaction(m_transferFromTransaction != -1
+                ? m_transferFromTransaction
+                : m_transferToTransaction);
+    }
+
+    public boolean isReceivingParty()
+    {
+        if (!m_isTransfer)
+            return false; //todo throw exception here.
+
+        return m_transferFromTransaction != -1;
+    }
+
+    public Account getAccount(Context context)
+    {
+        return DatabaseManager.getInstance(context).GetAccount(m_account);
+    }
+
+    public String getTransferDescription(Context context)
+    {
+        return "Transfer "+(isReceivingParty() ? "from " : "to ")+getRelatedTransferTransaction(context).getAccount(context).getName();
+    }
 }

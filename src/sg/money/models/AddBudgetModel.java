@@ -23,7 +23,7 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
         if (this.budget == null)
         {
             this.budget = new Budget();
-            this.budget.notifyType = Budget.NotificationType.None;
+            this.budget.setNotifyType(Budget.NotificationType.None);
             newBudget = true;
         }
 
@@ -35,7 +35,7 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
 			.GetAllCategories();
 		allCategories = Misc.getCategoriesInGroupOrder(allCategories);
 		for (Category category : allCategories) {
-			if (!category.income)
+			if (!category.isIncome())
 				currentCategories.add(category);
 		}
 
@@ -47,20 +47,20 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
     }
 
     public String getBudgetName() {
-        return budget.name;
+        return budget.getName();
     }
 
     public void setBudgetName(String budgetName) {
-        budget.name = budgetName;
+        budget.setName(budgetName);
         notifyObservers(this);
     }
 
     public Double getBudgetValue() {
-        return budget.value;
+        return budget.getValue();
     }
 
     public void setBudgetValue(Double value) {
-        budget.value = value;
+        budget.setValue(value);
         notifyObservers(this);
     }
 	
@@ -71,23 +71,23 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
 	
 	public ArrayList<Account> getSelectedAccounts()
 	{
-		return budget.accounts;
+		return budget.getAccounts();
 	}
 	
 	public void setSelectedAccounts(ArrayList<Account> accounts)
 	{
-		budget.accounts = accounts;
+		budget.setAccounts(accounts);
 		notifyObservers(this);
 	}
 
 	public ArrayList<Category> getSelectedCategories()
 	{
-		return budget.categories;
+		return budget.getCategories();
 	}
 
 	public void setSelectedCategories(ArrayList<Category> categories)
 	{
-		budget.categories = categories;
+		budget.setCategories(categories);
 		notifyObservers(this);
 	}
 
@@ -103,14 +103,14 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
 	
 	public Budget.NotificationType getNotifyType()
 	{
-		return budget.notifyType;
+		return budget.getNotifyType();
 	}
 	
 	public void setNotifyType(Budget.NotificationType notifyType)
 	{
-        if (budget.notifyType != notifyType)
+        if (budget.getNotifyType() != notifyType)
         {
-            budget.notifyType = notifyType;
+            budget.setNotifyType(notifyType);
             notifyObservers(this);
         }
 	}
@@ -122,19 +122,19 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
 
     public String validate(Context context)
     {
-        if (budget.name.trim().equals("")) {
+        if (budget.getName().trim().equals("")) {
             return "Please enter a name.";
         }
 
-        if (budget.value < 0) {
+        if (budget.getValue() < 0) {
             return "Please enter a positive budget value.";
         }
 
         for (Budget currentBudget : currentBudgets) {
-            if (currentBudget.id == budget.id)
+            if (currentBudget.getId() == budget.getId())
                 continue;
 
-            if (budget.name.trim().equals(currentBudget.name.trim())) {
+            if (budget.getName().trim().equals(currentBudget.getName().trim())) {
                 return "A budget with this name already exists.";
             }
         }

@@ -74,7 +74,7 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 	{
 		for(Category category : categories)
 		{
-			if (category.id == id)
+			if (category.getId() == id)
 				return category;
 		}
 		
@@ -162,7 +162,7 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 	private void EditItem(Category selectedItem)
 	{			
 		Intent intent = new Intent(getParentActivity(), AddCategoryActivity.class);
-		intent.putExtra("ID", selectedItem.id);
+		intent.putExtra("ID", selectedItem.getId());
 		startActivityForResult(intent, REQUEST_ADDCATEGORY);
 	}
 	
@@ -193,7 +193,7 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 		ArrayList<Category> permanentItems = new ArrayList<Category>();
 		for(Category selectedItem : selectedItems)
 		{
-			if (!selectedItem.isPermanent)
+			if (!selectedItem.isPermanent())
 				DatabaseManager.getInstance(getParentActivity()).DeleteCategory(selectedItem);
 			else
 				permanentItems.add(selectedItem);
@@ -204,7 +204,7 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 		{
 			String msg = "Can't delete ";
 			for(Category category : permanentItems)
-				msg += category.name + (permanentItems.get(permanentItems.size()-1) != category ? ", " : ".");
+				msg += category.getName() + (permanentItems.get(permanentItems.size()-1) != category ? ", " : ".");
 			Toast.makeText(getParentActivity(), msg, Toast.LENGTH_SHORT).show();
 		}
 	}

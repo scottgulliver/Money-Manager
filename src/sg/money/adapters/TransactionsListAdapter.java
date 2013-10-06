@@ -74,7 +74,7 @@ public class TransactionsListAdapter extends BaseAdapter {
     {
     	for(Transaction transaction : transactions)
     	{
-    		if (transaction.id == id)
+    		if (transaction.getId() == id)
     			return transaction;
     	}
 
@@ -85,7 +85,7 @@ public class TransactionsListAdapter extends BaseAdapter {
     {
     	for(Category category : categories)
     	{
-    		if (category.id == id)
+    		if (category.getId() == id)
     			return category;
     	}
     	
@@ -109,31 +109,31 @@ public class TransactionsListAdapter extends BaseAdapter {
         transactionData = transactions.get(position);
  
         //set values
-        descText.setText(transactionData.description);
-    	categoryText.setText(transactionData.isTransfer
+        descText.setText(transactionData.getDescription());
+    	categoryText.setText(transactionData.isTransfer()
     			? transactionData.getTransferDescription(activity)
-    			: getCategory(transactionData.category).name);
-        valueText.setText(Misc.formatValue(activity, transactionData.value));
+    			: getCategory(transactionData.getCategory()).getName());
+        valueText.setText(Misc.formatValue(activity, transactionData.getValue()));
 
         try
         {
-        	dateText.setText(Misc.formatDate(activity, transactionData.dateTime));
+        	dateText.setText(Misc.formatDate(activity, transactionData.getDateTime()));
         }
         catch(Exception e)
         {
         	e.printStackTrace();
         }
         
-        if (transactionData.value >= 0)
+        if (transactionData.getValue() >= 0)
         	valueText.setTextColor(Color.argb(255, 102, 153, 0));
         else
         	valueText.setTextColor(Color.argb(255, 204, 0, 0));
 
-        descText.setTextColor(transactionData.reconciled && greyOutReconciled ? Color.argb(255, 100, 100, 100) : Color.argb(255, 34, 34, 34));
+        descText.setTextColor(transactionData.isReconciled() && greyOutReconciled ? Color.argb(255, 100, 100, 100) : Color.argb(255, 34, 34, 34));
 
         layoutReconciled.setVisibility(showReconcileOptions ? View.VISIBLE : View.GONE);
-		chkReconciled.setChecked(transactionData.reconciled);
-		final int id = transactionData.id;
+		chkReconciled.setChecked(transactionData.isReconciled());
+		final int id = transactionData.getId();
 		chkReconciled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
 			{
 				public void onCheckedChanged(CompoundButton p1, boolean p2)
@@ -144,7 +144,7 @@ public class TransactionsListAdapter extends BaseAdapter {
         
         if (selectedItems.contains(transactionData))
         	vi.setBackgroundColor(COLOR_SELECTED);
-        else if (transactionData.reconciled && greyOutReconciled)
+        else if (transactionData.isReconciled() && greyOutReconciled)
 			vi.setBackgroundColor(COLOR_RECONCILED);
 		else
         	vi.setBackgroundColor(Color.TRANSPARENT);
@@ -155,7 +155,7 @@ public class TransactionsListAdapter extends BaseAdapter {
 	private void chkReconciledChanged(CompoundButton view, boolean newValue, int transactionId)
 	{
 		Transaction transaction = getTransaction(transactionId);
-		transaction.reconciled = newValue;
+		transaction.setReconciled(newValue);
 		DatabaseManager.getInstance(activity).UpdateTransaction(transaction);
 		notifyDataSetChanged();
 	}

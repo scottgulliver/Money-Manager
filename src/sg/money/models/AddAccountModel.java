@@ -90,17 +90,17 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
 			if (startingBalance != 0.0)
 			{
 				Transaction transaction = new Transaction();
-				transaction.account = account.getId();
-				transaction.description = "Starting balance for account";
-				transaction.dateTime = Calendar.getInstance().getTime();
-				transaction.value = startingBalance;
+				transaction.setAccount(account.getId());
+				transaction.setDescription("Starting balance for account");
+				transaction.setDateTime(Calendar.getInstance().getTime());
+				transaction.setValue(startingBalance);
 
 				ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
 				for(Category category : categories)
 				{
-					if (category.name.equals("Starting Balance") && category.income == startingBalance > 0)
+					if (category.getName().equals("Starting Balance") && category.isIncome() == startingBalance > 0)
 					{
-						transaction.category = category.id;
+						transaction.setCategory(category.getId());
 						break;
 					}
 				}

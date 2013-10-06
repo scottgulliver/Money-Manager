@@ -11,6 +11,9 @@ import android.os.Parcelable;
 
 import sg.money.DatabaseManager;
 
+/**
+ * TODO add summary
+ */
 public class Budget implements Parcelable
 {
 	public enum NotificationType{
@@ -44,35 +47,129 @@ public class Budget implements Parcelable
         }
 	}
 	
-	public int id;
-	public String name;
-	public double value;
-	public NotificationType notifyType;
-	public ArrayList<Account> accounts = new ArrayList<Account>();
-	public ArrayList<Category> categories = new ArrayList<Category>();
+	private int m_id;
+    private String m_name;
+    private double m_value;
+    private NotificationType m_notifyType;
+    private ArrayList<Account> m_accounts;
+    private ArrayList<Category> m_categories;
+
+
+    /* Constructor */
 
     public Budget()
     {
-
+        m_accounts = new ArrayList<Account>();
+        m_categories = new ArrayList<Category>();
     }
-	
-	/* test comment for budget class */
-	
+
+
+    /* Getters / setters */
+
+    public int getId() {
+        return m_id;
+    }
+
+    public void setId(int id) {
+        m_id = id;
+    }
+
+    public String getName() {
+        return m_name;
+    }
+
+    public void setName(String name) {
+        m_name = name;
+    }
+
+    public double getValue() {
+        return m_value;
+    }
+
+    public void setValue(double value) {
+        m_value = value;
+    }
+
+    public NotificationType getNotifyType() {
+        return m_notifyType;
+    }
+
+    public void setNotifyType(NotificationType notifyType) {
+        m_notifyType = notifyType;
+    }
+
+    public ArrayList<Account> getAccounts() {
+        return m_accounts;
+    }
+
+    public void setAccounts(ArrayList<Account> accounts) {
+        m_accounts = accounts;
+    }
+
+    public ArrayList<Category> getCategories() {
+        return m_categories;
+    }
+
+    public void setCategories(ArrayList<Category> categories) {
+        m_categories = categories;
+    }
+
+    /* Implementation of Parcelable */
+
+    public static final Parcelable.Creator<Budget> CREATOR = new Parcelable.Creator<Budget>() {
+        public Budget createFromParcel(Parcel in) {
+            return new Budget(in);
+        }
+
+        public Budget[] newArray(int size) {
+            return new Budget[size];
+        }
+    };
+
+    private Budget(Parcel in) {
+        m_id = in.readInt();
+        m_name = in.readString();
+        m_value = in.readDouble();
+        m_notifyType = NotificationType.fromInteger(in.readInt());
+        m_accounts = new ArrayList<Account>(Arrays.asList((Account[]) in.readParcelableArray(Account.class.getClassLoader())));
+        m_categories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(m_id);
+        parcel.writeString(m_name);
+        parcel.writeDouble(m_value);
+        parcel.writeInt(m_notifyType.getValue());
+        parcel.writeParcelableArray((Parcelable[]) m_accounts.toArray(), flags);
+        parcel.writeParcelableArray((Parcelable[]) m_categories.toArray(), flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /* End Implementation of Parcelable */
+
+
+    /* Methods */
+
 	public double getSpent(Context context, Calendar startDate, Calendar endDate)
 	{
 		ArrayList<Transaction> transactions = DatabaseManager.getInstance(context).GetAllTransactions(startDate.getTime(), endDate.getTime());
 		double spending = 0;
         for(Transaction transaction : transactions)
         {
-        	if (!DatabaseManager.getInstance(context).GetCategory(transaction.category).useInReports)
+        	if (!DatabaseManager.getInstance(context).GetCategory(transaction.getCategory()).isUseInReports())
         		continue;
         	
-        	if (!accounts.isEmpty())
+        	if (!m_accounts.isEmpty())
         	{
             	boolean isAccout = false;
-            	for(Account account : accounts)
+            	for(Account account : m_accounts)
             	{
-            		if (transaction.account == account.getId())
+            		if (transaction.getAccount() == account.getId())
         			{
         				isAccout = true;
         				break;
@@ -81,12 +178,12 @@ public class Budget implements Parcelable
             	if (!isAccout)
             		continue;
         	}
-        	if (!categories.isEmpty())
+        	if (!m_categories.isEmpty())
         	{
             	boolean isCategory = false;
-            	for(Category category : categories)
+            	for(Category category : m_categories)
             	{
-            		if (transaction.category == category.id)
+            		if (transaction.getCategory() == category.getId())
             		{
             			isCategory = true;
         				break;
@@ -109,46 +206,8 @@ public class Budget implements Parcelable
 	public String getCompletePercentage(double spent)
 	{
 		DecimalFormat df = new DecimalFormat("#");
-		double percentageConversion = 100.0 / value;
+		double percentageConversion = 100.0 / m_value;
 		percentageConversion *= spent;
 		return df.format(percentageConversion) + "%";
 	}
-
-    /* Implementation of Parcelable */
-
-    public static final Parcelable.Creator<Budget> CREATOR = new Parcelable.Creator<Budget>() {
-        public Budget createFromParcel(Parcel in) {
-            return new Budget(in);
-        }
-
-        public Budget[] newArray(int size) {
-            return new Budget[size];
-        }
-    };
-
-    private Budget(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        value = in.readDouble();
-        notifyType = NotificationType.fromInteger(in.readInt());
-        accounts = new ArrayList<Account>(Arrays.asList((Account[]) in.readParcelableArray(Account.class.getClassLoader())));
-        categories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(id);
-        parcel.writeString(name);
-        parcel.writeDouble(value);
-        parcel.writeInt(notifyType.getValue());
-        parcel.writeParcelableArray((Parcelable[])accounts.toArray(), flags);
-        parcel.writeParcelableArray((Parcelable[])categories.toArray(), flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /* End Implementation of Parcelable */
 }

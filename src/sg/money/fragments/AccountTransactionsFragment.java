@@ -132,7 +132,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
     
     public class DateComparator implements Comparator<Transaction> {
 	    public int compare(Transaction o1, Transaction o2) {
-	        return o1.dateTime.compareTo(o2.dateTime);
+	        return o1.getDateTime().compareTo(o2.getDateTime());
 	    }
 	}
     
@@ -143,14 +143,14 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
 
 		Double total = 0.0;
 		for(Transaction transaction : allTransactions)
-			total += transaction.value;
+			total += transaction.getValue();
 
 		txtTotal.setText(Misc.formatValue(parentActivity, total));
 		
 		transactions = new ArrayList<Transaction>();
 		for(Transaction transaction : allTransactions)
 		{
-			if (parentFragment.showReconciledTransactions() || !transaction.reconciled)
+			if (parentFragment.showReconciledTransactions() || !transaction.isReconciled())
 				transactions.add(transaction);
 		}
 
@@ -208,8 +208,8 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
 	private void EditItem(Transaction selectedItem)
 	{
 		Intent intent = new Intent(getActivity(), AddTransactionActivity.class);
-		intent.putExtra("AccountID", selectedItem.account);
-		intent.putExtra("ID", selectedItem.id);
+		intent.putExtra("AccountID", selectedItem.getAccount());
+		intent.putExtra("ID", selectedItem.getId());
     	startActivityForResult(intent, REQUEST_ADDTRANSACTION);
 	}
 	
@@ -236,7 +236,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
 		ArrayList<Transaction> selectedItems = adapter.GetSelectedItems();
 		for(Transaction selectedItem : selectedItems)
 		{
-			if (selectedItem.isTransfer)
+			if (selectedItem.isTransfer())
 			{
 				Transaction releatedTransaction = selectedItem.getRelatedTransferTransaction(getActivity());
 				DatabaseManager.getInstance(getActivity()).DeleteTransaction(releatedTransaction);

@@ -80,24 +80,24 @@ public class BudgetListAdapter extends BaseAdapter
         Budget budget = budgets.get(position);
  
         //set values
-        nameText.setText(budget.name);
-        progress.setBudget(budget.value);
+        nameText.setText(budget.getName());
+        progress.setBudget(budget.getValue());
         
         double spending = 0;
         for(Transaction transaction : transactions)
         {
-			if (transaction.dontReport)
+			if (transaction.isDontReport())
 				continue;
 			
-        	if (!DatabaseManager.getInstance(activity).GetCategory(transaction.category).useInReports)
+        	if (!DatabaseManager.getInstance(activity).GetCategory(transaction.getCategory()).isUseInReports())
         		continue;
         	
-        	if (!budget.accounts.isEmpty())
+        	if (!budget.getAccounts().isEmpty())
         	{
             	boolean isAccout = false;
-            	for(Account account : budget.accounts)
+            	for(Account account : budget.getAccounts())
             	{
-            		if (transaction.account == account.getId())
+            		if (transaction.getAccount() == account.getId())
         			{
         				isAccout = true;
         				break;
@@ -106,12 +106,12 @@ public class BudgetListAdapter extends BaseAdapter
             	if (!isAccout)
             		continue;
         	}
-        	if (!budget.categories.isEmpty())
+        	if (!budget.getCategories().isEmpty())
         	{
             	boolean isCategory = false;
-            	for(Category category : budget.categories)
+            	for(Category category : budget.getCategories())
             	{
-            		if (transaction.category == category.id)
+            		if (transaction.getCategory() == category.getId())
             		{
             			isCategory = true;
         				break;
@@ -125,7 +125,7 @@ public class BudgetListAdapter extends BaseAdapter
         progress.setToDate(spending);
         
         TextView typeText = (TextView)vi.findViewById(R.id.budget_extra);
-        typeText.setText(Misc.formatValue(activity, spending) + " / " + Misc.formatValue(activity, budget.value));
+        typeText.setText(Misc.formatValue(activity, spending) + " / " + Misc.formatValue(activity, budget.getValue()));
         
         if (selectedItems.contains(budget))
         	vi.setBackgroundColor(COLOR_SELECTED);

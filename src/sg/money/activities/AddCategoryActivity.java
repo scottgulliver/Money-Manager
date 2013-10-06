@@ -170,7 +170,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
             boolean selectedParent = false;
 			for(int i = 0; i < parentOptions.size(); i++)
 			{
-				if (parentOptions.get(i).equals(model.getParentCategory().name))
+				if (parentOptions.get(i).equals(model.getParentCategory().getName()))
 				{
 					spnParent.setSelection(i);
                     selectedParent = true;

@@ -275,12 +275,12 @@ public class Misc
     	
     	for(Category category : categories)
     	{
-    		if (category.parentCategoryId == -1)
+    		if (category.getParentCategoryId() == -1)
     		{
         		orderedList.add(category);
     			for(Category subCategory : categories)
     			{
-    				if (subCategory.parentCategoryId == category.id)
+    				if (subCategory.getParentCategoryId() == category.getId())
     					orderedList.add(subCategory);
     			}
     		}
@@ -297,14 +297,14 @@ public class Misc
 
     public static String getCategoryName(Category category, ArrayList<Category> categories)
     {
-    	String name = category.name;
-		if (category.parentCategoryId != -1)
+    	String name = category.getName();
+		if (category.getParentCategoryId() != -1)
 		{
 			for(Category parentCategory : categories)
 			{
-				if (parentCategory.id == category.parentCategoryId)
+				if (parentCategory.getId() == category.getParentCategoryId())
 				{
-					name = parentCategory.name + " >> " + name;
+					name = parentCategory.getName() + " >> " + name;
 					break;
 				}
 			}
@@ -314,7 +314,7 @@ public class Misc
 
     public  static class CategoryComparator implements Comparator<Category> {
 	    public int compare(Category o1, Category o2) {
-	        return Double.compare(o1.id, o2.id);
+	        return Double.compare(o1.getId(), o2.getId());
 	    }
 	}
 

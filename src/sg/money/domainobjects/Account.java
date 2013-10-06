@@ -32,7 +32,7 @@ public class Account implements Parcelable
 		{
 			ArrayList<Transaction> transactions = DatabaseManager.getInstance(context).GetAllTransactions(id);
 			for(Transaction transaction : transactions)
-				m_value += transaction.value;
+				m_value += transaction.getValue();
 		}
 	}
 	

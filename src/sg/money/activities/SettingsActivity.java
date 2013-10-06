@@ -118,8 +118,8 @@ public class SettingsActivity extends SherlockPreferenceActivity
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         for (Transaction transaction : DatabaseManager.getInstance(SettingsActivity.this).GetAllTransactions()) {
-                            if (!transaction.reconciled) {
-                                transaction.reconciled = true;
+                            if (!transaction.isReconciled()) {
+                                transaction.setReconciled(true);
                                 DatabaseManager.getInstance(SettingsActivity.this).UpdateTransaction(transaction);
                             }
                         }

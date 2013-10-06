@@ -326,7 +326,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 
 				for(Category category : categories)
 				{
-					if (category.getId() == transaction.category)
+					if (category.getId() == transaction.getCategory())
 					{
 						validCategory = true;
 						break;
@@ -334,7 +334,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				}
 				for(Account account : accounts)
 				{
-					if (account.getId() == transaction.account)
+					if (account.getId() == transaction.getAccount())
 					{
 						validAccount = true;
 						break;
@@ -514,7 +514,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	
 	public void InsertTransaction(Transaction trans)
 	{
-		String desc = trans.description.replace("'", "''");
+		String desc = trans.getDescription().replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
 		String sql = "INSERT INTO "+transTable+" ("
@@ -529,16 +529,16 @@ public class DatabaseManager extends SQLiteOpenHelper
 						+colTransFromTrans+","
 						+colTransReconciled
 						+") VALUES ("
-						+trans.value+",'"
+						+trans.getValue()+",'"
 						+desc+"',"
-						+trans.category+",'"
-						+df.format(trans.dateTime)+"',"
-						+trans.account+","
-						+(trans.dontReport?1:0)+","
-						+(trans.dontReport?1:0)+","
-						+trans.transferToTransaction+","
-						+trans.transferFromTransaction+","
-						+(trans.reconciled?1:0)
+						+trans.getCategory()+",'"
+						+df.format(trans.getDateTime())+"',"
+						+trans.getAccount()+","
+						+(trans.isDontReport()?1:0)+","
+						+(trans.isDontReport()?1:0)+","
+						+trans.getTransferToTransaction()+","
+						+trans.getTransferFromTransaction()+","
+						+(trans.isReconciled()?1:0)
 						+")";
 		Log.i("SQL", sql);
 		
@@ -547,7 +547,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		sql = "SELECT MAX("+colTransID+") FROM "+transTable;
 		Cursor c = db.rawQuery(sql, null);
 		c.moveToFirst();
-		trans.id = c.getInt(0);
+		trans.setId(c.getInt(0));
 		c.close();
 	}
 	
@@ -568,20 +568,20 @@ public class DatabaseManager extends SQLiteOpenHelper
 			while (c.isAfterLast() == false)
 			{
 				Transaction transaction = new Transaction();
-				transaction.id = c.getInt((c.getColumnIndex(colTransID)));
-				transaction.value = c.getDouble((c.getColumnIndex(colTransValue)));
-				transaction.description = c.getString((c.getColumnIndex(colTransDesc)));
-				transaction.category = c.getInt((c.getColumnIndex(colTransCategory)));
+				transaction.setId(c.getInt((c.getColumnIndex(colTransID))));
+				transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
+				transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
+				transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
 				Date theDate = (Date)df.parse(c.getString((c.getColumnIndex(colTransDate))));
-				transaction.dateTime = theDate;
-				transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
-				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
-				transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
-				transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
-				transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
-				transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
+				transaction.setDateTime(theDate);
+				transaction.setAccount(c.getInt((c.getColumnIndex(colTransAccount))));
+				transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+				transaction.setTransfer(c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+				transaction.setTransferToTransaction(c.getInt((c.getColumnIndex(colTransToTrans))));
+				transaction.setTransferFromTransaction(c.getInt((c.getColumnIndex(colTransFromTrans))));
+				transaction.setReconciled(c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 				
-				if (transaction.dateTime.compareTo(startDate) >= 0 && transaction.dateTime.compareTo(endDate) <= 0)
+				if (transaction.getDateTime().compareTo(startDate) >= 0 && transaction.getDateTime().compareTo(endDate) <= 0)
 					transactions.add(transaction);
 				
 	       	    c.moveToNext();
@@ -618,18 +618,18 @@ public class DatabaseManager extends SQLiteOpenHelper
 			while (c.isAfterLast() == false)
 			{
 				Transaction transaction = new Transaction();
-				transaction.id = c.getInt((c.getColumnIndex(colTransID)));
-				transaction.value = c.getDouble((c.getColumnIndex(colTransValue)));
-				transaction.description = c.getString((c.getColumnIndex(colTransDesc)));
-				transaction.category = c.getInt((c.getColumnIndex(colTransCategory)));
+				transaction.setId(c.getInt((c.getColumnIndex(colTransID))));
+				transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
+				transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
+				transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
 				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
-				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
-				transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
-				transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
-				transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
-				transaction.dateTime = theDate;
-				transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
-				transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
+				transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+				transaction.setTransfer(c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+				transaction.setTransferToTransaction(c.getInt((c.getColumnIndex(colTransToTrans))));
+				transaction.setTransferFromTransaction(c.getInt((c.getColumnIndex(colTransFromTrans))));
+				transaction.setDateTime(theDate);
+				transaction.setAccount(c.getInt((c.getColumnIndex(colTransAccount))));
+				transaction.setReconciled(c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 				transactions.add(transaction);
 				
 	       	    c.moveToNext();
@@ -666,18 +666,18 @@ public class DatabaseManager extends SQLiteOpenHelper
 			while (c.isAfterLast() == false)
 			{
 				Transaction transaction = new Transaction();
-				transaction.id = c.getInt((c.getColumnIndex(colTransID)));
-				transaction.value = c.getDouble((c.getColumnIndex(colTransValue)));
-				transaction.description = c.getString((c.getColumnIndex(colTransDesc)));
-				transaction.category = c.getInt((c.getColumnIndex(colTransCategory)));
+				transaction.setId(c.getInt((c.getColumnIndex(colTransID))));
+				transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
+				transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
+				transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
 				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
-				transaction.dateTime = theDate;
-				transaction.account = accountID;
-				transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
-				transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
-				transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
-				transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
-				transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
+				transaction.setDateTime(theDate);
+				transaction.setAccount(accountID);
+				transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+				transaction.setTransfer(c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+				transaction.setTransferToTransaction(c.getInt((c.getColumnIndex(colTransToTrans))));
+				transaction.setTransferFromTransaction(c.getInt((c.getColumnIndex(colTransFromTrans))));
+				transaction.setReconciled(c.getInt((c.getColumnIndex(colTransReconciled)))==1);
 				transactions.add(transaction);
 				
 	       	    c.moveToNext();
@@ -710,18 +710,18 @@ public class DatabaseManager extends SQLiteOpenHelper
 			c.moveToFirst();
 			
 			Transaction transaction = new Transaction();
-			transaction.value = c.getDouble((c.getColumnIndex(colTransValue)));
-			transaction.description = c.getString((c.getColumnIndex(colTransDesc)));
-			transaction.category = c.getInt((c.getColumnIndex(colTransCategory)));
+			transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
+			transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
+			transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
 			Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
-			transaction.dateTime = theDate;
-			transaction.account = c.getInt((c.getColumnIndex(colTransAccount)));
-			transaction.dontReport = (c.getInt((c.getColumnIndex(colTransDontReport)))==1);
-			transaction.isTransfer = (c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
-			transaction.transferToTransaction = c.getInt((c.getColumnIndex(colTransToTrans)));
-			transaction.transferFromTransaction = c.getInt((c.getColumnIndex(colTransFromTrans)));
-			transaction.reconciled = (c.getInt((c.getColumnIndex(colTransReconciled)))==1);
-			transaction.id = id;
+			transaction.setDateTime(theDate);
+			transaction.setAccount(c.getInt((c.getColumnIndex(colTransAccount))));
+			transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);
+			transaction.setTransfer(c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
+			transaction.setTransferToTransaction(c.getInt((c.getColumnIndex(colTransToTrans))));
+			transaction.setTransferFromTransaction(c.getInt((c.getColumnIndex(colTransFromTrans))));
+			transaction.setReconciled(c.getInt((c.getColumnIndex(colTransReconciled)))==1);
+			transaction.setId(id);
 			
 			c.close();
 			
@@ -737,7 +737,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db= getDatabase(this, DATABASE_READ_MODE);
 		
-		String sql = "DELETE FROM "+transTable+" WHERE "+colTransID+" = "+transaction.id;
+		String sql = "DELETE FROM "+transTable+" WHERE "+colTransID+" = "+transaction.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -746,21 +746,21 @@ public class DatabaseManager extends SQLiteOpenHelper
 	
 	public void UpdateTransaction(Transaction trans)
 	{
-		String desc = trans.description.replace("'", "''");
+		String desc = trans.getDescription().replace("'", "''");
 		SQLiteDatabase db=this.getWritableDatabase();
 		
 		String sql = "UPDATE "+transTable+" SET "+
-						colTransValue+" = "+trans.value+", "+
+						colTransValue+" = "+trans.getValue()+", "+
 						colTransDesc+" = '"+desc+"', "+
-						colTransCategory+" = "+trans.category+", "+
-						colTransDate+" = '"+df.format(trans.dateTime)+"', "+
-						colTransAccount+" = "+trans.account+", "+
-						colTransDontReport+" = "+(trans.dontReport?1:0)+", "+
-						colTransIsTransfer+" = "+(trans.isTransfer?1:0)+", "+
-						colTransFromTrans+" = "+trans.transferFromTransaction+", "+
-						colTransToTrans+" = "+trans.transferToTransaction+", "+
-						colTransReconciled+" = "+(trans.reconciled?1:0)+
-						" WHERE "+colTransID+" = "+trans.id;
+						colTransCategory+" = "+trans.getCategory()+", "+
+						colTransDate+" = '"+df.format(trans.getDateTime())+"', "+
+						colTransAccount+" = "+trans.getAccount()+", "+
+						colTransDontReport+" = "+(trans.isDontReport()?1:0)+", "+
+						colTransIsTransfer+" = "+(trans.isTransfer()?1:0)+", "+
+						colTransFromTrans+" = "+trans.getTransferFromTransaction()+", "+
+						colTransToTrans+" = "+trans.getTransferToTransaction()+", "+
+						colTransReconciled+" = "+(trans.isReconciled()?1:0)+
+						" WHERE "+colTransID+" = "+trans.getId();
 		Log.i("SQL", sql);
 		
 		db.execSQL(sql); 
@@ -907,13 +907,13 @@ public class DatabaseManager extends SQLiteOpenHelper
 			
 			while (c.isAfterLast() == false)
 			{
-				category.id = id;
-				category.name = c.getString((c.getColumnIndex(colCategoriesName)));
-				category.color = c.getInt((c.getColumnIndex(colCategoriesColor)));
-				category.income = (c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
-				category.isPermanent = (c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
-				category.useInReports = (c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
-				category.parentCategoryId = c.getInt((c.getColumnIndex(colCategoriesParent)));
+				category.setId(id);
+				category.setName(c.getString((c.getColumnIndex(colCategoriesName))));
+				category.setColor(c.getInt((c.getColumnIndex(colCategoriesColor))));
+				category.setIncome(c.getInt(c.getColumnIndex(colCategoriesIsIncome)) == 1);
+				category.setIsPermanent(c.getInt(c.getColumnIndex(colCategoriesIsPermanent)) == 1);
+				category.setUseInReports(c.getInt(c.getColumnIndex(colCategoriesUseInReports)) == 1);
+				category.setParentCategoryId(c.getInt((c.getColumnIndex(colCategoriesParent))));
 				
 	       	    c.moveToNext();
 	        }
@@ -932,7 +932,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db=getDatabase(this, DATABASE_WRITE_MODE);
 		
-		String sql = "DELETE FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+category.id;
+		String sql = "DELETE FROM "+categoriesTable+" WHERE "+colCategoriesID+" = "+category.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 
@@ -942,7 +942,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		ArrayList<Category> categories = GetAllCategories();
 		for(Category testCategory : categories)
 		{
-			if (testCategory.name.equals("Uncategorised") && (testCategory.income == category.income))
+			if (testCategory.getName().equals("Uncategorised") && (testCategory.isIncome() == category.isIncome()))
 			{
 				uncategorisedCategory = testCategory;
 				break;
@@ -952,18 +952,18 @@ public class DatabaseManager extends SQLiteOpenHelper
 		ArrayList<Transaction> transactions = GetAllTransactions();
 		for(Transaction transaction : transactions)
 		{
-			if (transaction.category == category.id)
+			if (transaction.getCategory() == category.getId())
 			{
-				transaction.category = uncategorisedCategory.id;
+				transaction.setCategory(uncategorisedCategory.getId());
 				UpdateTransaction(transaction);
 			}
 		}
 
-        if (category.parentCategoryId == -1)
+        if (category.getParentCategoryId() == -1)
         {
             for(Category testCategory : GetAllCategories())
             {
-                if (testCategory.parentCategoryId == category.id)
+                if (testCategory.getParentCategoryId() == category.getId())
                 {
                     DeleteCategory(testCategory);
                 }
@@ -977,16 +977,16 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db=getDatabase(this, DATABASE_WRITE_MODE);
 		
-		String name = category.name.replace("'", "''");
+		String name = category.getName().replace("'", "''");
 		
 		String sql = "UPDATE "+categoriesTable+" SET "
 							+colCategoriesName+" = '"+name
-							+"',"+colCategoriesIsIncome+" = "+(category.income?"1":"0")
-							+","+colCategoriesIsPermanent+" = "+(category.isPermanent?"1":"0")
-							+","+colCategoriesUseInReports+" = "+(category.useInReports?"1":"0")
-							+","+colCategoriesColor+" = "+(category.color)
-							+","+colCategoriesParent+" = "+(category.parentCategoryId)
-							+" WHERE "+colCategoriesID+" = "+category.id;
+							+"',"+colCategoriesIsIncome+" = "+(category.isIncome()?"1":"0")
+							+","+colCategoriesIsPermanent+" = "+(category.isPermanent()?"1":"0")
+							+","+colCategoriesUseInReports+" = "+(category.isUseInReports()?"1":"0")
+							+","+colCategoriesColor+" = "+(category.getColor())
+							+","+colCategoriesParent+" = "+(category.getParentCategoryId())
+							+" WHERE "+colCategoriesID+" = "+category.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -1095,9 +1095,9 @@ public class DatabaseManager extends SQLiteOpenHelper
 		ArrayList<Category> categories = GetAllCategories();
 		for(Category category : categories)
 		{
-			if (category.name.equals("Uncategorised"))
+			if (category.getName().equals("Uncategorised"))
 			{
-				if (category.income)
+				if (category.isIncome())
 					incomeUncategorised = category;
 				else
 					expenseUncategorised = category;
@@ -1107,19 +1107,19 @@ public class DatabaseManager extends SQLiteOpenHelper
 		ArrayList<Transaction> transactions = GetAllTransactions();
 		for(Transaction transaction : transactions)
 		{
-			if (transaction.account == account.getId())
+			if (transaction.getAccount() == account.getId())
 			{
-				if (transaction.isTransfer)
+				if (transaction.isTransfer())
 				{
 					//update the related entry, so that it still shows as an entry, but doesn't act as a transfer.
 					Transaction relatedTransaction = transaction.getRelatedTransferTransaction(_context);
-					relatedTransaction.description += " (" + relatedTransaction.getTransferDescription(_context) + ")";
-					relatedTransaction.category = relatedTransaction.isReceivingParty() 
-														? incomeUncategorised.id
-														: expenseUncategorised.id;
-					relatedTransaction.isTransfer = false;
-					relatedTransaction.transferToTransaction = -1;
-					relatedTransaction.transferFromTransaction = -1;
+					relatedTransaction.setDescription(relatedTransaction.getDescription() + " (" + relatedTransaction.getTransferDescription(_context) + ")");
+					relatedTransaction.setCategory(relatedTransaction.isReceivingParty()
+														? incomeUncategorised.getId()
+														: expenseUncategorised.getId());
+					relatedTransaction.setTransfer(false);
+					relatedTransaction.setTransferToTransaction(-1);
+					relatedTransaction.setTransferFromTransaction(-1);
 					UpdateTransaction(relatedTransaction);
 				}
 				DeleteTransaction(transaction);
@@ -1150,10 +1150,10 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = getDatabase(this, DATABASE_WRITE_MODE);
 		
-		String name = budget.name.replace("'", "''");
+		String name = budget.getName().replace("'", "''");
 		
 		String sql = "INSERT INTO "+budgetsTable+" ("+colBudgetsName+","+colBudgetsValue+","+colBudgetsNotify+
-													") VALUES ('"+name+"',"+budget.value+","+budget.notifyType.getValue()+") ";
+													") VALUES ('"+name+"',"+budget.getValue()+","+budget.getNotifyType().getValue()+") ";
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -1162,21 +1162,21 @@ public class DatabaseManager extends SQLiteOpenHelper
 		Log.i("SQL", sql);
 		Cursor c = db.rawQuery(sql , null);
 		c.moveToFirst();
-		budget.id = c.getInt(c.getColumnIndex(colBudgetsID));
+		budget.setId(c.getInt(c.getColumnIndex(colBudgetsID)));
 		c.close();
 		
-		for(Category category : budget.categories) 
+		for(Category category : budget.getCategories())
 		{
 			sql = "INSERT INTO "+budgetLinksTable+" ("+colBudgetLinksBudgetID+","+colBudgetLinksForeignID+","+colBudgetLinksForeignType+
-					") VALUES ("+budget.id+","+category.id+","+1+") ";
+					") VALUES ("+budget.getId()+","+category.getId()+","+1+") ";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
 		}
 		
-		for(Account account : budget.accounts)
+		for(Account account : budget.getAccounts())
 		{
 			sql = "INSERT INTO "+budgetLinksTable+" ("+colBudgetLinksBudgetID+","+colBudgetLinksForeignID+","+colBudgetLinksForeignType+
-					") VALUES ("+budget.id+","+account.getId()+","+2+") ";
+					") VALUES ("+budget.getId()+","+account.getId()+","+2+") ";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
 		}
@@ -1201,13 +1201,13 @@ public class DatabaseManager extends SQLiteOpenHelper
 			while (c.isAfterLast() == false)
 			{
 				Budget budget = new Budget();
-				budget.id = c.getInt((c.getColumnIndex(colBudgetsID)));
-				budget.name = c.getString((c.getColumnIndex(colBudgetsName)));
-				budget.value = c.getDouble((c.getColumnIndex(colBudgetsValue)));
-				budget.notifyType = Budget.NotificationType.fromInteger(c.getInt((c.getColumnIndex(colBudgetsNotify))));
+				budget.setId(c.getInt((c.getColumnIndex(colBudgetsID))));
+				budget.setName(c.getString((c.getColumnIndex(colBudgetsName))));
+				budget.setValue(c.getDouble((c.getColumnIndex(colBudgetsValue))));
+				budget.setNotifyType(Budget.NotificationType.fromInteger(c.getInt((c.getColumnIndex(colBudgetsNotify)))));
 				
 				/* find links */
-				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
+				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.getId();
 				Log.i("SQL", sql);
 				
 				Cursor linkCur = db.rawQuery(sql , null);
@@ -1217,12 +1217,12 @@ public class DatabaseManager extends SQLiteOpenHelper
 					if (linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignType)) == 1)
 					{
 						Category category = GetCategory(linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignID)));
-						budget.categories.add(category);
+						budget.getCategories().add(category);
 					}
 					else if (linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignType)) == 2)
 					{
 						Account account = GetAccount(linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignID)));
-						budget.accounts.add(account);
+						budget.getAccounts().add(account);
 					}
 					linkCur.moveToNext();
 				}
@@ -1265,13 +1265,13 @@ public class DatabaseManager extends SQLiteOpenHelper
 			
 			while (c.isAfterLast() == false)
 			{
-				budget.id = id;
-				budget.name = c.getString((c.getColumnIndex(colBudgetsName)));
-				budget.value = c.getDouble((c.getColumnIndex(colBudgetsValue)));
-				budget.notifyType = Budget.NotificationType.fromInteger(c.getInt((c.getColumnIndex(colBudgetsNotify))));
+				budget.setId(id);
+				budget.setName(c.getString((c.getColumnIndex(colBudgetsName))));
+				budget.setValue(c.getDouble((c.getColumnIndex(colBudgetsValue))));
+				budget.setNotifyType(Budget.NotificationType.fromInteger(c.getInt((c.getColumnIndex(colBudgetsNotify)))));
 				
 				/* find links */
-				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
+				sql = "SELECT "+colBudgetLinksForeignID+","+colBudgetLinksForeignType+" FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.getId();
 				Log.i("SQL", sql);
 				
 				Cursor linkCur = db.rawQuery(sql , null);
@@ -1281,12 +1281,12 @@ public class DatabaseManager extends SQLiteOpenHelper
 					if (linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignType)) == 1)
 					{
 						Category category = GetCategory(linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignID)));
-						budget.categories.add(category);
+						budget.getCategories().add(category);
 					}
 					else if (linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignType)) == 2)
 					{
 						Account account = GetAccount(linkCur.getInt(linkCur.getColumnIndex(colBudgetLinksForeignID)));
-						budget.accounts.add(account);
+						budget.getAccounts().add(account);
 					}
 					linkCur.moveToNext();
 				}
@@ -1315,11 +1315,11 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = getDatabase(this, DATABASE_WRITE_MODE);
 		
-		String sql = "DELETE FROM "+budgetsTable+" WHERE "+colBudgetsID+" = "+budget.id;
+		String sql = "DELETE FROM "+budgetsTable+" WHERE "+colBudgetsID+" = "+budget.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
-		sql = "DELETE FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
+		sql = "DELETE FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
@@ -1330,28 +1330,28 @@ public class DatabaseManager extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = getDatabase(this, DATABASE_WRITE_MODE);
 		
-		String name = budget.name.replace("'", "''");
+		String name = budget.getName().replace("'", "''");
 		
-		String sql = "UPDATE "+budgetsTable+" SET "+colBudgetsName+" = '"+name+"', "+colBudgetsValue+" = "+budget.value+", "+colBudgetsNotify+" = "+budget.notifyType.getValue()+" WHERE "+colBudgetsID+" = "+budget.id;
+		String sql = "UPDATE "+budgetsTable+" SET "+colBudgetsName+" = '"+name+"', "+colBudgetsValue+" = "+budget.getValue()+", "+colBudgetsNotify+" = "+budget.getNotifyType().getValue()+" WHERE "+colBudgetsID+" = "+budget.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
-		sql = "DELETE FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.id;
+		sql = "DELETE FROM "+budgetLinksTable+" WHERE "+colBudgetLinksBudgetID+" = "+budget.getId();
 		Log.i("SQL", sql);
 		db.execSQL(sql);
 		
-		for(Category category : budget.categories)
+		for(Category category : budget.getCategories())
 		{
 			sql = "INSERT INTO "+budgetLinksTable+" ("+colBudgetLinksBudgetID+","+colBudgetLinksForeignID+","+colBudgetLinksForeignType+
-					") VALUES ("+budget.id+","+category.id+","+1+") ";
+					") VALUES ("+budget.getId()+","+category.getId()+","+1+") ";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
 		}
 		
-		for(Account account : budget.accounts)
+		for(Account account : budget.getAccounts())
 		{
 			sql = "INSERT INTO "+budgetLinksTable+" ("+colBudgetLinksBudgetID+","+colBudgetLinksForeignID+","+colBudgetLinksForeignType+
-					") VALUES ("+budget.id+","+account.getId()+","+2+") ";
+					") VALUES ("+budget.getId()+","+account.getId()+","+2+") ";
 			Log.i("SQL", sql);
 			db.execSQL(sql);
 		}

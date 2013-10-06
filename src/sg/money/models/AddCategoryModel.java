@@ -37,7 +37,7 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
             newCategory = true;
 
             Random rnd = new Random(System.currentTimeMillis());
-            this.category.color = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+            this.category.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
         }
 
         currentCategories = DatabaseManager.getInstance(context).GetAllCategories();
@@ -45,28 +45,28 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
 
 	public void setIsIncome(boolean incomeSelected)
 	{
-        if (category.income != incomeSelected)
+        if (category.isIncome() != incomeSelected)
         {
-            category.income = incomeSelected;
+            category.setIncome(incomeSelected);
             notifyObservers(this);
         }
 	}
 
 	public boolean getIsPermanent()
 	{
-		return category.isPermanent;
+		return category.isPermanent();
 	}
 
     public String getCategoryName()
     {
-        return category.name;
+        return category.getName();
     }
 
     public void setCategoryName(String name)
     {
-        if (category.name == null || !category.name.equals(name))
+        if (category.getName() == null || !category.getName().equals(name))
         {
-            category.name = name;
+            category.setName(name);
             notifyObservers(this);
         }
     }
@@ -74,7 +74,7 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
     public Category getParentCategory()
     {
 		if (cachedParentCategory != null 
-			&& cachedParentCategory.id == category.parentCategoryId)
+			&& cachedParentCategory.getId() == category.getParentCategoryId())
 		{
 			return cachedParentCategory;
 		}
@@ -82,7 +82,7 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
 		cachedParentCategory = null;
 		for(Category category : currentCategories)
 		{
-			if (category.id == category.parentCategoryId)
+			if (category.getId() == category.getParentCategoryId())
 			{
 				cachedParentCategory = category;
 			}
@@ -94,16 +94,16 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
 	
     public void setParentCategory(Category parent)
     {
-        if (category.parentCategoryId != (parent != null ? parent.id : -1))
+        if (category.getParentCategoryId() != (parent != null ? parent.getId() : -1))
         {
-            category.parentCategoryId = parent != null ? parent.id : -1;
+            category.setParentCategoryId(parent != null ? parent.getId() : -1);
             cachedParentCategory = parent;
             notifyObservers(this);
         }
     }
 
     public int getCurrentColor() {
-        return category.color;
+        return category.getParentCategoryId();
     }
 
     public ArrayList<Category> getCurrentCategories() {
@@ -111,34 +111,34 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
     }
 
     public void setCurrentColor(int color) {
-        category.color = color;
+        category.setColor(color);
 		notifyObservers(this);
     }
 
     public String validate()
     {
-        if (category.name.trim().equals(""))
+        if (category.getName().trim().equals(""))
         {
             return "Please enter a name.";
         }
 
-        if (category.name.trim().equals(AddTransactionController.ADD_CATEGORY_STRING))
+        if (category.getName().trim().equals(AddTransactionController.ADD_CATEGORY_STRING))
         {
             return "This name is not valid.";
         }
 
-        if (newCategory || !category.isPermanent)
+        if (newCategory || !category.isPermanent())
         {
             for(Category currentCategory : currentCategories)
             {
-                if ((currentCategory.id == category.id))
+                if ((currentCategory.getId() == category.getId()))
 
                 {
                     continue;
                 }
 
-                if (category.name.trim().equals(currentCategory.name.trim())
-                        && currentCategory.income == category.income)
+                if (category.getName().trim().equals(currentCategory.getName().trim())
+                        && currentCategory.isIncome() == category.isIncome())
                 {
                     return "A category with this name already exists.";
                 }
@@ -165,7 +165,7 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
     }
 
     public boolean getIsIncome() {
-        return category.income;
+        return category.isIncome();
     }
 
     /* Implementation of Parcelable */

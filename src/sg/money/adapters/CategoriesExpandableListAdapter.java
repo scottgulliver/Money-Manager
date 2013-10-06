@@ -53,16 +53,16 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
     	groupings = new HashMap<Category, ArrayList<Category>>();
     	for(Category category : categories)
     	{
-    		if (category.parentCategoryId == -1)
+    		if (category.getParentCategoryId() == -1)
     			groupings.put(category, new ArrayList<Category>());
     	}
     	for(Category category : categories)
     	{
-    		if (category.parentCategoryId != -1)
+    		if (category.getParentCategoryId() != -1)
     		{
     			for(Category parentCategory : groupings.keySet())
     			{
-    				if (parentCategory.id == category.parentCategoryId)
+    				if (parentCategory.getId() == category.getParentCategoryId())
     				{
     					groupings.get(parentCategory).add(category);
     					break;
@@ -81,7 +81,7 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
     
     private class CategoryComparator implements Comparator<Category> {
 	    public int compare(Category o1, Category o2) {
-	        return Double.compare(o1.id, o2.id);
+	        return Double.compare(o1.getId(), o2.getId());
 	    }
 	}
  
@@ -118,7 +118,7 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
 
 	public long getChildId(int groupPosition, int childPosition) {
 		Category parentCategory = getOrderedGroups().get(groupPosition);
-		return groupings.get(parentCategory).get(childPosition).id;
+		return groupings.get(parentCategory).get(childPosition).getId();
 	}
 
 	public int getChildrenCount(int groupPosition) {
@@ -135,7 +135,7 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
 	}
 
 	public long getGroupId(int groupPosition) {
-		return getOrderedGroups().get(groupPosition).id;
+		return getOrderedGroups().get(groupPosition).getId();
 	}
 
 	public boolean hasStableIds() {
@@ -166,13 +166,13 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
         ImageView colorField = (ImageView)vi.findViewById(R.id.category_color);
 
         //set values
-        nameText.setText(category.name);
-        typeText.setText(category.income ? "Income" : "Expense");
+        nameText.setText(category.getName());
+        typeText.setText(category.isIncome() ? "Income" : "Expense");
         
-        colorField.setBackgroundColor(category.color);
+        colorField.setBackgroundColor(category.getColor());
         
     	RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)colorField.getLayoutParams();
-    	int leftMargin = category.parentCategoryId == -1 ? params.rightMargin : (int) Misc.dipsToPixels(activity.getResources(), 40);
+    	int leftMargin = category.getParentCategoryId() == -1 ? params.rightMargin : (int) Misc.dipsToPixels(activity.getResources(), 40);
     	params.setMargins(leftMargin, params.topMargin, params.bottomMargin, params.rightMargin);
     	colorField.setLayoutParams(params);
     

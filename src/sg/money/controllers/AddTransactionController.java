@@ -144,7 +144,7 @@ public class AddTransactionController
     		//save selections to preference, for loading these by default next time
     		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view);
     		SharedPreferences.Editor editor = sharedPref.edit();
-			editor.putInt((model.getCategory().income ? "lastIncomeCategoryId" : "lastExpenseCategoryId"), model.getCategory().id);
+			editor.putInt((model.getCategory().isIncome() ? "lastIncomeCategoryId" : "lastExpenseCategoryId"), model.getCategory().getId());
     		editor.commit();
 
             view.setResult(view.RESULT_OK, new Intent());

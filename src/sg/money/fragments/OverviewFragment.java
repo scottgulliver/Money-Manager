@@ -184,29 +184,29 @@ public class OverviewFragment extends HostActivityFragmentBase
 		double expenditure = 0;
 		for(Transaction transaction : transactions)
     	{
-			if (transaction.dontReport)
+			if (transaction.isDontReport())
 				continue;
 				
     		Category thisCategory = null;
     		for(Category category : categories)
     		{
-    			if (category.id == transaction.category)
+    			if (category.getId() == transaction.getCategory())
     			{
     				thisCategory = category;
     				break;
     			}
     		}
     		
-    		if (!thisCategory.useInReports)
+    		if (!thisCategory.isUseInReports())
     			continue;
     		
-    		if (thisCategory.income)
+    		if (thisCategory.isIncome())
     		{
-    			income += transaction.value;
+    			income += transaction.getValue();
     		}
     		else
     		{
-    			expenditure += (transaction.value * -1.0);
+    			expenditure += (transaction.getValue() * -1.0);
     		}
     	}
 		
@@ -238,17 +238,17 @@ public class OverviewFragment extends HostActivityFragmentBase
 		double categoryValue = 0;
 		for(Transaction transaction : transactions)
 		{
-			if (transaction.dontReport)
+			if (transaction.isDontReport())
 				continue;
-			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports && transaction.category == category.id)
-				categoryValue -= transaction.value;
+			if (!getCategory(transaction.getCategory()).isIncome() && getCategory(transaction.getCategory()).isUseInReports() && transaction.getCategory() == category.getId())
+				categoryValue -= transaction.getValue();
 		} 
 		
-		if (getSubcategoryValue && category.parentCategoryId == -1)
+		if (getSubcategoryValue && category.getParentCategoryId() == -1)
 		{
 			for(Category subCat : categories)
 			{
-				if (subCat.parentCategoryId == category.id)
+				if (subCat.getParentCategoryId() == category.getId())
 					categoryValue += getCategoryValue(subCat, false);
 			}
 		}
@@ -267,20 +267,20 @@ public class OverviewFragment extends HostActivityFragmentBase
 		double total = 0;
 		for(Transaction transaction : transactions)
 		{
-			if (transaction.dontReport)
+			if (transaction.isDontReport())
 				continue;
-			if (!getCategory(transaction.category).income && getCategory(transaction.category).useInReports)
-				total -= transaction.value;
+			if (!getCategory(transaction.getCategory()).isIncome() && getCategory(transaction.getCategory()).isUseInReports())
+				total -= transaction.getValue();
 		}
 		
 		ArrayList<CategoryValuePair> segmentList = new ArrayList<CategoryValuePair>();
 		
 		for(Category category : categories)
 		{
-			if (category.income || !category.useInReports)
+			if (category.isIncome() || !category.isUseInReports())
 				continue;
 			
-			if (!chkShowSubcategories.isChecked() && category.parentCategoryId != -1)
+			if (!chkShowSubcategories.isChecked() && category.getParentCategoryId() != -1)
 				continue; // we will pick this up in the value of the parent
 			
 			segmentList.add(new CategoryValuePair(
@@ -303,7 +303,7 @@ public class OverviewFragment extends HostActivityFragmentBase
 			{
 				PieChartSegment categorySegment = new PieChartSegment();
 				categorySegment.angle = (float) ((catValPair.value / total) * 360d);
-				categorySegment.color = catValPair.category.color;
+				categorySegment.color = catValPair.category.getColor();
 				categorySegments.add(categorySegment);
 				categoriesShown.add(catValPair.category);
 				DecimalFormat df = new DecimalFormat("#.##");
@@ -318,7 +318,7 @@ public class OverviewFragment extends HostActivityFragmentBase
     {
     	for(Category category : categories)
 		{
-			if (category.id == id)
+			if (category.getId() == id)
 				return category;
 		}
     	
@@ -328,7 +328,7 @@ public class OverviewFragment extends HostActivityFragmentBase
 
 	public class DateComparator implements Comparator<Transaction> {
 	    public int compare(Transaction o1, Transaction o2) {
-	        return o1.dateTime.compareTo(o2.dateTime);
+	        return o1.getDateTime().compareTo(o2.getDateTime());
 	    }
 	}
 	
@@ -349,7 +349,7 @@ public class OverviewFragment extends HostActivityFragmentBase
     	{
 	    	Transaction oldestTransaction = transactions.get(transactions.size()-1);
 	    	Calendar oldestDate = Calendar.getInstance();
-	    	oldestDate.setTime(oldestTransaction.dateTime);
+	    	oldestDate.setTime(oldestTransaction.getDateTime());
 	    	oldestDate.set(oldestDate.get(Calendar.YEAR), oldestDate.get(Calendar.MONTH), 1, 0, 0, 0);
 		    
 		    Calendar currentDate = Calendar.getInstance();

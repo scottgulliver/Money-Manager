@@ -80,7 +80,7 @@ public class AddBudgetController
 		for (int i = 0; i < model.getCurrentCategories().size(); i++) {
 			boolean alreadySelected = false;
 			for (Category selectedCategory : model.getSelectedCategories()) {
-				if (selectedCategory.id == model.getCurrentCategories().get(i).id) {
+				if (selectedCategory.getId() == model.getCurrentCategories().get(i).getId()) {
 					alreadySelected = true;
 					break;
 				}
@@ -91,7 +91,7 @@ public class AddBudgetController
 		ArrayList<String> items = new ArrayList<String>();
 		items.add("All Categories");
 		for (Category category : model.getCurrentCategories()) {
-			if (!category.useInReports)
+			if (!category.isUseInReports())
 				continue;
 
 			items.add(Misc.getCategoryName(category, model.getCurrentCategories()));

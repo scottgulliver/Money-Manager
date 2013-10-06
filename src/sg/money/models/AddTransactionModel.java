@@ -31,14 +31,14 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         this.transaction = transaction;
 
         relatedTransaction = new Transaction();
-        relatedTransaction.dontReport = true;
-        relatedTransaction.transferToTransaction = -1;
+        relatedTransaction.setDontReport(true);
+        relatedTransaction.setTransferToTransaction(-1);
 
         if (this.transaction == null)
         {
             this.transaction = new Transaction();
-			this.transaction.account = accountID;
-			this.transaction.category = defaultCategoryID;
+			this.transaction.setAccount(accountID);
+			this.transaction.setCategory(defaultCategoryID);
 			this.transaction.dateTime = new Date();
             this.transaction.transferFromTransaction = -1;
             this.transaction.transferToTransaction = -1;
@@ -65,12 +65,12 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         categories = Misc.getCategoriesInGroupOrder(categories);
         for(Category category : categories)
         {
-            categoriesMap.put(category.name, category);
+            categoriesMap.put(category.getName(), category);
         }
 
         if (!newTransaction)
         {
-            isIncomeType = getCategory().income;
+            isIncomeType = getCategory().isIncome();
         }
     }
 
@@ -184,7 +184,7 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         ArrayList<String> categoryNames = new ArrayList<String>();
         for(Map.Entry<String, Category> entry : categoriesMap.entrySet())
         {
-            if (entry.getValue().income == isIncomeType)
+            if (entry.getValue().isIncome() == isIncomeType)
             {
                 categoryNames.add(entry.getKey());
             }
@@ -218,7 +218,7 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
     {
     	for(Map.Entry<String, Category> entry : categoriesMap.entrySet())
         {
-            if (entry.getValue().id == category.id)
+            if (entry.getValue().getId() == category.getId())
             {
                 return entry.getKey();
             }
@@ -235,7 +235,7 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 		}
 		
 		if (cachedCategory != null 
-			&& cachedCategory.id == transaction.id)
+			&& cachedCategory.getId() == transaction.id)
 		{
 			return cachedCategory;
 		}
@@ -244,7 +244,7 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 		Category category = null;
 		for(Category testCategory : getAllCategories())
 		{
-			if (testCategory.id == transaction.category)
+			if (testCategory.getId() == transaction.category)
 			{
 				category = testCategory;
 				break;
@@ -257,9 +257,9 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 
     public void setCategory(Category category) {
 		
-		if (transaction.category != category.id)
+		if (transaction.category != category.getId())
 		{
-        	transaction.category = category.id;
+        	transaction.category = category.getId();
         	cachedCategory = category;
         	notifyObservers(this);
 		}
@@ -284,15 +284,15 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 
     	if (useNewCategory)
     	{
-    		if (newCategory.name.trim() == "")
+    		if (newCategory.getName().trim() == "")
     		{
 	   			return "Please enter a name for the new category.";
     		}
 
     		for(Category currentCategory : getAllCategories())
         	{
-        		if (newCategory.name.trim().equals(currentCategory.name.trim())
-					&& currentCategory.income == newCategory.income)
+        		if (newCategory.getName().trim().equals(currentCategory.getName().trim())
+					&& currentCategory.isIncome() == newCategory.isIncome())
             	{
             		return "A category with this name already exists.";
             	}
@@ -307,10 +307,10 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
     	if (useNewCategory)
     	{
         	Random rnd = new Random(System.currentTimeMillis());
-        	newCategory.color = Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
+        	newCategory.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
 			DatabaseManager.getInstance(context).AddCategory(newCategory);
       
-			transaction.category = newCategory.id;
+			transaction.category = newCategory.getId();
 		}
 
 		if (!transaction.isTransfer)

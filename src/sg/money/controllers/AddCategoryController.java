@@ -39,7 +39,7 @@ public class AddCategoryController {
 		Category parentCategory = null;
 		for(Category category : model.getCurrentCategories())
 		{
-			if (category.name.equals(parentName))
+			if (category.getName().equals(parentName))
 			{
 				parentCategory = category;
 				break;
@@ -110,9 +110,9 @@ public class AddCategoryController {
     	parentOptions.add("< None >");
     	for(Category category : model.getCurrentCategories())
     	{
-    		if (category.parentCategoryId == -1 && category.income == model.getIsIncome() && !category.isPermanent)
+    		if (category.getParentCategoryId() == -1 && category.isIncome() == model.getIsIncome() && !category.isPermanent())
     		{
-    			parentOptions.add(category.name);
+    			parentOptions.add(category.getName());
     		}
     	}
 		

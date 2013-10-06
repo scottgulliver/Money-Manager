@@ -120,7 +120,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             {
                 for(Category category : DatabaseManager.getInstance(this).GetAllCategories())
                 {
-                    lastSelectedCategoryId = category.id;
+                    lastSelectedCategoryId = category.getId();
                 }
             }
 
@@ -275,7 +275,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
             spnCategory.setAdapter(arrayAdapter);
 
-            spnCategory.setSelection(categoryNames.indexOf(model.getCategory() != null ? model.getCategory().name : AddTransactionController.ADD_CATEGORY_STRING));
+            spnCategory.setSelection(categoryNames.indexOf(model.getCategory() != null ? model.getCategory().getName() : AddTransactionController.ADD_CATEGORY_STRING));
 		}
 		else
 		{

@@ -177,7 +177,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 
 	public class DateComparator implements Comparator<Transaction> {
 	    public int compare(Transaction o1, Transaction o2) {
-	        return o1.dateTime.compareTo(o2.dateTime);
+	        return o1.getDateTime().compareTo(o2.getDateTime());
 	    }
 	}
 	
@@ -198,7 +198,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
     	{
 	    	Transaction oldestTransaction = transactions.get(transactions.size()-1);
 	    	Calendar oldestDate = Calendar.getInstance();
-	    	oldestDate.setTime(oldestTransaction.dateTime);
+	    	oldestDate.setTime(oldestTransaction.getDateTime());
 	    	oldestDate.set(oldestDate.get(Calendar.YEAR), oldestDate.get(Calendar.MONTH), 1, 0, 0, 0);
 		    
 		    Calendar currentDate = Calendar.getInstance();
@@ -271,7 +271,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	private void EditItem(Budget selectedItem)
 	{			
 		Intent intent = new Intent(getParentActivity(), AddBudgetActivity.class);
-		intent.putExtra("ID", selectedItem.id);
+		intent.putExtra("ID", selectedItem.getId());
 		startActivityForResult(intent, REQUEST_ADDBUDGET);
 	}
 	
