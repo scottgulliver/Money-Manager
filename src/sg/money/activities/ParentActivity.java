@@ -13,9 +13,7 @@ import com.actionbarsherlock.app.SherlockActionBarDrawerToggleDelegate;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-
 import java.util.ArrayList;
-
 import sg.money.fragments.AccountsFragment;
 import sg.money.fragments.BudgetsFragment;
 import sg.money.fragments.CategoriesFragment;
@@ -28,17 +26,32 @@ import sg.money.R;
 import sg.money.utils.Settings;
 import sg.money.fragments.TransactionsHolderFragment;
 
+/**
+ * Holds the main navigation drawer, and uses fragments to populate its view.
+ */
 public class ParentActivity extends BaseFragmentActivity implements ActionBarDrawerToggle.DelegateProvider
 {
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+	
+	
     public static final String INTENTEXTRA_CONTENTTYPE = "INTENTEXTRA_CONTENTTYPE";
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    SherlockActionBarDrawerToggle mDrawerToggle;
-    private SherlockActionBarDrawerToggleDelegate mDrawerDelegate;
-    private HostActivityFragmentBase currentFragment;
-    ArrayList<DrawerArrayItem> drawerItems;
-    ActionMode actionMode;
+    private DrawerLayout m_drawerLayout;
+    private ListView m_drawerList;
+    private SherlockActionBarDrawerToggle m_drawerToggle;
+    private SherlockActionBarDrawerToggleDelegate m_drawerDelegate;
+    private HostActivityFragmentBase m_currentFragment;
+    private ArrayList<DrawerArrayItem> m_drawerItems;
+    private ActionMode m_actionMode;
+	
+	
+	/* Activity overrides */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,43 +59,41 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
 
         setContentView(R.layout.activity_parent);
 
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView)findViewById(R.id.left_drawer);
+        m_drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        m_drawerList = (ListView)findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        drawerItems = new ArrayList<DrawerArrayItem>();
-        drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Transactions.name(), R.drawable.sort_by_size));
-        drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Accounts.name(), R.drawable.bank));
-        drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Categories.name(), R.drawable.categories));
-        drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Overview.name(), R.drawable.overview));
-        drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Budgets.name(), R.drawable.percent));
-        mDrawerList.setAdapter(new DrawerArrayAdapter(this, drawerItems));
+        m_drawerItems = new ArrayList<DrawerArrayItem>();
+        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Transactions.name(), R.drawable.sort_by_size));
+        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Accounts.name(), R.drawable.bank));
+        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Categories.name(), R.drawable.categories));
+        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Overview.name(), R.drawable.overview));
+        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Budgets.name(), R.drawable.percent));
+        m_drawerList.setAdapter(new DrawerArrayAdapter(this, m_drawerItems));
         // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        m_drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        mDrawerDelegate = new SherlockActionBarDrawerToggleDelegate(this);
-        mDrawerToggle = new SherlockActionBarDrawerToggle(this, mDrawerLayout,
+        m_drawerDelegate = new SherlockActionBarDrawerToggleDelegate(this);
+        m_drawerToggle = new SherlockActionBarDrawerToggle(this, m_drawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                //getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                //getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                if (actionMode != null)
+                if (m_actionMode != null)
                 {
-                    actionMode.finish();
+                    m_actionMode.finish();
                 }
             }
         };
 
         // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        m_drawerLayout.setDrawerListener(m_drawerToggle);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -102,60 +113,91 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
         //open the drawer if this is the first run
         if (!Settings.getFirstTimeDrawerOpened(this))
         {
-            mDrawerLayout.openDrawer(mDrawerList);
+            m_drawerLayout.openDrawer(m_drawerList);
             Settings.setFirstTimeDrawerOpened(this, true);
         }
     }
 
-    public ActionMode getActionMode()
-    {
-        return actionMode;
-    }
-
-    public void setActionMode(ActionMode actionMode)
-    {
-        this.actionMode = actionMode;
-    }
-
     @Override
     public ActionBarDrawerToggle.Delegate getDrawerToggleDelegate() {
-        return mDrawerDelegate;
+        return m_drawerDelegate;
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putInt("tab", ((ParentActivity)getActivity()).getSupportActionBar().getSelectedNavigationIndex());
+        m_drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        m_drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
+    @Override
+    public void setTitle(CharSequence title) {
+        getSupportActionBar().setTitle(title);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (m_currentFragment != null)
+        {
+            m_currentFragment.onCreateOptionsMenu(menu);
         }
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        m_currentFragment.onPrepareOptionsMenu(menu, m_drawerLayout.isDrawerOpen(m_drawerList));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (m_drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        m_currentFragment.onOptionsItemSelected(item);
+
+        return true;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        m_currentFragment.onActivityResult(requestCode, resultCode, data);
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+	
+	
+	/* Other methods */
+
+    public ActionMode getActionMode()
+    {
+        return m_actionMode;
+    }
+
+    public void setActionMode(ActionMode actionMode)
+    {
+        this.m_actionMode = actionMode;
     }
 
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
-        if (position > drawerItems.size())
+        if (position > m_drawerItems.size())
         {
             throw new RuntimeException("Unexpected positon.");
         }
 
-        changeContent(HostActivityFragmentTypes.valueOf(drawerItems.get(position).getText()));
+        changeContent(HostActivityFragmentTypes.valueOf(m_drawerItems.get(position).getText()));
     }
 
     public void changeContent(HostActivityFragmentTypes newType)
@@ -185,58 +227,16 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
         try {
             HostActivityFragmentBase fragment = fragmentClass.newInstance();
             getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.parentFrame, fragment)
-                    .commit();
-            currentFragment = fragment;
+				.beginTransaction()
+				.replace(R.id.parentFrame, fragment)
+				.commit();
+            m_currentFragment = fragment;
             setTitle(title);
-            mDrawerLayout.closeDrawer(mDrawerList);
+            m_drawerLayout.closeDrawer(m_drawerList);
         }
         catch(Exception ex)
         {
             throw new RuntimeException(ex);
         }
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        getSupportActionBar().setTitle(title);
-    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (currentFragment != null)
-        {
-            currentFragment.onCreateOptionsMenu(menu);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        currentFragment.onPrepareOptionsMenu(menu, mDrawerLayout.isDrawerOpen(mDrawerList));
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        currentFragment.onOptionsItemSelected(item);
-
-        return true;
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        currentFragment.onActivityResult(requestCode, resultCode, data);
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

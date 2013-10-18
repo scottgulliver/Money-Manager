@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -15,56 +14,63 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import sg.money.R;
 import sg.money.domainobjects.Category;
 import sg.money.utils.Misc;
 
-public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter 
-{
+public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter  {
 
-    private ArrayList<Category> categories;
-    private HashMap<Category, ArrayList<Category>> groupings;
-    private ArrayList<String> customStrings; 
-    private static LayoutInflater inflater=null;
-    private ArrayList<Category> selectedItems;
+    private ArrayList<Category> m_categories;
+    private HashMap<Category, ArrayList<Category>> m_groupings;
+    private ArrayList<String> m_customStrings; 
+    private static LayoutInflater m_inflater;
+    private ArrayList<Category> m_selectedItems;
+    private Activity m_activity;
+	
     final int COLOR_SELECTED = Color.rgb(133, 194, 215);
-    private Activity activity;
+	
+	
+	/* Constructors */
  
     public CategoriesExpandableListAdapter(Activity activity, ArrayList<Category> categories) {
-    	this.activity = activity;
-        this.categories = categories;
-        inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        selectedItems = new ArrayList<Category>();
+    	m_activity = activity;
+        m_categories = categories;
+        m_inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        m_selectedItems = new ArrayList<Category>();
         buildGroupings();
     }
  
     public CategoriesExpandableListAdapter(Activity activity, ArrayList<Category> categories, ArrayList<String> customStrings) {
-    	this.activity = activity;
-        this.categories = categories;
-        this.customStrings = customStrings;
-        inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        selectedItems = new ArrayList<Category>();
+    	m_activity = activity;
+        m_categories = categories;
+        m_customStrings = customStrings;
+        m_inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        m_selectedItems = new ArrayList<Category>();
         buildGroupings();
     }
+	
+	
+	/* Methods */
     
     private void buildGroupings()
     {
-    	groupings = new HashMap<Category, ArrayList<Category>>();
-    	for(Category category : categories)
+    	m_groupings = new HashMap<Category, ArrayList<Category>>();
+    	for(Category category : m_categories)
     	{
     		if (category.getParentCategoryId() == -1)
-    			groupings.put(category, new ArrayList<Category>());
+			{
+    			m_groupings.put(category, new ArrayList<Category>());
+			}
     	}
-    	for(Category category : categories)
+    	for(Category category : m_categories)
     	{
     		if (category.getParentCategoryId() != -1)
     		{
-    			for(Category parentCategory : groupings.keySet())
+    			for(Category parentCategory : m_groupings.keySet())
     			{
     				if (parentCategory.getId() == category.getParentCategoryId())
     				{
-    					groupings.get(parentCategory).add(category);
+    					m_groupings.get(parentCategory).add(category);
     					break;
     				}
     			}
@@ -74,7 +80,7 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
     
     private ArrayList<Category> getOrderedGroups()
     {
-    	ArrayList<Category> arrayList = new ArrayList<Category>(groupings.keySet());
+    	ArrayList<Category> arrayList = new ArrayList<Category>(m_groupings.keySet());
     	Collections.sort(arrayList, new CategoryComparator());
     	return arrayList;
     }
@@ -86,12 +92,12 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
 	}
  
     public int getCount() {
-        return categories.size();
+        return m_categories.size();
     }
     
     public void ClearSelected()
     {
-    	selectedItems.clear();
+    	m_selectedItems.clear();
     }
     
     public void SetSelected(int position, boolean selected)
@@ -100,30 +106,34 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
     	int chPos = getChildPosition(position);
     	
     	Category item = (Category)(chPos == -1 ? getGroup(gpPos) : getChild(gpPos, chPos));
-    	if (selected && !selectedItems.contains(item))
-    		selectedItems.add(item);
-    	else if (!selected && selectedItems.contains(item))
-    		selectedItems.remove(item);
+    	if (selected && !m_selectedItems.contains(item))
+		{
+    		m_selectedItems.add(item);
+		}
+    	else if (!selected && m_selectedItems.contains(item))
+		{
+    		m_selectedItems.remove(item);
+		}
     }
     
     public ArrayList<Category> GetSelectedItems()
     {
-    	return selectedItems;
+    	return m_selectedItems;
     }
 
 	public Object getChild(int groupPosition, int childPosition) {
 		Category parentCategory = getOrderedGroups().get(groupPosition);
-		return groupings.get(parentCategory).get(childPosition);
+		return m_groupings.get(parentCategory).get(childPosition);
 	}
 
 	public long getChildId(int groupPosition, int childPosition) {
 		Category parentCategory = getOrderedGroups().get(groupPosition);
-		return groupings.get(parentCategory).get(childPosition).getId();
+		return m_groupings.get(parentCategory).get(childPosition).getId();
 	}
 
 	public int getChildrenCount(int groupPosition) {
 		Category parentCategory = getOrderedGroups().get(groupPosition);
-		return groupings.get(parentCategory).size();
+		return m_groupings.get(parentCategory).size();
 	}
 
 	public Object getGroup(int groupPosition) {
@@ -131,7 +141,7 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
 	}
 
 	public int getGroupCount() {
-		return groupings.size();
+		return m_groupings.size();
 	}
 
 	public long getGroupId(int groupPosition) {
@@ -159,7 +169,9 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
 	public View getView(Category category, View convertView, ViewGroup parent, boolean isExpanded) {
         View vi=convertView;
         if(convertView==null)
-            vi = inflater.inflate(R.layout.category_item_layout, null);
+		{
+            vi = m_inflater.inflate(R.layout.category_item_layout, null);
+		}
 
         TextView nameText = (TextView)vi.findViewById(R.id.category_name);
         TextView typeText = (TextView)vi.findViewById(R.id.category_type);
@@ -172,20 +184,24 @@ public class CategoriesExpandableListAdapter extends BaseExpandableListAdapter
         colorField.setBackgroundColor(category.getColor());
         
     	RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)colorField.getLayoutParams();
-    	int leftMargin = category.getParentCategoryId() == -1 ? params.rightMargin : (int) Misc.dipsToPixels(activity.getResources(), 40);
+    	int leftMargin = category.getParentCategoryId() == -1 ? params.rightMargin : (int) Misc.dipsToPixels(m_activity.getResources(), 40);
     	params.setMargins(leftMargin, params.topMargin, params.bottomMargin, params.rightMargin);
     	colorField.setLayoutParams(params);
     
-        if (selectedItems.contains(category))
+        if (m_selectedItems.contains(category))
+		{
         	vi.setBackgroundColor(COLOR_SELECTED);
+		}
         else
+		{
         	vi.setBackgroundColor(Color.TRANSPARENT);
+		}
 
         return vi;
     }
 
 	public int getPosition(int groupPosition, int childPosition) {
-		int position = 0;//groupPosition*(CHILDREN + 1) + childPosition + 1;
+		int position = 0;
 		for(int i = 0; i < groupPosition; i++)
 		{
 			position++;

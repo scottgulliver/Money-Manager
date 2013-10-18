@@ -302,8 +302,8 @@ public class OverviewFragment extends HostActivityFragmentBase
 			if (catValPair.value > 0d)
 			{
 				PieChartSegment categorySegment = new PieChartSegment();
-				categorySegment.angle = (float) ((catValPair.value / total) * 360d);
-				categorySegment.color = catValPair.category.getColor();
+				categorySegment.setAngle((float) ((catValPair.value / total) * 360d));
+				categorySegment.setColor(catValPair.category.getColor());
 				categorySegments.add(categorySegment);
 				categoriesShown.add(catValPair.category);
 				DecimalFormat df = new DecimalFormat("#.##");

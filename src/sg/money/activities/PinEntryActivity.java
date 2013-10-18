@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import sg.money.R;
 
 public class PinEntryActivity extends BaseActivity
@@ -23,30 +22,27 @@ public class PinEntryActivity extends BaseActivity
 	public static final int PINENTRYTYPE_CHANGE = 3;
 	public static final int PINENTRYTYPE_REMOVE = 4;
 	public static final String PINENTRYTYPE = "PINENTRYTYPE";
-	
 	public static final int RESULT_PINOK = 1001;
 	
-	TextView txtTitle;
-	EditText txtPinNumber;
-	Button okButton;
-	Button cancelButton;
+	private TextView m_txtTitle;
+	private EditText m_txtPinNumber;
+	private Button m_okButton;
+	private Button m_cancelButton;
+	private int m_pinEntryType;
+	private String m_currentPinNumber;
+	private String m_initialEnterText;
+	private boolean m_enteringNewPin;
+	private int m_iteration;
 	
-	int pinEntryType;
-	String currentPinNumber;
-	String initialEnterText;
-	boolean enteringNewPin = false;
-	int iteration;
 	
-	public static boolean PinIsSet(Context context)
-	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-		return !sharedPref.getString(context.getResources().getString(R.string.pref_pinnumber_key), "").equals("");
-	}
+	/* Activity overrides */
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		pinEntryType = getIntent().getExtras() != null ? getIntent().getExtras().getInt(PINENTRYTYPE, PINENTRYTYPE_ENTER) : PINENTRYTYPE_ENTER;
-		if (pinEntryType == PINENTRYTYPE_ENTER && !PinIsSet(PinEntryActivity.this))
+		m_enteringNewPin = false;
+		
+		m_pinEntryType = getIntent().getExtras() != null ? getIntent().getExtras().getInt(PINENTRYTYPE, PINENTRYTYPE_ENTER) : PINENTRYTYPE_ENTER;
+		if (m_pinEntryType == PINENTRYTYPE_ENTER && !PinIsSet(PinEntryActivity.this))
 		{
 			Intent newIntent = new Intent(PinEntryActivity.this, ParentActivity.class);
 			startActivity(newIntent);
@@ -57,12 +53,12 @@ public class PinEntryActivity extends BaseActivity
 		
 		setContentView(R.layout.activity_pin_entry);
 		
-		txtTitle = (TextView)findViewById(R.id.txtTitle);
-		txtPinNumber = (EditText)findViewById(R.id.txtPinNumber);
-		okButton = (Button)findViewById(R.id.ok_button);
-		cancelButton = (Button)findViewById(R.id.cancel_button);
+		m_txtTitle = (TextView)findViewById(R.id.txtTitle);
+		m_txtPinNumber = (EditText)findViewById(R.id.txtPinNumber);
+		m_okButton = (Button)findViewById(R.id.ok_button);
+		m_cancelButton = (Button)findViewById(R.id.cancel_button);
 		
-		txtPinNumber.addTextChangedListener(new TextWatcher() {
+		m_txtPinNumber.addTextChangedListener(new TextWatcher() {
 			
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 			}
@@ -75,79 +71,91 @@ public class PinEntryActivity extends BaseActivity
 			}
 		});
 		
-		okButton.setOnClickListener(new OnClickListener() {
+		m_okButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				okClicked();
 			}
 		});
 		
-		cancelButton.setOnClickListener(new OnClickListener() {
+		m_cancelButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				cancelClicked();
 			}
 		});
 		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		currentPinNumber = sharedPref.getString(getString(R.string.pref_pinnumber_key), "");
+		m_currentPinNumber = sharedPref.getString(getString(R.string.pref_pinnumber_key), "");
 
-		switch(pinEntryType)
+		switch(m_pinEntryType)
 		{
 			case PINENTRYTYPE_CREATE:
-				initialEnterText = "Enter a PIN";
-				enteringNewPin = true;
+				m_initialEnterText = "Enter a PIN";
+				m_enteringNewPin = true;
 				break;
 			case PINENTRYTYPE_ENTER:
-				initialEnterText = "Enter your PIN";
+				m_initialEnterText = "Enter your PIN";
 				break;
 			case PINENTRYTYPE_CHANGE:
-				initialEnterText = "Enter your current PIN";
+				m_initialEnterText = "Enter your current PIN";
 				break;
 			case PINENTRYTYPE_REMOVE:
-				initialEnterText = "Enter your PIN";
+				m_initialEnterText = "Enter your PIN";
 			break;
 			default:
 		        finish();
 		        break;
 		}
 		
-		txtTitle.setText(initialEnterText);
+		m_txtTitle.setText(m_initialEnterText);
 		
-		okButton.setEnabled(false);
-		iteration = 0;
+		m_okButton.setEnabled(false);
+		m_iteration = 0;
 	}
+	
+	
+	/* Static methods */
+
+	public static boolean PinIsSet(Context context)
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+		return !sharedPref.getString(context.getResources().getString(R.string.pref_pinnumber_key), "").equals("");
+	}
+	
+	
+	/* Other methods */
 	
 	/**
 	 * This method sets the UI back into a state where it appears new again
 	 */
 	private void softReset()
 	{
-		txtTitle.setText(initialEnterText);
-		txtPinNumber.setText("");
-		okButton.setEnabled(false);
+		m_txtTitle.setText(m_initialEnterText);
+		m_txtPinNumber.setText("");
+		m_okButton.setEnabled(false);
 	}
 
 	private void pinNumberTextChanged()
 	{
-		int length = txtPinNumber.getText().length();
-		if (length == 0 && enteringNewPin)
+		int length = m_txtPinNumber.getText().length();
+		if (length == 0 && m_enteringNewPin)
 		{
-			txtTitle.setText(initialEnterText);
+			m_txtTitle.setText(m_initialEnterText);
 		}
 		else if (length < 4)
 		{	
-			if (okButton.isEnabled())
-				okButton.setEnabled(false);
+			if (m_okButton.isEnabled())
+				m_okButton.setEnabled(false);
 			
-			if (enteringNewPin)
-				txtTitle.setText("PIN must contain at least 4 digits");
+			if (m_enteringNewPin)
+				m_txtTitle.setText("PIN must contain at least 4 digits");
 		}
 		else
 		{
-			if (!okButton.isEnabled())
-				okButton.setEnabled(true);
+			if (!m_okButton.isEnabled())
+				m_okButton.setEnabled(true);
 			
-			if (enteringNewPin)
-				txtTitle.setText("Tap Continue when finished");
+			if (m_enteringNewPin)
+				m_txtTitle.setText("Tap Continue when finished");
 		}
 	}
 	
@@ -157,15 +165,15 @@ public class PinEntryActivity extends BaseActivity
 	 */
 	private void okClicked()
 	{
-		switch(pinEntryType)
+		switch(m_pinEntryType)
 		{
 			case PINENTRYTYPE_CREATE:
-				if (iteration == 0)
+				if (m_iteration == 0)
 				{ // entered once, so confirm
-					currentPinNumber = txtPinNumber.getText().toString();
-					iteration++;
-					initialEnterText = "Confirm PIN";
-					enteringNewPin = false;
+					m_currentPinNumber = m_txtPinNumber.getText().toString();
+					m_iteration++;
+					m_initialEnterText = "Confirm PIN";
+					m_enteringNewPin = false;
 					softReset();
 				}
 				else
@@ -177,14 +185,14 @@ public class PinEntryActivity extends BaseActivity
 				checkPinsMatch(true);
 				break;
 			case PINENTRYTYPE_CHANGE:
-				if (iteration == 0)
+				if (m_iteration == 0)
 				{
 					if (checkPinsMatch(false))
 					{
-						pinEntryType = PINENTRYTYPE_CREATE;
-						iteration = 0;
-						initialEnterText = "Enter new PIN";
-						enteringNewPin = true;
+						m_pinEntryType = PINENTRYTYPE_CREATE;
+						m_iteration = 0;
+						m_initialEnterText = "Enter new PIN";
+						m_enteringNewPin = true;
 						softReset();
 					}
 				}
@@ -193,25 +201,25 @@ public class PinEntryActivity extends BaseActivity
 				checkPinsMatch(true);
 				break;
 			default:
-		        finish(); // no idea why we are here..
+		        finish();
 		        break;
 		}
 	}
 	
 	private boolean checkPinsMatch(boolean exitWhenCorrect)
 	{
-		if (txtPinNumber.getText().toString().equals(currentPinNumber)) // :D YAY!
+		if (m_txtPinNumber.getText().toString().equals(m_currentPinNumber))
 		{
 			if (exitWhenCorrect)
 			{
 				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 				Editor editor = sharedPref.edit();
 				
-				switch(pinEntryType)
+				switch(m_pinEntryType)
 				{
 					case PINENTRYTYPE_CREATE:
 					case PINENTRYTYPE_CHANGE:
-						editor.putString(getString(R.string.pref_pinnumber_key), txtPinNumber.getText().toString());
+						editor.putString(getString(R.string.pref_pinnumber_key), m_txtPinNumber.getText().toString());
 						editor.commit();
 						break;
 					case PINENTRYTYPE_REMOVE:
@@ -231,8 +239,8 @@ public class PinEntryActivity extends BaseActivity
 		}
 		else
 		{ 
-			txtPinNumber.setText("");
-			initialEnterText = "PIN was incorrect";
+			m_txtPinNumber.setText("");
+			m_initialEnterText = "PIN was incorrect";
 			softReset();
 			return false;
 		}

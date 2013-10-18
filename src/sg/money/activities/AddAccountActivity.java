@@ -28,12 +28,15 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 {
     private final String SIS_KEY_MODEL = "Model";
 
-	View baseView;
-    EditText txtName;
-    EditText txtStartingBalance;
-    TextView textView2;
-    private AddAccountModel model;
-	private AddAccountController controller;
+	private View m_baseView;
+    private EditText m_txtName;
+    private EditText m_txtStartingBalance;
+    private TextView m_tvStartingBalance;
+    private AddAccountModel m_model;
+	private AddAccountController m_controller;
+	
+	
+	/* Activity Overrides */
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -41,18 +44,18 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.activity_add_account);
 
-		baseView = findViewById(R.id.addactivitybase);
-        txtName = (EditText)findViewById(R.id.txtName);
-        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
-        textView2 = (TextView)findViewById(R.id.textView2);
+		m_baseView = findViewById(R.id.addactivitybase);
+        m_txtName = (EditText)findViewById(R.id.txtName);
+        m_txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
+        m_tvStartingBalance = (TextView)findViewById(R.id.textView2);
 
-        txtName = (EditText)findViewById(R.id.txtName);
-        txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
-        textView2 = (TextView)findViewById(R.id.textView2);
+        m_txtName = (EditText)findViewById(R.id.txtName);
+        m_txtStartingBalance = (EditText)findViewById(R.id.txtStartBalance);
+        m_tvStartingBalance = (TextView)findViewById(R.id.textView2);
 
         if (savedInstanceState != null)
         {
-            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
+            m_model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
         }
         else
         {
@@ -63,66 +66,48 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
                 account = DatabaseManager.getInstance(AddAccountActivity.this).GetAccount(editId);
             }
 
-            model = new AddAccountModel(account);
+            m_model = new AddAccountModel(account);
         }
 
-        model.addListener(this);
-		controller = new AddAccountController(this, model);
+        m_model.addListener(this);
+		m_controller = new AddAccountController(this, m_model);
 		
+        m_txtStartingBalance.setVisibility(m_model.isNewAccount() ? View.VISIBLE : View.GONE);
+        m_tvStartingBalance.setVisibility(m_model.isNewAccount() ? View.VISIBLE : View.GONE);
 
-        txtStartingBalance.setVisibility(model.isNewAccount() ? View.VISIBLE : View.GONE);
-        textView2.setVisibility(model.isNewAccount() ? View.VISIBLE : View.GONE);
-
-    	setTitle(model.isNewAccount() ? "Add Account" : "Edit Account");
+    	setTitle(m_model.isNewAccount() ? "Add Account" : "Edit Account");
     	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        txtStartingBalance.setText("0.00");
+        m_txtStartingBalance.setText("0.00");
 		
-		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
+		m_txtName.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
 					{
-						controller.onAccountNameChange(txtName.getText().toString());
+						m_controller.onAccountNameChange(m_txtName.getText().toString());
 					}
 				}			
 			});
 
-		txtStartingBalance.setOnFocusChangeListener(new OnFocusChangeListener()
+		m_txtStartingBalance.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
 					{
-						Log.i("sg.money", Log.getStackTraceString(new Throwable()));
-                        if (Misc.stringNullEmptyOrWhitespace(txtStartingBalance.getText().toString()))
-                            txtStartingBalance.setText("0");
+                        if (Misc.stringNullEmptyOrWhitespace(m_txtStartingBalance.getText().toString()))
+                            m_txtStartingBalance.setText("0");
 
-						controller.onStartingBalanceChange(Double.parseDouble(txtStartingBalance.getText().toString()));
+						m_controller.onStartingBalanceChange(Double.parseDouble(m_txtStartingBalance.getText().toString()));
 					}
 				}			
 			});
 
         updateUi();
     }
-	
-	@Override
-	public void onChange(AddAccountModel model)
-	{
-		runOnUiThread(new Runnable() {
-            public void run() {
-                updateUi();
-            }
-        });
-	}
-	
-	private void updateUi()
-	{
-		txtName.setText(model.getAccountName());
-		txtStartingBalance.setText(String.valueOf(model.getStartingBalance()));
-	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,7 +118,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 		cancelFocus();
-        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, m_model);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -143,12 +128,34 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return controller.onOptionsItemSelected(item);
+        return m_controller.onOptionsItemSelected(item);
     }
+	
+	
+	/* Methods */
+	
+	private void updateUi()
+	{
+		m_txtName.setText(m_model.getAccountName());
+		m_txtStartingBalance.setText(String.valueOf(m_model.getStartingBalance()));
+	}
 
     public void cancelFocus()
     {
-        txtName.clearFocus();
-        txtStartingBalance.clearFocus();
+        m_txtName.clearFocus();
+        m_txtStartingBalance.clearFocus();
     }
+
+
+	/* Implementation of OnChangeListener */
+
+	@Override
+	public void onChange(AddAccountModel model)
+	{
+		runOnUiThread(new Runnable() {
+				public void run() {
+					updateUi();
+				}
+			});
+	}
 }

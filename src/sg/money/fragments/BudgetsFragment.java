@@ -111,9 +111,9 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	}
 	
 	public void changeItemCheckState(int position, boolean checked) {
-        adapter.SetSelected(position, checked);
+        adapter.setSelected(position, checked);
         adapter.notifyDataSetChanged();
-    	final int checkedCount = adapter.GetSelectedItems().size();
+    	final int checkedCount = adapter.getSelectedItems().size();
         switch (checkedCount) {
             case 0:
                 getActionMode().setSubtitle(null);
@@ -130,7 +130,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
                 break;
         }
         
-        if (adapter.GetSelectedItems().size() == 0)
+        if (adapter.getSelectedItems().size() == 0)
             getActionMode().finish();
     }
     
@@ -278,9 +278,9 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	private void confirmDeleteItems(final ActionMode mode)
 	{
 		Misc.showConfirmationDialog(getParentActivity(),
-                adapter.GetSelectedItems().size() == 1
+                adapter.getSelectedItems().size() == 1
                         ? "Delete 1 budget?"
-                        : "Delete " + adapter.GetSelectedItems().size() + " budgets?",
+                        : "Delete " + adapter.getSelectedItems().size() + " budgets?",
                 DialogButtons.OkCancel,
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -298,7 +298,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	
 	private void DeleteItems()
 	{
-		ArrayList<Budget> selectedItems = adapter.GetSelectedItems();
+		ArrayList<Budget> selectedItems = adapter.getSelectedItems();
 		for(Budget selectedItem : selectedItems)
 		{
 			DatabaseManager.getInstance(getParentActivity()).DeleteBudget(selectedItem);
@@ -320,7 +320,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         }
  
         public void onDestroyActionMode(ActionMode mode) {
-			adapter.ClearSelected();
+			adapter.clearSelected();
 	        adapter.notifyDataSetChanged();
 	        budgetsList.clearChoices();
  
@@ -332,7 +332,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
             case R.id.cab_edit:
-            	EditItem(adapter.GetSelectedItems().get(0));
+            	EditItem(adapter.getSelectedItems().get(0));
                 mode.finish();
                 return true;
             case R.id.cab_delete:

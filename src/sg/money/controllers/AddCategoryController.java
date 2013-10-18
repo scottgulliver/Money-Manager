@@ -9,35 +9,40 @@ import sg.money.domainobjects.*;
 import sg.money.fragments.*;
 import sg.money.models.*;
 
-public class AddCategoryController {
-
-	private AddCategoryActivity view;
-	private AddCategoryModel model;
+public class AddCategoryController 
+{
+	private AddCategoryActivity m_view;
+	private AddCategoryModel m_model;
+	private ArrayList<String> m_parentOptions;
 	
-	ArrayList<String> parentOptions;
+	
+	/* Constructor */
 	
 	public AddCategoryController(AddCategoryActivity view, AddCategoryModel model)
 	{
-		this.view = view;
-		this.model = model;
+		m_view = view;
+		m_model = model;
 	}
+	
+	
+	/* Methods */
 
 	public void onCategoryNameChange(String name)
 	{
-		model.setCategoryName(name);
+		m_model.setCategoryName(name);
 	}
 
 	public void onTypeChange(boolean incomeSelected)
 	{
-		model.setIsIncome(incomeSelected);
+		m_model.setIsIncome(incomeSelected);
 	}
 
 	public void onParentChange(int position)
 	{
-		String parentName = parentOptions.get(position);
+		String parentName = m_parentOptions.get(position);
 		
 		Category parentCategory = null;
-		for(Category category : model.getCurrentCategories())
+		for(Category category : m_model.getCurrentCategories())
 		{
 			if (category.getName().equals(parentName))
 			{
@@ -46,11 +51,13 @@ public class AddCategoryController {
 			}
 		}
 		
-		model.setParentCategory(parentCategory);
+		m_model.setParentCategory(parentCategory);
 	}
 
-	public void colorChanged(int color) {
-		model.setCurrentColor(color);
+	public void onColorChange(int color)
+	{
+        m_view.cancelFocus();
+		m_model.setCurrentColor(color);
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -71,10 +78,10 @@ public class AddCategoryController {
             	}
 
 	        case android.R.id.home:
-                Intent intent = new Intent(view, ParentActivity.class);
+                Intent intent = new Intent(m_view, ParentActivity.class);
                 intent.putExtra(ParentActivity.INTENTEXTRA_CONTENTTYPE, HostActivityFragmentTypes.Categories);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                view.startActivity(intent);
+                m_view.startActivity(intent);
                 break;
 	    }
 	    return true;
@@ -82,40 +89,40 @@ public class AddCategoryController {
 
     private void OkClicked()
     {
-        view.cancelFocus();
+        m_view.cancelFocus();
 
-        String validationError = model.validate();
+        String validationError = m_model.validate();
         if (validationError != null)
         {
-            Toast.makeText(view, validationError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(m_view, validationError, Toast.LENGTH_SHORT).show();
         }
         else
         {
-            model.commit(view);
+            m_model.commit(m_view);
 
-            view.setResult(view.RESULT_OK, new Intent());
-            view.finish();
+            m_view.setResult(m_view.RESULT_OK, new Intent());
+            m_view.finish();
         }
     }
 
     private void CancelClicked()
     {
-        view.setResult(view.RESULT_CANCELED, new Intent());
-        view.finish();
+        m_view.setResult(m_view.RESULT_CANCELED, new Intent());
+        m_view.finish();
     }
 
     public ArrayList<String> getParentCategoryOptions()
     {
-    	parentOptions = new ArrayList<String>();
-    	parentOptions.add("< None >");
-    	for(Category category : model.getCurrentCategories())
+    	m_parentOptions = new ArrayList<String>();
+    	m_parentOptions.add("< None >");
+    	for(Category category : m_model.getCurrentCategories())
     	{
-    		if (category.getParentCategoryId() == -1 && category.isIncome() == model.getIsIncome() && !category.isPermanent())
+    		if (category.getParentCategoryId() == -1 && category.isIncome() == m_model.getIsIncome() && !category.isPermanent())
     		{
-    			parentOptions.add(category.getName());
+    			m_parentOptions.add(category.getName());
     		}
     	}
 		
-		return parentOptions;
+		return m_parentOptions;
     }
 }

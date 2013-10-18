@@ -8,11 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-
 import sg.money.DatabaseManager;
 import sg.money.activities.AddTransactionActivity;
 import sg.money.controllers.AddTransactionController;
@@ -20,125 +18,142 @@ import sg.money.domainobjects.Account;
 import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
 
-public class AddCategoryModel extends SimpleObservable implements Parcelable {
+public class AddCategoryModel extends Observable implements Parcelable {
 
-    ArrayList<Category> currentCategories;
-    Category category;
-    ArrayList<String> options;
-    ArrayList<String> parentOptions;
-    boolean newCategory;
-	private Category cachedParentCategory;
+    private ArrayList<Category> m_currentCategories;
+    private Category m_category;
+    private ArrayList<String> m_options;
+    private ArrayList<String> m_parentOptions;
+    private boolean m_newCategory;
+	private Category m_cachedParentCategory;
+	
+	
+	/* Constructor */
 
     public AddCategoryModel(Category category, Context context) {
-        this.category = category;
-        if (this.category == null)
+        m_category = category;
+        if (m_category == null)
         {
-            this.category = new Category();
-            newCategory = true;
+            m_category = new Category();
+            m_newCategory = true;
 
             Random rnd = new Random(System.currentTimeMillis());
-            this.category.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
+            m_category.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
         }
 
-        currentCategories = DatabaseManager.getInstance(context).GetAllCategories();
+        m_currentCategories = DatabaseManager.getInstance(context).GetAllCategories();
     }
+	
+	
+	/* Getters / setters */
 
 	public void setIsIncome(boolean incomeSelected)
 	{
-        if (category.isIncome() != incomeSelected)
+        if (m_category.isIncome() != incomeSelected)
         {
-            category.setIncome(incomeSelected);
+            m_category.setIncome(incomeSelected);
             notifyObservers(this);
         }
 	}
 
 	public boolean getIsPermanent()
 	{
-		return category.isPermanent();
+		return m_category.isPermanent();
 	}
 
     public String getCategoryName()
     {
-        return category.getName();
+        return m_category.getName();
     }
 
     public void setCategoryName(String name)
     {
-        if (category.getName() == null || !category.getName().equals(name))
+        if (m_category.getName() == null || !m_category.getName().equals(name))
         {
-            category.setName(name);
+            m_category.setName(name);
             notifyObservers(this);
         }
     }
 
     public Category getParentCategory()
     {
-		if (cachedParentCategory != null 
-			&& cachedParentCategory.getId() == category.getParentCategoryId())
+		if (m_cachedParentCategory != null 
+			&& m_cachedParentCategory.getId() == m_category.getParentCategoryId())
 		{
-			return cachedParentCategory;
+			return m_cachedParentCategory;
 		}
 		
-		cachedParentCategory = null;
-		for(Category category : currentCategories)
+		m_cachedParentCategory = null;
+		for(Category category : m_currentCategories)
 		{
 			if (category.getId() == category.getParentCategoryId())
 			{
-				cachedParentCategory = category;
+				m_cachedParentCategory = category;
 			}
 		}
 		
-        return cachedParentCategory;
+        return m_cachedParentCategory;
     }
 
 	
     public void setParentCategory(Category parent)
     {
-        if (category.getParentCategoryId() != (parent != null ? parent.getId() : -1))
+        if (m_category.getParentCategoryId() != (parent != null ? parent.getId() : -1))
         {
-            category.setParentCategoryId(parent != null ? parent.getId() : -1);
-            cachedParentCategory = parent;
+            m_category.setParentCategoryId(parent != null ? parent.getId() : -1);
+            m_cachedParentCategory = parent;
             notifyObservers(this);
         }
     }
 
     public int getCurrentColor() {
-        return category.getParentCategoryId();
+        return m_category.getParentCategoryId();
     }
 
     public ArrayList<Category> getCurrentCategories() {
-        return currentCategories;
+        return m_currentCategories;
     }
 
     public void setCurrentColor(int color) {
-        category.setColor(color);
+        m_category.setColor(color);
 		notifyObservers(this);
     }
 
+    public boolean isNewCategory() {
+        return m_newCategory;
+    }
+
+    public boolean getIsIncome() {
+        return m_category.isIncome();
+    }
+	
+	
+	/* Methods */
+
     public String validate()
     {
-        if (category.getName().trim().equals(""))
+        if (m_category.getName().trim().equals(""))
         {
             return "Please enter a name.";
         }
 
-        if (category.getName().trim().equals(AddTransactionController.ADD_CATEGORY_STRING))
+        if (m_category.getName().trim().equals(AddTransactionController.ADD_CATEGORY_STRING))
         {
             return "This name is not valid.";
         }
 
-        if (newCategory || !category.isPermanent())
+        if (m_newCategory || !m_category.isPermanent())
         {
-            for(Category currentCategory : currentCategories)
+            for(Category currentCategory : m_currentCategories)
             {
-                if ((currentCategory.getId() == category.getId()))
+                if ((currentCategory.getId() == m_category.getId()))
 
                 {
                     continue;
                 }
 
-                if (category.getName().trim().equals(currentCategory.getName().trim())
-                        && currentCategory.isIncome() == category.isIncome())
+                if (m_category.getName().trim().equals(currentCategory.getName().trim())
+                        && currentCategory.isIncome() == m_category.isIncome())
                 {
                     return "A category with this name already exists.";
                 }
@@ -150,23 +165,16 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
 
     public void commit(Context context)
     {
-        if (newCategory)
+        if (m_newCategory)
         {
-            DatabaseManager.getInstance(context).AddCategory(category);
+            DatabaseManager.getInstance(context).AddCategory(m_category);
         }
         else
         {
-            DatabaseManager.getInstance(context).UpdateCategory(category);
+            DatabaseManager.getInstance(context).UpdateCategory(m_category);
         }
     }
-
-    public boolean isNewCategory() {
-        return newCategory;
-    }
-
-    public boolean getIsIncome() {
-        return category.isIncome();
-    }
+	
 
     /* Implementation of Parcelable */
 
@@ -181,12 +189,12 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
     };
 
     private AddCategoryModel(Parcel in) {
-        category = in.readParcelable(Category.class.getClassLoader());
-        currentCategories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
-        options = in.createStringArrayList();
-        parentOptions = in.createStringArrayList();
-        newCategory = in.readInt() == 1;
-        cachedParentCategory = in.readParcelable(Category.class.getClassLoader());
+        m_category = in.readParcelable(Category.class.getClassLoader());
+        m_currentCategories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
+        m_options = in.createStringArrayList();
+        m_parentOptions = in.createStringArrayList();
+        m_newCategory = in.readInt() == 1;
+        m_cachedParentCategory = in.readParcelable(Category.class.getClassLoader());
     }
 
     @Override
@@ -196,12 +204,12 @@ public class AddCategoryModel extends SimpleObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(category, flags);
-        parcel.writeParcelableArray((Parcelable[])currentCategories.toArray(), flags);
-        parcel.writeStringList(options);
-        parcel.writeStringList(parentOptions);
-        parcel.writeInt(newCategory ? 1 : 0);
-        parcel.writeParcelable(cachedParentCategory, flags);
+        parcel.writeParcelable(m_category, flags);
+        parcel.writeParcelableArray((Parcelable[])m_currentCategories.toArray(), flags);
+        parcel.writeStringList(m_options);
+        parcel.writeStringList(m_parentOptions);
+        parcel.writeInt(m_newCategory ? 1 : 0);
+        parcel.writeParcelable(m_cachedParentCategory, flags);
     }
 
     /* End Implementation of Parcelable */

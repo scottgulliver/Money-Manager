@@ -11,37 +11,43 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-
 import sg.money.widgets.PieChartSegment;
 
-public class PieChartView extends View
-{
-	Paint backgroundPaint = new Paint();
-	Rect entireRect = new Rect();
-	ArrayList<PieChartSegment> segments = new ArrayList<PieChartSegment>();
+public class PieChartView extends View {
+	private Paint m_backgroundPaint;
+	private Rect m_entireRect;
+	private ArrayList<PieChartSegment> m_segments;
+	
+	
+	/* Constructor */
 	
 	public PieChartView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
         init();
     }
 	
+	
+	/* Methods */
+	
 	private void init() {
-		backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		backgroundPaint.setStyle(Paint.Style.FILL);
-		backgroundPaint.setColor(Color.argb(0, 241, 241, 241));
-		backgroundPaint.setColor(Color.argb(255, 255, 255, 255));
+		m_backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		m_backgroundPaint.setStyle(Paint.Style.FILL);
+		m_backgroundPaint.setColor(Color.argb(0, 241, 241, 241));
+		m_backgroundPaint.setColor(Color.argb(255, 255, 255, 255));
 		
-		entireRect = new Rect();
+		m_entireRect = new Rect();
+		
+		m_segments = new ArrayList<PieChartSegment>();
 	}
 	
 	public void setSegments(ArrayList<PieChartSegment> segments)
 	{
-		this.segments = segments;
+		m_segments = segments;
 	}
 	
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		entireRect = new Rect(getPaddingLeft(), getPaddingTop(), w-getPaddingRight(), h-getPaddingBottom());
+		m_entireRect = new Rect(getPaddingLeft(), getPaddingTop(), w-getPaddingRight(), h-getPaddingBottom());
 	}
 	
 	private PointF rotatePoint(PointF point, PointF origin, float angle)
@@ -55,9 +61,9 @@ public class PieChartView extends View
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-		canvas.drawRect(entireRect, backgroundPaint);
+		canvas.drawRect(m_entireRect, m_backgroundPaint);
 		
-		PointF centre = new PointF(entireRect.exactCenterX(),entireRect.exactCenterY());
+		PointF centre = new PointF(m_entireRect.exactCenterX(),m_entireRect.exactCenterY());
 		float extentDistance = centre.x * 0.8f;
 		RectF shapeRect = new RectF(centre.x-extentDistance, centre.y-extentDistance, centre.x+extentDistance, centre.y+extentDistance);
 		
@@ -73,35 +79,29 @@ public class PieChartView extends View
 		//draw segments
 		
 		float totalAngle = -90.0f;
-		for(PieChartSegment segment : segments)
+		for(PieChartSegment segment : m_segments)
 		{
 			Path path = new Path();
 			path.moveTo(centre.x, centre.y);
 			PointF from = rotatePoint(standard, centre, totalAngle);
 			path.lineTo(from.x, from.y);
-			path.addArc(shapeRect, totalAngle, segment.angle);
+			path.addArc(shapeRect, totalAngle, segment.getAngle());
 			path.lineTo(centre.x, centre.y);
 			path.close(); 
 			Paint pieChartPaint = new Paint();
 			pieChartPaint.setStyle(Paint.Style.FILL);
-			pieChartPaint.setColor(segment.color);
+			pieChartPaint.setColor(segment.getColor());
 			canvas.drawPath(path, pieChartPaint);
-			totalAngle = totalAngle + segment.angle;
+			totalAngle = totalAngle + segment.getAngle();
 		}
 		
 		//draw segment outlines
 		totalAngle = 0.0f;
-		if (segments.size() > 1)
+		if (m_segments.size() > 1)
 		{
-			for(PieChartSegment segment : segments)
+			for(PieChartSegment segment : m_segments)
 			{ 
-				PointF toPoint = rotatePoint(standard, centre, (float)Math.toRadians(totalAngle + segment.angle));
-				
-				/*Path path = new Path();
-				path.moveTo(centre.x, centre.y); 
-				path.lineTo(fromPoint.x, fromPoint.y);
-				path.close();
-				canvas.drawPath(path, outlinePaint);*/
+				PointF toPoint = rotatePoint(standard, centre, (float)Math.toRadians(totalAngle + segment.getAngle()));
 	
 				Path path2 = new Path();
 				path2.moveTo(centre.x, centre.y);
@@ -109,7 +109,7 @@ public class PieChartView extends View
 				path2.close();
 				canvas.drawPath(path2, outlinePaint);
 				
-				totalAngle = totalAngle + segment.angle;
+				totalAngle = totalAngle + segment.getAngle();
 			}
 		}
 		
@@ -121,11 +121,11 @@ public class PieChartView extends View
 		canvas.drawPath(path, outlinePaint);
 		
 		//draw inner circle
-		backgroundPaint.setColor(Color.argb(255, 241, 241, 241));
-		backgroundPaint.setColor(Color.argb(255, 255, 255, 255));
-		canvas.drawCircle(centre.x, centre.y, extentDistance/5.0f, backgroundPaint);
+		m_backgroundPaint.setColor(Color.argb(255, 241, 241, 241));
+		m_backgroundPaint.setColor(Color.argb(255, 255, 255, 255));
+		canvas.drawCircle(centre.x, centre.y, extentDistance/5.0f, m_backgroundPaint);
 		canvas.drawCircle(centre.x, centre.y, extentDistance/5.0f, outlinePaint);
-		backgroundPaint.setColor(Color.argb(0, 241, 241, 241));
-		backgroundPaint.setColor(Color.argb(255, 255, 255, 255));
+		m_backgroundPaint.setColor(Color.argb(0, 241, 241, 241));
+		m_backgroundPaint.setColor(Color.argb(255, 255, 255, 255));
 	}
 }

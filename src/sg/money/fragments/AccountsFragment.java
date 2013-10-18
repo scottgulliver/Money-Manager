@@ -84,9 +84,9 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	}
 	
 	public void changeItemCheckState(int position, boolean checked) {
-        adapter.SetSelected(position, checked);
+        adapter.setSelected(position, checked);
         adapter.notifyDataSetChanged();
-    	final int checkedCount = adapter.GetSelectedItems().size();
+    	final int checkedCount = adapter.getSelectedItems().size();
         switch (checkedCount) {
             case 0:
                 getActionMode().setSubtitle(null);
@@ -103,7 +103,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
                 break;
         }
         
-        if (adapter.GetSelectedItems().size() == 0)
+        if (adapter.getSelectedItems().size() == 0)
             getActionMode().finish();
     }
 
@@ -185,7 +185,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
         }
  
         public void onDestroyActionMode(ActionMode mode) {
-			adapter.ClearSelected();
+			adapter.clearSelected();
 	        adapter.notifyDataSetChanged();
 	        accountsList.clearChoices();
  
@@ -211,7 +211,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	
 	private void EditItem()
 	{
-		Account selectedItem = adapter.GetSelectedItems().get(0);
+		Account selectedItem = adapter.getSelectedItems().get(0);
 		Intent intent = new Intent(getParentActivity(), AddAccountActivity.class);
 		intent.putExtra("ID", selectedItem.getId());
     	startActivityForResult(intent, REQUEST_ADDACCOUNT);
@@ -220,9 +220,9 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	private void confirmDeleteItems(final ActionMode mode)
 	{
 		Misc.showConfirmationDialog(getParentActivity(),
-                adapter.GetSelectedItems().size() == 1
+                adapter.getSelectedItems().size() == 1
                         ? "Delete 1 account?"
-                        : "Delete " + adapter.GetSelectedItems().size() + " accounts?",
+                        : "Delete " + adapter.getSelectedItems().size() + " accounts?",
                 DialogButtons.OkCancel,
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -240,7 +240,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	
 	private void DeleteItems()
 	{
-		ArrayList<Account> selectedItems = adapter.GetSelectedItems();
+		ArrayList<Account> selectedItems = adapter.getSelectedItems();
 		for(Account selectedItem : selectedItems)
 		{
 			DatabaseManager.getInstance(getParentActivity()).DeleteAccount(selectedItem);

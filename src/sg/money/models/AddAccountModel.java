@@ -9,70 +9,79 @@ import sg.money.*;
 import sg.money.domainobjects.*;
 import java.util.*;
 
-public class AddAccountModel extends SimpleObservable implements Parcelable {
+public class AddAccountModel extends Observable implements Parcelable {
 
-    private Account account;
-	private Double startingBalance;
-    private boolean newAccount;
-	private ArrayList<Account> currentAccounts;
+    private Account m_account;
+	private Double m_startingBalance;
+    private boolean m_newAccount;
+	private ArrayList<Account> m_currentAccounts;
+	
+	
+	/* Constructor */
 
     public AddAccountModel(Account account) {
-        this.account = account;
-        if (this.account == null)
+        m_account = account;
+        if (m_account == null)
         {
-            this.account = new Account("");
-            newAccount = true;
+            m_account = new Account("");
+            m_newAccount = true;
         }
 
-        startingBalance = 0d;
+        m_startingBalance = 0d;
     }
+	
+	
+	/* Getters / setters */
 
     public String getAccountName() {
-        return account.getName();
+        return m_account.getName();
     }
 
     public void setAccountName(String accountName) {
-        account.setName(accountName);
+        m_account.setName(accountName);
 		notifyObservers(this);
     }
 
     public Double getStartingBalance() {
-        return startingBalance;
+        return m_startingBalance;
     }
 
     public void setStartingBalance(Double startingBalance) {
-        this.startingBalance = startingBalance;
+        this.m_startingBalance = startingBalance;
 		notifyObservers(this);
     }
 
     public boolean isNewAccount()
     {
-        return newAccount;
+        return m_newAccount;
     }
 	
 	private ArrayList<Account> getCurrentAccounts(Context context)
 	{
-		if (currentAccounts == null)
+		if (m_currentAccounts == null)
 		{
-			currentAccounts = DatabaseManager.getInstance(context).GetAllAccounts();
+			m_currentAccounts = DatabaseManager.getInstance(context).GetAllAccounts();
 		}
 		
-		return currentAccounts;
+		return m_currentAccounts;
 	}
+	
+	
+	/* Methods */
 	
 	public String validate(Context context)
 	{
-    	if (account.getName().trim().equals(""))
+    	if (m_account.getName().trim().equals(""))
     	{
     		return "Please enter a name.";
     	}
 
     	for(Account currentAccount : getCurrentAccounts(context))
     	{
-    		if (currentAccount.getId() == account.getId()) 
+    		if (currentAccount.getId() == m_account.getId()) 
 				continue;
 
-    		if (account.getName().trim().equals(currentAccount.getName().trim()))
+    		if (m_account.getName().trim().equals(currentAccount.getName().trim()))
         	{
         		return "An account with this name already exists.";
         	}
@@ -85,20 +94,20 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
 	{
 		if (isNewAccount())
 		{
-			DatabaseManager.getInstance(context).AddAccount(account);
+			DatabaseManager.getInstance(context).AddAccount(m_account);
 			
-			if (startingBalance != 0.0)
+			if (m_startingBalance != 0.0)
 			{
 				Transaction transaction = new Transaction();
-				transaction.setAccount(account.getId());
+				transaction.setAccount(m_account.getId());
 				transaction.setDescription("Starting balance for account");
 				transaction.setDateTime(Calendar.getInstance().getTime());
-				transaction.setValue(startingBalance);
+				transaction.setValue(m_startingBalance);
 
 				ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
 				for(Category category : categories)
 				{
-					if (category.getName().equals("Starting Balance") && category.isIncome() == startingBalance > 0)
+					if (category.getName().equals("Starting Balance") && category.isIncome() == m_startingBalance > 0)
 					{
 						transaction.setCategory(category.getId());
 						break;
@@ -110,7 +119,7 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
 		}
 		else
 		{
-			DatabaseManager.getInstance(context).UpdateAccount(account);
+			DatabaseManager.getInstance(context).UpdateAccount(m_account);
 		}
 	}
 
@@ -127,10 +136,10 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
     };
 
     private AddAccountModel(Parcel in) {
-        account = in.readParcelable(Account.class.getClassLoader());
-        startingBalance = in.readDouble();
-        newAccount = in.readInt() == 1;
-        currentAccounts = new ArrayList<Account>(Arrays.asList((Account[])in.readParcelableArray(Account.class.getClassLoader())));
+        m_account = in.readParcelable(Account.class.getClassLoader());
+        m_startingBalance = in.readDouble();
+        m_newAccount = in.readInt() == 1;
+        m_currentAccounts = new ArrayList<Account>(Arrays.asList((Account[])in.readParcelableArray(Account.class.getClassLoader())));
     }
 
     @Override
@@ -140,10 +149,10 @@ public class AddAccountModel extends SimpleObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(account, flags);
-        parcel.writeDouble(startingBalance);
-        parcel.writeInt(newAccount ? 1 : 0);
-        parcel.writeParcelableArray((Parcelable[])currentAccounts.toArray(), flags);
+        parcel.writeParcelable(m_account, flags);
+        parcel.writeDouble(m_startingBalance);
+        parcel.writeInt(m_newAccount ? 1 : 0);
+        parcel.writeParcelableArray((Parcelable[])m_currentAccounts.toArray(), flags);
     }
 
     /* End Implementation of Parcelable */

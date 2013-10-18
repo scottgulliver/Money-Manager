@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import sg.money.widgets.BudgetDateView;
 import sg.money.DatabaseManager;
 import sg.money.R;
@@ -20,44 +19,55 @@ import sg.money.domainobjects.Category;
 import sg.money.domainobjects.Transaction;
 import sg.money.utils.Misc;
 
-public class BudgetListAdapter extends BaseAdapter
-{
-	private ArrayList<Budget> budgets;
-    private static LayoutInflater inflater=null;
-    private ArrayList<Budget> selectedItems;
-    final int COLOR_SELECTED = Color.rgb(133, 194, 215);
-    private ArrayList<Transaction> transactions;
-    private Activity activity;
+public class BudgetListAdapter extends BaseAdapter {
+
+	private ArrayList<Budget> m_budgets;
+    private static LayoutInflater m_inflater;
+    private ArrayList<Budget> m_selectedItems;
+    private ArrayList<Transaction> m_transactions;
+    private Activity m_activity;
+	
+    private final int COLOR_SELECTED = Color.rgb(133, 194, 215);
+	
+	
+	/* Constructor */
  
     public BudgetListAdapter(Activity activity, ArrayList<Budget> budgets, ArrayList<Transaction> transactions) {
-    	this.activity = activity;
-        this.budgets = budgets;
-        this.transactions = transactions;
-        inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        selectedItems = new ArrayList<Budget>();
+    	m_activity = activity;
+        m_budgets = budgets;
+        m_transactions = transactions;
+        m_inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        m_selectedItems = new ArrayList<Budget>();
     }
+	
+	
+	/* Methods */
  
     public int getCount() {
-        return budgets.size();
+        return m_budgets.size();
     }
     
-    public void ClearSelected()
+    public void clearSelected()
     {
-    	selectedItems.clear();
+    	m_selectedItems.clear();
     }
     
-    public void SetSelected(int position, boolean selected)
+    public void setSelected(int position, boolean selected)
     {
-    	Budget item = budgets.get(position);
-    	if (selected && !selectedItems.contains(item))
-    		selectedItems.add(item);
-    	else if (!selected && selectedItems.contains(item))
-    		selectedItems.remove(item);
+    	Budget item = m_budgets.get(position);
+    	if (selected && !m_selectedItems.contains(item))
+		{
+    		m_selectedItems.add(item);
+		}
+    	else if (!selected && m_selectedItems.contains(item))
+		{
+    		m_selectedItems.remove(item);
+		}
     }
     
-    public ArrayList<Budget> GetSelectedItems()
+    public ArrayList<Budget> getSelectedItems()
     {
-    	return selectedItems;
+    	return m_selectedItems;
     }
  
     public Object getItem(int position) {
@@ -72,24 +82,27 @@ public class BudgetListAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
-            vi = inflater.inflate(R.layout.budget_item_layout, null);
+		{
+            vi = m_inflater.inflate(R.layout.budget_item_layout, null);
+		}
 
         TextView nameText = (TextView)vi.findViewById(R.id.budget_name);
         BudgetDateView progress = (BudgetDateView)vi.findViewById(R.id.budget_progress);
  
-        Budget budget = budgets.get(position);
+        Budget budget = m_budgets.get(position);
  
         //set values
+		
         nameText.setText(budget.getName());
         progress.setBudget(budget.getValue());
         
         double spending = 0;
-        for(Transaction transaction : transactions)
+        for(Transaction transaction : m_transactions)
         {
 			if (transaction.isDontReport())
 				continue;
 			
-        	if (!DatabaseManager.getInstance(activity).GetCategory(transaction.getCategory()).isUseInReports())
+        	if (!DatabaseManager.getInstance(m_activity).GetCategory(transaction.getCategory()).isUseInReports())
         		continue;
         	
         	if (!budget.getAccounts().isEmpty())
@@ -120,17 +133,21 @@ public class BudgetListAdapter extends BaseAdapter
             	if (!isCategory)
             		continue;
         	}
-        	spending += transaction.getRealValue(activity);
+        	spending += transaction.getRealValue(m_activity);
         }
         progress.setToDate(spending);
         
         TextView typeText = (TextView)vi.findViewById(R.id.budget_extra);
-        typeText.setText(Misc.formatValue(activity, spending) + " / " + Misc.formatValue(activity, budget.getValue()));
+        typeText.setText(Misc.formatValue(m_activity, spending) + " / " + Misc.formatValue(m_activity, budget.getValue()));
         
-        if (selectedItems.contains(budget))
+        if (m_selectedItems.contains(budget))
+		{
         	vi.setBackgroundColor(COLOR_SELECTED);
+		}
         else
+		{
         	vi.setBackgroundColor(Color.TRANSPARENT);
+		}
 
         return vi;
     }

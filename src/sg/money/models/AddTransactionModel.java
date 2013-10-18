@@ -5,7 +5,6 @@ import android.graphics.*;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.*;
-
 import java.io.Serializable;
 import java.util.*;
 import sg.money.*;
@@ -13,51 +12,55 @@ import sg.money.activities.*;
 import sg.money.domainobjects.*;
 import sg.money.utils.*;
 
-public class AddTransactionModel extends SimpleObservable implements Parcelable
+public class AddTransactionModel extends Observable implements Parcelable
 {	
-    Transaction transaction;
-    boolean newTransaction;
-    Map<String, Account> accountsMap = new HashMap<String, Account>();
-    Map<String, Category> categoriesMap = new HashMap<String, Category>();
-	Category cachedCategory;
-    Transaction relatedTransaction; // other half of a transaction
+    private Transaction m_transaction;
+    private boolean m_newTransaction;
+    private Map<String, Account> m_accountsMap;
+    private Map<String, Category> m_categoriesMap;
+	private Category m_cachedCategory;
+    private Transaction m_relatedTransaction; // other half of a transaction
+	private boolean m_useNewCategory;
+	private Category m_newCategory;
+    private boolean m_isIncomeType;
 	
-	boolean useNewCategory;
-	Category newCategory;
-
-    boolean isIncomeType;
+	
+	/* Constructor */
 
     public AddTransactionModel(Transaction transaction, int accountID, int defaultCategoryID, Context context) {
-        this.transaction = transaction;
+        m_transaction = transaction;
+		
+		m_accountsMap = new HashMap<String, Account>();
+		m_categoriesMap = new HashMap<String, Category>();
 
-        relatedTransaction = new Transaction();
-        relatedTransaction.setDontReport(true);
-        relatedTransaction.setTransferToTransaction(-1);
+        m_relatedTransaction = new Transaction();
+        m_relatedTransaction.setDontReport(true);
+        m_relatedTransaction.setTransferToTransaction(-1);
 
-        if (this.transaction == null)
+        if (m_transaction == null)
         {
-            this.transaction = new Transaction();
-			this.transaction.setAccount(accountID);
-			this.transaction.setCategory(defaultCategoryID);
-			this.transaction.dateTime = new Date();
-            this.transaction.transferFromTransaction = -1;
-            this.transaction.transferToTransaction = -1;
-			this.transaction.description = "";
-            newTransaction = true;
+            m_transaction = new Transaction();
+			m_transaction.setAccount(accountID);
+			m_transaction.setCategory(defaultCategoryID);
+			m_transaction.setDateTime(new Date());
+            m_transaction.setTransferFromTransaction(-1);
+            m_transaction.setTransferToTransaction(-1);
+			m_transaction.setDescription("");
+            m_newTransaction = true;
         }
-        else if (transaction.isTransfer)
+        else if (transaction.isTransfer())
         {
-            relatedTransaction = transaction.getRelatedTransferTransaction(context);
+            m_relatedTransaction = transaction.getRelatedTransferTransaction(context);
         }
 
-		useNewCategory = false;
-		newCategory = new Category();
+		m_useNewCategory = false;
+		m_newCategory = new Category();
 
         ArrayList<Account> accounts = DatabaseManager.getInstance(context).GetAllAccounts();
         for(Account account : accounts)
         {
             if (account.getId() != accountID)
-                accountsMap.put(account.getName(), account);
+                m_accountsMap.put(account.getName(), account);
         }
 
 
@@ -65,38 +68,31 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         categories = Misc.getCategoriesInGroupOrder(categories);
         for(Category category : categories)
         {
-            categoriesMap.put(category.getName(), category);
+            m_categoriesMap.put(category.getName(), category);
         }
 
-        if (!newTransaction)
+        if (!m_newTransaction)
         {
-            isIncomeType = getCategory().isIncome();
+            m_isIncomeType = getCategory().isIncome();
         }
     }
+	
+	
+	/* Getters / setters */
 
     public boolean getIsReceivingParty()
     {
-        return transaction.isReceivingParty();
+        return m_transaction.isReceivingParty();
     }
 
 	public double getValue()
 	{
-        double value = transaction.value;
+        double value = m_transaction.getValue();
         if (value != 0 && shouldReverseValue())
         {
             value *= -1.0f;
         }
 		return value;
-	}
-	
-	private boolean shouldReverseValue()
-	{
-		if (!getIsTransfer() && !isIncomeType || (getIsTransfer() && getIsReceivingParty()))
-		{
-			return true;
-		}
-		
-		return false;
 	}
 	
 	public void setValue(double value)
@@ -105,86 +101,185 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         {
             value *= -1.0f;
         }
-
-		Log.e("sg.money", isIncomeType ? "isincometype" : "-");
-		Log.e("sg.money", getIsTransfer() ? "istransfer" : "-");
-		Log.e("sg.money", getIsReceivingParty() ? "isreceivingparty" : "-");
-		Log.e("sg.money", "transaction value: " + transaction.value + ", value: " + value);
-		if (transaction.value != value)
+		
+		if (m_transaction.getValue() != value)
 		{
-			transaction.value = value;
+			m_transaction.setValue(value);
 			notifyObservers(this);
 		}
 	}
 
 	public boolean getDontReport()
 	{
-		return transaction.dontReport;
+		return m_transaction.isDontReport();
 	}
 	
 	public void setDontReport(boolean dontReport)
 	{
-		transaction.dontReport = dontReport;
+		m_transaction.setDontReport(dontReport);
 		notifyObservers(this);
 	}
 
 	public String getDescription()
 	{
-		return transaction.description;
+		return m_transaction.getDescription();
 	}
 	
 	public void setDescription(String description)
 	{
-		if (!transaction.description.equals(description)
-			|| !relatedTransaction.description.equals(description))
+		if (!m_transaction.getDescription().equals(description)
+			|| !m_relatedTransaction.getDescription().equals(description))
 		{
-			transaction.description = description;
-        	relatedTransaction.description = description;
+			m_transaction.setDescription(description);
+        	m_relatedTransaction.setDescription(description);
 			notifyObservers(this);
 		}
 	}
 
 	public void setDate(Date date)
 	{
-		if (transaction.dateTime.compareTo(date) != 0
-			|| relatedTransaction.dateTime.compareTo(date) != 0)
+		if (m_transaction.getDateTime().compareTo(date) != 0
+			|| m_relatedTransaction.getDateTime().compareTo(date) != 0)
 		{
-			transaction.dateTime = date;
-        	relatedTransaction.dateTime = date;
+			m_transaction.setDateTime(date);
+        	m_relatedTransaction.setDateTime(date);
 			notifyObservers(this);
 		}
 	}
 	
 	public Date getDate()
 	{
-		return transaction.dateTime;
+		return m_transaction.getDateTime();
 	}
 
 	public boolean getIsTransfer()
 	{
-		return transaction.isTransfer;
+		return m_transaction.isTransfer();
 	}
 
     public boolean isNewTransaction() {
-        return newTransaction;
+        return m_newTransaction;
     }
 	
 	public Account[] getAccounts()
 	{
-		return accountsMap.values().toArray(new Account[accountsMap.values().size()]);
+		return m_accountsMap.values().toArray(new Account[m_accountsMap.values().size()]);
 	}
 	
 	public String[] getAccountNames()
 	{
-		return accountsMap.keySet().toArray(new String[accountsMap.keySet().size()]);
+		return m_accountsMap.keySet().toArray(new String[m_accountsMap.keySet().size()]);
+	}
+	
+	public Category getCategory()
+	{
+		if (m_useNewCategory)
+		{
+			return m_newCategory;
+		}
+		
+		if (m_cachedCategory != null 
+			&& m_cachedCategory.getId() == m_transaction.getId())
+		{
+			return m_cachedCategory;
+		}
+		
+		//cache is invalid, so fetch from collection
+		Category category = null;
+		for(Category testCategory : getAllCategories())
+		{
+			if (testCategory.getId() == m_transaction.getCategory())
+			{
+				category = testCategory;
+				break;
+			}
+		}
+		
+		m_cachedCategory = category;
+		return m_cachedCategory;
+	}
+
+    public void setCategory(Category category) {
+		
+		if (m_transaction.getCategory() != category.getId())
+		{
+        	m_transaction.setCategory(category.getId());
+        	m_cachedCategory = category;
+        	notifyObservers(this);
+		}
+    }
+
+    public void setCategory(String categoryName) {
+        Category category = m_categoriesMap.get(categoryName);
+        setCategory(category);
+    }
+
+    public boolean getUseNewCategory() {
+        return m_useNewCategory;
+    }
+
+    public void setUseNewCategory(boolean useNewCategory) {
+        this.m_useNewCategory = useNewCategory;
+    }
+
+    public boolean isIncomeType() {
+        return m_isIncomeType;
+    }
+
+    public void setIncomeType(boolean incomeType) {
+        this.m_isIncomeType = incomeType;
+    }
+
+    public void setIsTransfer(boolean isTransfer) {
+        m_transaction.setTransfer(isTransfer);
+        m_transaction.setDontReport(isTransfer);
+        notifyObservers(this);
+    }
+
+    public boolean isReceivingParty() {
+        return m_transaction.isReceivingParty();
+    }
+
+    public void setTransferAccount(Account account)
+    {
+        m_relatedTransaction.setAccount(account.getId());
+        notifyObservers(this);
+    }
+
+    public Account getTransferAccount(Context context)
+    {
+        if (m_relatedTransaction.getAccount() != -1)
+        {
+            return m_relatedTransaction.getAccount(context);
+        }
+
+        return null;
+    }
+
+    public Transaction getRelatedTransferTransaction(AddTransactionActivity addTransactionActivity) {
+        //todo
+        return null;
+    }
+	
+	
+	/* Methods */
+
+	private boolean shouldReverseValue()
+	{
+		if (!getIsTransfer() && !m_isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	public ArrayList<String> getValidCategoryNames()
 	{
         ArrayList<String> categoryNames = new ArrayList<String>();
-        for(Map.Entry<String, Category> entry : categoriesMap.entrySet())
+        for(Map.Entry<String, Category> entry : m_categoriesMap.entrySet())
         {
-            if (entry.getValue().isIncome() == isIncomeType)
+            if (entry.getValue().isIncome() == m_isIncomeType)
             {
                 categoryNames.add(entry.getKey());
             }
@@ -198,7 +293,7 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
         ArrayList<Category> categories = new ArrayList<Category>();
         for(String categoryName : getValidCategoryNames())
         {
-            categories.add(categoriesMap.get(categoryName));
+            categories.add(m_categoriesMap.get(categoryName));
         }
 
         return categories;
@@ -206,17 +301,17 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 
     public Category[] getAllCategories()
     {
-        return categoriesMap.values().toArray(new Category[categoriesMap.values().size()]);
+        return m_categoriesMap.values().toArray(new Category[m_categoriesMap.values().size()]);
     }
 
     public String[] getAllCategoryNames()
     {
-        return categoriesMap.keySet().toArray(new String[categoriesMap.keySet().size()]);
+        return m_categoriesMap.keySet().toArray(new String[m_categoriesMap.keySet().size()]);
     }
 
     private String getCategoryName(Category category)
     {
-    	for(Map.Entry<String, Category> entry : categoriesMap.entrySet())
+    	for(Map.Entry<String, Category> entry : m_categoriesMap.entrySet())
         {
             if (entry.getValue().getId() == category.getId())
             {
@@ -226,73 +321,30 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 
         throw new RuntimeException("Category not found.");
     }
-	
-	public Category getCategory()
-	{
-		if (useNewCategory)
-		{
-			return newCategory;
-		}
-		
-		if (cachedCategory != null 
-			&& cachedCategory.getId() == transaction.id)
-		{
-			return cachedCategory;
-		}
-		
-		//cache is invalid, so fetch from collection
-		Category category = null;
-		for(Category testCategory : getAllCategories())
-		{
-			if (testCategory.getId() == transaction.category)
-			{
-				category = testCategory;
-				break;
-			}
-		}
-		
-		cachedCategory = category;
-		return cachedCategory;
-	}
-
-    public void setCategory(Category category) {
-		
-		if (transaction.category != category.getId())
-		{
-        	transaction.category = category.getId();
-        	cachedCategory = category;
-        	notifyObservers(this);
-		}
-    }
-
-    public void setCategory(String categoryName) {
-        Category category = categoriesMap.get(categoryName);
-        setCategory(category);
-    }
 
     public String validate()
     {
-    	if (String.valueOf(transaction.value).trim().equals(""))
+    	if (String.valueOf(m_transaction.getValue()).trim().equals(""))
     	{
     		return "Please enter a value.";
     	}
 
-    	if (transaction.description.trim().equals(""))
+    	if (m_transaction.getDescription().trim().equals(""))
     	{
     		return "Please enter a description.";
     	}
 
-    	if (useNewCategory)
+    	if (m_useNewCategory)
     	{
-    		if (newCategory.getName().trim() == "")
+    		if (m_newCategory.getName().trim() == "")
     		{
 	   			return "Please enter a name for the new category.";
     		}
 
     		for(Category currentCategory : getAllCategories())
         	{
-        		if (newCategory.getName().trim().equals(currentCategory.getName().trim())
-					&& currentCategory.isIncome() == newCategory.isIncome())
+        		if (m_newCategory.getName().trim().equals(currentCategory.getName().trim())
+					&& currentCategory.isIncome() == m_newCategory.isIncome())
             	{
             		return "A category with this name already exists.";
             	}
@@ -304,88 +356,42 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 	
 	public void commit(Context context)
 	{
-    	if (useNewCategory)
+    	if (m_useNewCategory)
     	{
         	Random rnd = new Random(System.currentTimeMillis());
-        	newCategory.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
-			DatabaseManager.getInstance(context).AddCategory(newCategory);
+        	m_newCategory.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
+			DatabaseManager.getInstance(context).AddCategory(m_newCategory);
       
-			transaction.category = newCategory.getId();
+			m_transaction.setCategory(m_newCategory.getId());
 		}
 
-		if (!transaction.isTransfer)
+		if (!m_transaction.isTransfer())
 		{
-    		if (newTransaction)
-    			DatabaseManager.getInstance(context).InsertTransaction(transaction);
+    		if (m_newTransaction)
+    			DatabaseManager.getInstance(context).InsertTransaction(m_transaction);
     		else
-    			DatabaseManager.getInstance(context).UpdateTransaction(transaction);
+    			DatabaseManager.getInstance(context).UpdateTransaction(m_transaction);
     	}
     	else
     	{
             if (isNewTransaction())
             {
-                DatabaseManager.getInstance(context).InsertTransaction(transaction);
-                DatabaseManager.getInstance(context).InsertTransaction(relatedTransaction);
-                transaction.transferToTransaction = relatedTransaction.id;
-                relatedTransaction.transferFromTransaction = transaction.id;
-                DatabaseManager.getInstance(context).UpdateTransaction(transaction);
-                DatabaseManager.getInstance(context).UpdateTransaction(relatedTransaction);
+                DatabaseManager.getInstance(context).InsertTransaction(m_transaction);
+                DatabaseManager.getInstance(context).InsertTransaction(m_relatedTransaction);
+                m_transaction.setTransferToTransaction(m_relatedTransaction.getId());
+                m_relatedTransaction.setTransferFromTransaction(m_transaction.getId());
+                DatabaseManager.getInstance(context).UpdateTransaction(m_transaction);
+                DatabaseManager.getInstance(context).UpdateTransaction(m_relatedTransaction);
             }
             else
             {
-                DatabaseManager.getInstance(context).UpdateTransaction(transaction);
-                DatabaseManager.getInstance(context).UpdateTransaction(relatedTransaction);
+                DatabaseManager.getInstance(context).UpdateTransaction(m_transaction);
+                DatabaseManager.getInstance(context).UpdateTransaction(m_relatedTransaction);
             }
 		}
 	}
-
-    public boolean getUseNewCategory() {
-        return useNewCategory;
-    }
-
-    public void setUseNewCategory(boolean useNewCategory) {
-        this.useNewCategory = useNewCategory;
-    }
-
-    public boolean isIncomeType() {
-        return isIncomeType;
-    }
-
-    public void setIncomeType(boolean incomeType) {
-        this.isIncomeType = incomeType;
-    }
-
-    public void setIsTransfer(boolean isTransfer) {
-        transaction.isTransfer = isTransfer;
-        transaction.dontReport = isTransfer;
-        notifyObservers(this);
-    }
-
-    public boolean isReceivingParty() {
-        return transaction.isReceivingParty();
-    }
-
-    public void setTransferAccount(Account account)
-    {
-        relatedTransaction.account = account.getId();
-        notifyObservers(this);
-    }
-
-    public Account getTransferAccount(Context context)
-    {
-        if (relatedTransaction.account != -1)
-        {
-            return relatedTransaction.getAccount(context);
-        }
-
-        return null;
-    }
-
-    public Transaction getRelatedTransferTransaction(AddTransactionActivity addTransactionActivity) {
-        //todo
-        return null;
-    }
-
+	
+	
     /* Implementation of Parcelable */
 
     public static final Parcelable.Creator<AddTransactionModel> CREATOR = new Parcelable.Creator<AddTransactionModel>() {
@@ -399,15 +405,15 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
     };
 
     private AddTransactionModel(Parcel in) {
-        transaction = in.readParcelable(Transaction.class.getClassLoader());
-        newTransaction = in.readInt() == 1;
-        accountsMap = (HashMap<String, Account>)in.readSerializable();
-        categoriesMap = (HashMap<String, Category>)in.readSerializable();
-        cachedCategory = in.readParcelable(Category.class.getClassLoader());
-        relatedTransaction = in.readParcelable(Transaction.class.getClassLoader());
-        useNewCategory = in.readInt() == 1;
-        newCategory = in.readParcelable(Category.class.getClassLoader());
-        isIncomeType = in.readInt() == 1;
+        m_transaction = in.readParcelable(Transaction.class.getClassLoader());
+        m_newTransaction = in.readInt() == 1;
+        m_accountsMap = (HashMap<String, Account>)in.readSerializable();
+        m_categoriesMap = (HashMap<String, Category>)in.readSerializable();
+        m_cachedCategory = in.readParcelable(Category.class.getClassLoader());
+        m_relatedTransaction = in.readParcelable(Transaction.class.getClassLoader());
+        m_useNewCategory = in.readInt() == 1;
+        m_newCategory = in.readParcelable(Category.class.getClassLoader());
+        m_isIncomeType = in.readInt() == 1;
     }
 
     @Override
@@ -417,15 +423,15 @@ public class AddTransactionModel extends SimpleObservable implements Parcelable
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(transaction, flags);
-        parcel.writeInt(newTransaction ? 1 : 0);
-        parcel.writeSerializable((Serializable)accountsMap);
-        parcel.writeSerializable((Serializable)categoriesMap);
-        parcel.writeParcelable(cachedCategory, flags);
-        parcel.writeParcelable(relatedTransaction, flags);
-        parcel.writeInt(useNewCategory ? 1 : 0);
-        parcel.writeParcelable(newCategory, flags);
-        parcel.writeInt(isIncomeType ? 1 : 0);
+        parcel.writeParcelable(m_transaction, flags);
+        parcel.writeInt(m_newTransaction ? 1 : 0);
+        parcel.writeSerializable((Serializable)m_accountsMap);
+        parcel.writeSerializable((Serializable)m_categoriesMap);
+        parcel.writeParcelable(m_cachedCategory, flags);
+        parcel.writeParcelable(m_relatedTransaction, flags);
+        parcel.writeInt(m_useNewCategory ? 1 : 0);
+        parcel.writeParcelable(m_newCategory, flags);
+        parcel.writeInt(m_isIncomeType ? 1 : 0);
     }
 
     /* End Implementation of Parcelable */

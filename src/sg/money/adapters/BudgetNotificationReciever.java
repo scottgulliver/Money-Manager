@@ -14,14 +14,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-
 import sg.money.DatabaseManager;
 import sg.money.R;
 import sg.money.domainobjects.Budget;
 import sg.money.fragments.BudgetsFragment;
 
 public class BudgetNotificationReciever extends BroadcastReceiver {
+	
 	private static final int DAILY_NOTIFICATION   = 843254;
+	
+	
+	/* Static methods */
 	
 	public static void setUpEvents(Context context, boolean deleteExisting)
 	{
@@ -153,7 +156,7 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
 		NotificationManager mNotificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-		int mId = 0; // mId allows you to update the notification later on.
+		int mId = 0;
 		mNotificationManager.notify(mId, mBuilder.build());
 	}
 }

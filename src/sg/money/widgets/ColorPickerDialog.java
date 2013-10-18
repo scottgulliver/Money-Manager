@@ -12,121 +12,124 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
 import sg.money.utils.Misc;
 
 public class ColorPickerDialog extends Dialog {
+
 	public interface OnColorChangedListener {
 		void colorChanged(int color);
 	}
 
-	private OnColorChangedListener mListener;
-	private int mInitialColor;
+	private OnColorChangedListener m_listener;
+	private int m_initialColor;
 
 	private static class ColorPickerView extends View {
-		private Paint mPaint;
-		private Paint mPaintBlackWhite;
-		private Paint oldPaint;
-		private Paint newPaint;
-		private Paint highlightPaint;
-		private final int[] mColors;
-		private final int[] mColorsBlackWhite;
-		private OnColorChangedListener mListener;
-		private Rect gradientRect;
-		private Rect oldRect;
-		private Rect newRect;
+		
+		private Paint m_paint;
+		private Paint m_paintBlackWhite;
+		private Paint m_oldPaint;
+		private Paint m_newPaint;
+		private Paint m_highlightPaint;
+		private final int[] m_colors;
+		private final int[] m_colorsBlackWhite;
+		private OnColorChangedListener m_listener;
+		private Rect m_gradientRect;
+		private Rect m_oldRect;
+		private Rect m_newRect;
+		private boolean m_onOld, m_onNew, m_onSelector;
+		private boolean m_highlightOld, m_highlightNew;
+		
+		
+		/* Constructor */
 
 		ColorPickerView(Context c, OnColorChangedListener l, int color) {
 			super(c);
-			mListener = l;
-			mColors = new int[] { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF,
+			m_listener = l;
+			m_colors = new int[] { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF,
 					0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000 };
 
-			mColorsBlackWhite = new int[] { 0xFF000000, 0x00AAAAAA, 0xFFFFFFFF };
+			m_colorsBlackWhite = new int[] { 0xFF000000, 0x00AAAAAA, 0xFFFFFFFF };
 
-			Shader s = new LinearGradient(0, 0, 0, 0, mColors, null,
-					Shader.TileMode.CLAMP);
+			Shader s = new LinearGradient(0, 0, 0, 0, m_colors, null, Shader.TileMode.CLAMP);
+			Shader sBlackWhite = new LinearGradient(0, 0, 0, 0, m_colorsBlackWhite, null, Shader.TileMode.CLAMP);
 
-			Shader sBlackWhite = new LinearGradient(0, 0, 0, 0, mColorsBlackWhite, null,
-					Shader.TileMode.CLAMP);
+			m_paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			m_paint.setShader(s);
+			m_paint.setStyle(Paint.Style.FILL);
 
-			mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			mPaint.setShader(s);
-			mPaint.setStyle(Paint.Style.FILL);
+			m_paintBlackWhite = new Paint(Paint.ANTI_ALIAS_FLAG);
+			m_paintBlackWhite.setShader(sBlackWhite);
+			m_paintBlackWhite.setStyle(Paint.Style.FILL);
 
-			mPaintBlackWhite = new Paint(Paint.ANTI_ALIAS_FLAG);
-			mPaintBlackWhite.setShader(sBlackWhite);
-			mPaintBlackWhite.setStyle(Paint.Style.FILL);
+			m_oldPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			m_oldPaint.setColor(color);
+			m_oldPaint.setStyle(Paint.Style.FILL);
 
-			oldPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			oldPaint.setColor(color);
-			oldPaint.setStyle(Paint.Style.FILL);
+			m_newPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			m_newPaint.setColor(color);
+			m_newPaint.setStyle(Paint.Style.FILL);
 
-			newPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			newPaint.setColor(color);
-			newPaint.setStyle(Paint.Style.FILL);
-
-			highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			highlightPaint.setColor(Color.WHITE);
-			highlightPaint.setStyle(Paint.Style.STROKE);
-			highlightPaint.setStrokeWidth(5);
+			m_highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			m_highlightPaint.setColor(Color.WHITE);
+			m_highlightPaint.setStyle(Paint.Style.STROKE);
+			m_highlightPaint.setStrokeWidth(5);
 		}
 
-		private boolean m_onOld, m_onNew, m_onSelector;
-		private boolean m_highlightOld, m_highlightNew;
+		
+		/* Methods */
 
 		@Override
 		protected void onDraw(Canvas canvas) {
 
-			canvas.drawRect(gradientRect, mPaint);
-			canvas.drawRect(gradientRect, mPaintBlackWhite);
+			canvas.drawRect(m_gradientRect, m_paint);
+			canvas.drawRect(m_gradientRect, m_paintBlackWhite);
 
-			canvas.drawRect(oldRect, oldPaint);
-			canvas.drawRect(newRect, newPaint);
+			canvas.drawRect(m_oldRect, m_oldPaint);
+			canvas.drawRect(m_newRect, m_newPaint);
 
 			if (m_highlightOld)
-				canvas.drawRect(oldRect, highlightPaint);
+			{
+				canvas.drawRect(m_oldRect, m_highlightPaint);
+			}
 			if (m_highlightNew)
-				canvas.drawRect(newRect, highlightPaint);
+			{
+				canvas.drawRect(m_newRect, m_highlightPaint);
+			}
 		}
 
 		@Override
 		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 			w = this.getWidth();
-			int fiveDP = (int) Misc
-					.dipsToPixels(getContext().getResources(), 5);
-			int tenDP = (int) Misc
-					.dipsToPixels(getContext().getResources(), 10);
-			int fiftyDP = (int) Misc.dipsToPixels(getContext().getResources(),
-					50);
-			gradientRect = new Rect(tenDP, tenDP, w - tenDP, h - fiftyDP
-					- tenDP);
+			int fiveDP = (int) Misc.dipsToPixels(getContext().getResources(), 5);
+			int tenDP = (int) Misc.dipsToPixels(getContext().getResources(), 10);
+			int fiftyDP = (int) Misc.dipsToPixels(getContext().getResources(), 50);
+			m_gradientRect = new Rect(tenDP, tenDP, w - tenDP, h - fiftyDP - tenDP);
 
-			oldRect = new Rect(tenDP, h - fiftyDP, (gradientRect.width() / 2)
-					+ fiveDP, h - tenDP);
-			newRect = new Rect(oldRect.right + tenDP, h - fiftyDP,
-					gradientRect.right, h - tenDP);
+			m_oldRect = new Rect(tenDP, h - fiftyDP, (m_gradientRect.width() / 2) + fiveDP, h - tenDP);
+			m_newRect = new Rect(m_oldRect.right + tenDP, h - fiftyDP, m_gradientRect.right, h - tenDP);
 
-			Shader s = new LinearGradient(gradientRect.left, gradientRect.top,
-					gradientRect.right, gradientRect.top, mColors, null,
+			Shader s = new LinearGradient(m_gradientRect.left, m_gradientRect.top,
+					m_gradientRect.right, m_gradientRect.top, m_colors, null,
 					Shader.TileMode.CLAMP);
-			mPaint.setShader(s);
+			m_paint.setShader(s);
 
-			Shader sBlackWhite = new LinearGradient(gradientRect.left, gradientRect.top,
-					gradientRect.left, gradientRect.bottom, mColorsBlackWhite, null,
+			Shader sBlackWhite = new LinearGradient(m_gradientRect.left, m_gradientRect.top,
+					m_gradientRect.left, m_gradientRect.bottom, m_colorsBlackWhite, null,
 					Shader.TileMode.CLAMP);
-			mPaintBlackWhite.setShader(sBlackWhite);
+			m_paintBlackWhite.setShader(sBlackWhite);
 		};
 
 		private static int ave(int s, int d, float p) {
-			return s + java.lang.Math.round(p * (d - s));
+			return s + Math.round(p * (d - s));
 		}
 
 		private static int interpColor(int colors[], float unit) {
-			if (unit <= 0) {
+			if (unit <= 0)
+			{
 				return colors[0];
 			}
-			if (unit >= 1) {
+			if (unit >= 1)
+			{
 				return colors[colors.length - 1];
 			}
 
@@ -134,7 +137,7 @@ public class ColorPickerDialog extends Dialog {
 			int i = (int) p;
 			p -= i;
 
-			// now p is just the fractional part [0...1) and i is the index
+			// p is just the fractional part [0...1) and i is the index
 			int c0 = colors[i];
 			int c1 = colors[i + 1];
 			int a = ave(Color.alpha(c0), Color.alpha(c1), p);
@@ -149,9 +152,9 @@ public class ColorPickerDialog extends Dialog {
 		public boolean onTouchEvent(MotionEvent event) {
 			float x = event.getX();
 			float y = event.getY();
-			boolean onSelector = gradientRect.contains((int) x, (int) y);
-			boolean onOld = oldRect.contains((int) x, (int) y);
-			boolean onNew = newRect.contains((int) x, (int) y);
+			boolean onSelector = m_gradientRect.contains((int) x, (int) y);
+			boolean onOld = m_oldRect.contains((int) x, (int) y);
+			boolean onNew = m_newRect.contains((int) x, (int) y);
 
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
@@ -169,6 +172,7 @@ public class ColorPickerDialog extends Dialog {
 					invalidate();
 					break;
 				}
+				break;
 			case MotionEvent.ACTION_MOVE:
 				if (m_onOld) {
 					if (m_highlightOld != onOld) {
@@ -181,13 +185,13 @@ public class ColorPickerDialog extends Dialog {
 						invalidate();
 					}
 				} else if (m_onSelector && onSelector) {
-					x -= gradientRect.left;
-					x = (x / (float) gradientRect.width());
-					y -= gradientRect.top;
-					y = (y / (float) gradientRect.height());
-					int new1 = interpColor(mColors, x);
+					x -= m_gradientRect.left;
+					x = (x / (float) m_gradientRect.width());
+					y -= m_gradientRect.top;
+					y = (y / (float) m_gradientRect.height());
+					int new1 = interpColor(m_colors, x);
 					int addColor = (int)((510f * y) - 255f);
-					newPaint.setColor(Color.argb(
+					m_newPaint.setColor(Color.argb(
 							255,
 							clamp(Color.red(new1) + addColor, 0, 255),
 							clamp(Color.green(new1) + addColor, 0, 255),
@@ -198,11 +202,11 @@ public class ColorPickerDialog extends Dialog {
 			case MotionEvent.ACTION_UP:
 				if (m_onNew) {
 					if (onNew) {
-						mListener.colorChanged(newPaint.getColor());
+						m_listener.colorChanged(m_newPaint.getColor());
 					}
 				} else if (m_onOld) {
 					if (onOld) {
-						mListener.colorChanged(oldPaint.getColor());
+						m_listener.colorChanged(m_oldPaint.getColor());
 					}
 				}
 
@@ -221,18 +225,21 @@ public class ColorPickerDialog extends Dialog {
 	private static int clamp(int source, int min, int max)
 	{
 		if (source < min)
+		{
 			return min;
+		}
 		if (source > max)
+		{
 			return max;
+		}
 		return source;
 	}
 
-	public ColorPickerDialog(Context context, OnColorChangedListener listener,
-			int initialColor) {
+	public ColorPickerDialog(Context context, OnColorChangedListener listener, int initialColor) {
 		super(context);
 
-		mListener = listener;
-		mInitialColor = initialColor;
+		m_listener = listener;
+		m_initialColor = initialColor;
 	}
 
 	@Override
@@ -240,13 +247,12 @@ public class ColorPickerDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		OnColorChangedListener l = new OnColorChangedListener() {
 			public void colorChanged(int color) {
-				mListener.colorChanged(color);
+				m_listener.colorChanged(color);
 				dismiss();
 			}
 		};
 
-		ColorPickerView colorPicker = new ColorPickerView(getContext(), l,
-				mInitialColor);
+		ColorPickerView colorPicker = new ColorPickerView(getContext(), l, m_initialColor);
 		setContentView(colorPicker);
 		LayoutParams params = colorPicker.getLayoutParams();
 		params.width = LayoutParams.MATCH_PARENT;

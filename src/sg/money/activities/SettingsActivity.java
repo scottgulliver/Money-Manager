@@ -1,7 +1,6 @@
 package sg.money.activities;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -11,21 +10,21 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.*;
-
 import sg.money.DatabaseManager;
 import sg.money.utils.DialogButtons;
 import sg.money.utils.Misc;
 import sg.money.R;
 import sg.money.domainobjects.Transaction;
 
-public class SettingsActivity extends SherlockPreferenceActivity 
-{
-	CheckBoxPreference usePinProtectionPreference;
-	CheckBoxPreference useReconcilePreference;
-	EditTextPreference pinNumberPreference;
-	Preference enablePinPref;
-	Preference changePinPref;
-	Preference disablePinPref;
+public class SettingsActivity extends SherlockPreferenceActivity {
+
+	private CheckBoxPreference m_useReconcilePreference;
+	private Preference m_enablePinPref;
+	private Preference m_changePinPref;
+	private Preference m_disablePinPref;
+	
+	
+	/* Activity overrides */
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -35,15 +34,14 @@ public class SettingsActivity extends SherlockPreferenceActivity
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 
-		// check deprecation?
-		enablePinPref = findPreference(resString(R.string.pref_enablepin_key));
-		changePinPref = findPreference(resString(R.string.pref_changepin_key));
-		disablePinPref = findPreference(resString(R.string.pref_disablepin_key));
-		useReconcilePreference = (CheckBoxPreference)findPreference(resString(R.string.pref_usereconcile_key));
+		m_enablePinPref = findPreference(resString(R.string.pref_enablepin_key));
+		m_changePinPref = findPreference(resString(R.string.pref_changepin_key));
+		m_disablePinPref = findPreference(resString(R.string.pref_disablepin_key));
+		m_useReconcilePreference = (CheckBoxPreference)findPreference(resString(R.string.pref_usereconcile_key));
 
 		conditionPreferences();
 
-		enablePinPref
+		m_enablePinPref
 				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						Intent intent = new Intent(SettingsActivity.this, PinEntryActivity.class);
@@ -54,7 +52,7 @@ public class SettingsActivity extends SherlockPreferenceActivity
 					}
 				});
 
-		changePinPref
+		m_changePinPref
 				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						Intent intent = new Intent(SettingsActivity.this,
@@ -66,7 +64,7 @@ public class SettingsActivity extends SherlockPreferenceActivity
 					}
 				});
 
-		disablePinPref
+		m_disablePinPref
 				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						Intent intent = new Intent(SettingsActivity.this,
@@ -78,7 +76,7 @@ public class SettingsActivity extends SherlockPreferenceActivity
 					}
 				});
 				
-		useReconcilePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+		m_useReconcilePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 			{
 
 				public boolean onPreferenceChange(Preference p1, Object p2)
@@ -99,11 +97,14 @@ public class SettingsActivity extends SherlockPreferenceActivity
 			conditionPreferences();
 		}
 	}
+	
+	
+	/* Methods */
 
 	private void conditionPreferences() {
-		enablePinPref.setEnabled(!PinEntryActivity.PinIsSet(SettingsActivity.this));
-		changePinPref.setEnabled(PinEntryActivity.PinIsSet(SettingsActivity.this));
-		disablePinPref.setEnabled(PinEntryActivity.PinIsSet(SettingsActivity.this));
+		m_enablePinPref.setEnabled(!PinEntryActivity.PinIsSet(SettingsActivity.this));
+		m_changePinPref.setEnabled(PinEntryActivity.PinIsSet(SettingsActivity.this));
+		m_disablePinPref.setEnabled(PinEntryActivity.PinIsSet(SettingsActivity.this));
 	}
 
 	private String resString(int resId) {

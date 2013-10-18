@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import sg.money.controllers.AddBudgetController;
 import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
@@ -30,17 +29,19 @@ import sg.money.R;
 import sg.money.controllers.*;
 import android.view.View.*;
 
-public class AddCategoryActivity extends BaseActivity implements ColorPickerDialog.OnColorChangedListener, OnChangeListener<AddCategoryModel>
-{
-    private final String SIS_KEY_MODEL = "Model";
+public class AddCategoryActivity extends BaseActivity implements ColorPickerDialog.OnColorChangedListener, OnChangeListener<AddCategoryModel> {
+    
+	private final String SIS_KEY_MODEL = "Model";
 
-	EditText txtName;
-	Spinner spnType;
-	Spinner spnParent;
-	ImageView imgColor;
-
-    AddCategoryModel model;
-	AddCategoryController controller;
+	private EditText m_txtName;
+	private Spinner m_spnType;
+	private Spinner m_spnParent;
+	private ImageView m_imgColor;
+    private AddCategoryModel m_model;
+	private AddCategoryController m_controller;
+	
+	
+	/* Activity overrides */
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -50,10 +51,10 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 
     	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
           
-        txtName = (EditText)findViewById(R.id.txtName);
-        spnType = (Spinner)findViewById(R.id.spnType1);
-        imgColor = (ImageView)findViewById(R.id.imgColor);
-        spnParent = (Spinner)findViewById(R.id.spnParent);
+        m_txtName = (EditText)findViewById(R.id.txtName);
+        m_spnType = (Spinner)findViewById(R.id.spnType1);
+        m_imgColor = (ImageView)findViewById(R.id.imgColor);
+        m_spnParent = (Spinner)findViewById(R.id.spnParent);
 
 
         ArrayList<String> options = new ArrayList<String>();
@@ -63,11 +64,11 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_dropdown_item, options);
 
-        spnType.setAdapter(arrayAdapter);
+        m_spnType.setAdapter(arrayAdapter);
 
         if (savedInstanceState != null)
         {
-            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
+            m_model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
         }
         else
         {
@@ -78,35 +79,35 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
                 editCategory = DatabaseManager.getInstance(AddCategoryActivity.this).GetCategory(editId);
             }
 
-            model = new AddCategoryModel(editCategory, this);
+            m_model = new AddCategoryModel(editCategory, this);
         }
 
-        model.addListener(this);
-		controller = new AddCategoryController(this, model);
+        m_model.addListener(this);
+		m_controller = new AddCategoryController(this, m_model);
 
-        setTitle(model.isNewCategory() ? "Add Category" : "Edit Category");
+        setTitle(m_model.isNewCategory() ? "Add Category" : "Edit Category");
 
-        imgColor.setOnClickListener(new OnClickListener() { 
+        m_imgColor.setOnClickListener(new OnClickListener() { 
 			public void onClick(View v) { ColorClicked(); } });
 
 
-		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
+		m_txtName.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
                     {
-						controller.onCategoryNameChange(txtName.getText().toString());
+						m_controller.onCategoryNameChange(m_txtName.getText().toString());
 					}
 				}			
 			});
     	
-    	spnType.post(new Runnable() {
+    	m_spnType.post(new Runnable() {
 			public void run() {
-				spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
+				m_spnType.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         cancelFocus();
-                        controller.onTypeChange(position == 1);
+                        m_controller.onTypeChange(position == 1);
 					}
 
 					public void onNothingSelected(AdapterView<?> parent) {
@@ -115,12 +116,12 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 			}
 			});
 
-    	spnParent.post(new Runnable() {
+    	m_spnParent.post(new Runnable() {
 				public void run() {
-					spnParent.setOnItemSelectedListener(new OnItemSelectedListener() {
+					m_spnParent.setOnItemSelectedListener(new OnItemSelectedListener() {
 							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 cancelFocus();
-                                controller.onParentChange(position);
+                                m_controller.onParentChange(position);
 							}
 
 							public void onNothingSelected(AdapterView<?> parent) {
@@ -132,11 +133,82 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 		updateUi();
     }
 
-	public void colorChanged(int color)
-	{
-        cancelFocus();
-        controller.colorChanged(color);
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, m_model);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.activity_add_category, menu);
+        return true;
+    }
+
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    return m_controller.onOptionsItemSelected(item);
 	}
+	
+	
+	/* Methods */
+
+    public void updateUi()
+    {
+        m_txtName.setText(m_model.getCategoryName());
+        m_spnType.setSelection(m_model.getIsIncome() ? 1 : 0);
+        m_imgColor.setBackgroundColor(m_model.getCurrentColor());
+
+		//load the valid options for the parent
+
+    	ArrayAdapter<String> parentArrayAdapter = new ArrayAdapter<String>(this,
+																		   android.R.layout.simple_spinner_dropdown_item, 
+																		   m_controller.getParentCategoryOptions());
+    	m_spnParent.setAdapter(parentArrayAdapter);
+
+		//set the parent category selection
+		if (m_model.getParentCategory() != null)
+		{
+			ArrayList<String> parentOptions = m_controller.getParentCategoryOptions();
+            boolean selectedParent = false;
+			for(int i = 0; i < parentOptions.size(); i++)
+			{
+				if (parentOptions.get(i).equals(m_model.getParentCategory().getName()))
+				{
+					m_spnParent.setSelection(i);
+                    selectedParent = true;
+					break;
+				}
+			}
+            if(!selectedParent)
+            {
+                m_spnParent.setSelection(0);
+            }
+		}
+
+		//optionally disable some controls
+		boolean enableControls = !m_model.getIsPermanent();
+		m_txtName.setFocusable(enableControls);
+		m_txtName.setFocusableInTouchMode(enableControls);
+		m_txtName.setClickable(enableControls);
+        m_spnType.setEnabled(enableControls);
+		m_spnParent.setEnabled(enableControls);
+    }
+
+	//TODO move to controller
+    private void ColorClicked()
+    {
+    	//launch the color picker
+    	new ColorPickerDialog(this, this, m_model.getCurrentColor()).show();
+    }
+
+    public void cancelFocus()
+    {
+        m_txtName.clearFocus();
+    }
+	
+	
+	/* Implementation of OnChangeListener */
 
     @Override
     public void onChange(AddCategoryModel model)
@@ -147,82 +219,12 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
             }
         });
     }
+	
+	
+	/* Implementation of ColorPickerDialog.OnColorChangedListener */
 
-    public void updateUi()
-    {
-        txtName.setText(model.getCategoryName());
-        spnType.setSelection(model.getIsIncome() ? 1 : 0);
-        imgColor.setBackgroundColor(model.getCurrentColor());
-		
-		//load the valid options for the parent
-
-    	ArrayAdapter<String> parentArrayAdapter = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_dropdown_item, 
-			controller.getParentCategoryOptions());
-    	spnParent.setAdapter(parentArrayAdapter);
-		
-		//set the parent category selection
-
-		if (model.getParentCategory() != null)
-		{
-			//spnType.setSelection(model.getParentCategory().income ? 1 : 0);
-			ArrayList<String> parentOptions = controller.getParentCategoryOptions();
-            boolean selectedParent = false;
-			for(int i = 0; i < parentOptions.size(); i++)
-			{
-				if (parentOptions.get(i).equals(model.getParentCategory().getName()))
-				{
-					spnParent.setSelection(i);
-                    selectedParent = true;
-					break;
-				}
-			}
-            if(!selectedParent)
-            {
-                spnParent.setSelection(0);
-            }
-		}
-		
-		//optionally disable some controls
-		
-		boolean enableControls = !model.getIsPermanent();
-		txtName.setFocusable(enableControls);
-		txtName.setFocusableInTouchMode(enableControls);
-		txtName.setClickable(enableControls);
-        spnType.setEnabled(enableControls);
-		spnParent.setEnabled(enableControls);
-    }
-    
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-    
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_add_category, menu);
-        return true;
-    }
-    
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    return controller.onOptionsItemSelected(item);
+	public void colorChanged(int color)
+	{
+		m_controller.onColorChange(color);
 	}
-    
-	//TODO move to controller
-    private void ColorClicked()
-    {
-    	//launch the color picker
-    	new ColorPickerDialog(this, this, model.getCurrentColor()).show();
-    }
-
-    public void cancelFocus()
-    {
-        txtName.clearFocus();
-    }
 }

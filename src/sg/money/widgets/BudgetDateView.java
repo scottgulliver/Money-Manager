@@ -9,111 +9,118 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
-
 import sg.money.utils.Misc;
 
-public class BudgetDateView extends View
-{
-	Paint backgroundPaint = new Paint();
-	Paint foregroundPaint = new Paint();
-	Paint foregroundOverPaint = new Paint();
-	Paint textPaint = new Paint();
-	Rect entireRect = new Rect();
-	Rect foregroundRect = new Rect();
-	int fontSize = 30;
+public class BudgetDateView extends View {
+
+	private Paint m_backgroundPaint;
+	private Paint m_foregroundPaint;
+	private Paint m_foregroundOverPaint;
+	private Paint m_textPaint;
+	private Rect m_entireRect;
+	private Rect m_foregroundRect;
+	private double m_budget;
+	private double m_value;
 	
-	private double budget = 30;
-	private double value;
+	private final int FONTSIZE = 30;
+	
+	
+	/* Constructor */
 	
 	public BudgetDateView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
         init();
     }
 	
+	
+	/* Methods */
+	
 	private void init() {
-		backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		backgroundPaint.setStyle(Paint.Style.FILL);
-		backgroundPaint.setColor(Color.argb(255, 171, 202, 217));
+		m_backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		m_backgroundPaint.setStyle(Paint.Style.FILL);
+		m_backgroundPaint.setColor(Color.argb(255, 171, 202, 217));
 		
-		foregroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		foregroundPaint.setStyle(Paint.Style.FILL);
-		foregroundPaint.setColor(Color.argb(255, 87, 183, 87));
+		m_foregroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		m_foregroundPaint.setStyle(Paint.Style.FILL);
+		m_foregroundPaint.setColor(Color.argb(255, 87, 183, 87));
 		
-		foregroundOverPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		foregroundOverPaint.setStyle(Paint.Style.FILL);
-		foregroundOverPaint.setColor(Color.argb(255, 183, 87, 87));
+		m_foregroundOverPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		m_foregroundOverPaint.setStyle(Paint.Style.FILL);
+		m_foregroundOverPaint.setColor(Color.argb(255, 183, 87, 87));
 		
-		textPaint = new Paint();
+		m_textPaint = new Paint();
 		Typeface tf = Typeface.create("Helvetica",Typeface.NORMAL);
-		textPaint.setColor(Color.argb(255, 50, 50, 50));
-		textPaint.setTextSize(fontSize);
-		textPaint.setTypeface(tf);
+		m_textPaint.setColor(Color.argb(255, 50, 50, 50));
+		m_textPaint.setTextSize(FONTSIZE);
+		m_textPaint.setTypeface(tf);
 		
-		entireRect = new Rect();
-		foregroundRect = new Rect();
+		m_entireRect = new Rect();
+		m_foregroundRect = new Rect();
 		
 		if (isInEditMode())
 		{
-			budget = 100;
-			value = 66;
+			m_budget = 100;
+			m_value = 66;
 		}
 	}
 	
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-       float xpad = (float)(getPaddingLeft() + getPaddingRight());
+       float xpad = getPaddingLeft() + getPaddingRight();
        float internalWidth = (float)w - xpad;
        int width = (int)(internalWidth * (getPercentageComplete() * 0.01));
 
-		entireRect = new Rect(getPaddingLeft(), getPaddingTop(), w-getPaddingRight(), h-getPaddingBottom()- fontSize - 1);
-		foregroundRect = new Rect(getPaddingLeft(), getPaddingTop(), getPaddingLeft()+width, h-getPaddingBottom()- fontSize - 1);
+		m_entireRect = new Rect(getPaddingLeft(), getPaddingTop(), w-getPaddingRight(), h-getPaddingBottom()- FONTSIZE - 1);
+		m_foregroundRect = new Rect(getPaddingLeft(), getPaddingTop(), getPaddingLeft()+width, h-getPaddingBottom()- FONTSIZE - 1);
 		if (width > 0)
-			entireRect.left = foregroundRect.right + (int) Misc.dipsToPixels(getResources(), 2);
+		{
+			m_entireRect.left = m_foregroundRect.right + (int) Misc.dipsToPixels(getResources(), 2);
+		}
 	}
 	
 	private double getPercentageComplete()
 	{
-		double percentageConversion = 100.0 / budget;
-		return percentageConversion * value;
+		double percentageConversion = 100.0 / m_budget;
+		return percentageConversion * m_value;
 	}
 	
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-		canvas.drawRect(entireRect, backgroundPaint);
-		canvas.drawRect(foregroundRect, value <= budget ? foregroundPaint : foregroundOverPaint);
+		canvas.drawRect(m_entireRect, m_backgroundPaint);
+		canvas.drawRect(m_foregroundRect, m_value <= m_budget ? m_foregroundPaint : m_foregroundOverPaint);
 		
 		DecimalFormat df = new DecimalFormat("#");
 		String percentageString = df.format(getPercentageComplete()) + "%";
-		float textWidth = textPaint.measureText(percentageString);
+		float textWidth = m_textPaint.measureText(percentageString);
 		
 		float xPos;
-		if (foregroundRect.right > entireRect.right)
+		if (m_foregroundRect.right > m_entireRect.right)
 		{
-			xPos = entireRect.right - Misc.dipsToPixels(getResources(), 2) - textWidth;
+			xPos = m_entireRect.right - Misc.dipsToPixels(getResources(), 2) - textWidth;
 		}
-		else if (textWidth + Misc.dipsToPixels(getResources(), 4) <= foregroundRect.width())
+		else if (textWidth + Misc.dipsToPixels(getResources(), 4) <= m_foregroundRect.width())
 		{ 
-			xPos = foregroundRect.width() - textWidth - Misc.dipsToPixels(getResources(), 2);
+			xPos = m_foregroundRect.width() - textWidth - Misc.dipsToPixels(getResources(), 2);
 		}
 		else
 		{
-			xPos = foregroundRect.width() + Misc.dipsToPixels(getResources(), 4);
+			xPos = m_foregroundRect.width() + Misc.dipsToPixels(getResources(), 4);
 		}
 		
 		Rect bounds = new Rect();
-		textPaint.getTextBounds(percentageString, 0, percentageString.length(), bounds);
-		float yPos = entireRect.top + ((float)entireRect.height() / 2.0f) + ((float)bounds.height() / 2.0f);
-		canvas.drawText(percentageString, xPos, yPos, textPaint);
+		m_textPaint.getTextBounds(percentageString, 0, percentageString.length(), bounds);
+		float yPos = m_entireRect.top + ((float)m_entireRect.height() / 2.0f) + ((float)bounds.height() / 2.0f);
+		canvas.drawText(percentageString, xPos, yPos, m_textPaint);
 	}
 	
 	public void setBudget(double budget)
 	{
-		this.budget = budget;
+		this.m_budget = budget;
 	}
 	
 	public void setToDate(double value)
 	{
-		this.value = value;
+		this.m_value = value;
 	}
 }

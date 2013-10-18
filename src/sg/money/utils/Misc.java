@@ -19,13 +19,15 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
-
 import sg.money.DatabaseManager;
 import sg.money.R;
 import sg.money.domainobjects.Category;
 
 public class Misc
 {	
+	/**
+	 * Formats a value for display, with currency
+	 */
 	public static String formatValue(Activity activity, double value)
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -54,7 +56,10 @@ public class Misc
 		
 		return formattedValue;
 	}
-
+	
+	/**
+	 * Returns the symbol for a given currency code
+	 */
     public static String getCurrencySymbol(String currencyCode)
     {
         if (currencyCode.equals("AED")) return "د.إ";
@@ -215,9 +220,12 @@ public class Misc
         if (currencyCode.equals("ZMW")) return "ZK";
         if (currencyCode.equals("ZWL")) return "$";
 
-        return null;
+        throw new RuntimeException("Currency code " + currencyCode + " was not found.");
     }
 	
+	/**
+	 * Formats a date to the correct display format
+	 */
 	public static String formatDate(Activity activity, Date date) throws Exception
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -233,12 +241,18 @@ public class Misc
     	
     	return dateFormat.format(date);
 	}
-
+	
+	/**
+	 * Converts a value in Device Independant Pixels (DIPs) into Pixels
+	 */
     public static float dipsToPixels(Resources resources, float dipValue)
     {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, resources.getDisplayMetrics());
     }
 
+	/**
+	 * Shows a confirmation dialog to the user
+	 */
     public static void showConfirmationDialog(Context context, String message, DialogButtons buttons, OnClickListener okClick)
     {
     	showConfirmationDialog(context, message, buttons, okClick, 
@@ -248,7 +262,10 @@ public class Misc
 					}
 				});
     }
-    
+
+	/**
+	 * Shows a confirmation dialog to the user
+	 */
     public static void showConfirmationDialog(Context context, String message, DialogButtons buttons, OnClickListener okClick, OnClickListener cancelClick)
     {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -312,7 +329,7 @@ public class Misc
 		return name;
     }
 
-    public  static class CategoryComparator implements Comparator<Category> {
+    public static class CategoryComparator implements Comparator<Category> {
 	    public int compare(Category o1, Category o2) {
 	        return Double.compare(o1.getId(), o2.getId());
 	    }

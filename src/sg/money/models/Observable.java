@@ -2,10 +2,10 @@ package sg.money.models;
 
 import java.util.ArrayList;
 
-public class SimpleObservable<T> implements EasyObservable<T> {
-
+public class Observable<T> implements IObservable<T>
+{
     private final ArrayList<OnChangeListener<T>> listeners = new ArrayList<OnChangeListener<T>>();
-
+	
 
     public void addListener(OnChangeListener<T> listener) {
         synchronized (listeners) {
@@ -25,5 +25,4 @@ public class SimpleObservable<T> implements EasyObservable<T> {
             }
         }
     }
-
 }

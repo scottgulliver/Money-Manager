@@ -1,10 +1,8 @@
 package sg.money.activities;
 
 import java.util.ArrayList;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import sg.money.domainobjects.Account;
 import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
@@ -37,23 +34,20 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 
     private final String SIS_KEY_MODEL = "Model";
 
-	EditText txtName;
-	EditText txtValue;
-	Button btnCategories;
-	Button btnAccounts;
-	Spinner spnNotifyType;
-
-	// todo change these - just horrible!
-	int viewingDialog = 0;
-	static final int ACCOUNTSLIST = 1;
-	static final int CATEGORIESLIST = 2;
+	private EditText m_txtName;
+	private EditText m_txtValue;
+	private Button m_btnCategories;
+	private Button m_btnAccounts;
+	private Spinner m_spnNotifyType;
+    private AddBudgetModel m_model;
+	private AddBudgetController m_controller;
 
 	// Bundle State Data
 	static final String STATE_SELECTED_ACCOUNTS = "stateSelectedAccounts";
 	static final String STATE_SELECTED_CATEGORIES = "stateSelectedCategories";
 
-    AddBudgetModel model;
-	AddBudgetController controller;
+	
+	/* Activity overrides */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,15 +56,15 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		txtName = (EditText) findViewById(R.id.txtName);
-		txtValue = (EditText) findViewById(R.id.txtValue);
-		btnCategories = (Button) findViewById(R.id.btnCategories);
-		btnAccounts = (Button) findViewById(R.id.btnAccounts);
-		spnNotifyType = (Spinner) findViewById(R.id.spnNotifyType);
+		m_txtName = (EditText) findViewById(R.id.txtName);
+		m_txtValue = (EditText) findViewById(R.id.txtValue);
+		m_btnCategories = (Button) findViewById(R.id.btnCategories);
+		m_btnAccounts = (Button) findViewById(R.id.btnAccounts);
+		m_spnNotifyType = (Spinner) findViewById(R.id.spnNotifyType);
 
         if (savedInstanceState != null)
         {
-            model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
+            m_model = savedInstanceState.getParcelable(SIS_KEY_MODEL);
         }
         else
         {
@@ -81,61 +75,61 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
                 editBudget = DatabaseManager.getInstance(AddBudgetActivity.this).GetBudget(editId);
             }
 
-            model = new AddBudgetModel(editBudget, this);
+            m_model = new AddBudgetModel(editBudget, this);
         }
 
-		model.addListener(this);
-		controller = new AddBudgetController(this, model);
+		m_model.addListener(this);
+		m_controller = new AddBudgetController(this, m_model);
 		
-		setTitle(model.isNewBudget() ? "Add Budget" : "Edit Budget");
+		setTitle(m_model.isNewBudget() ? "Add Budget" : "Edit Budget");
 
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
                                                      android.R.layout.simple_spinner_dropdown_item,
-                                                     controller.getNotificationOptions());
-		spnNotifyType.setAdapter(arrayAdapter);
+                                                     m_controller.getNotificationOptions());
+		m_spnNotifyType.setAdapter(arrayAdapter);
 
-		btnCategories.setOnClickListener(new OnClickListener() {
+		m_btnCategories.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					controller.CategoriesClicked();
+					m_controller.CategoriesClicked();
 				}
 			});
 
-		btnAccounts.setOnClickListener(new OnClickListener() {
+		m_btnAccounts.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					controller.AccountsClicked();
+					m_controller.AccountsClicked();
 				}
 			});
 
-		txtName.setOnFocusChangeListener(new OnFocusChangeListener()
+		m_txtName.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
 					{
-                        controller.onNameChange(txtName.getText().toString());
+                        m_controller.onNameChange(m_txtName.getText().toString());
 					}
 				}			
 			});
 
-		txtValue.setOnFocusChangeListener(new OnFocusChangeListener()
+		m_txtValue.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
 					{
-                        if (Misc.stringNullEmptyOrWhitespace(txtValue.getText().toString()))
-                            txtValue.setText("0");
+                        if (Misc.stringNullEmptyOrWhitespace(m_txtValue.getText().toString()))
+                            m_txtValue.setText("0");
 
-						controller.onValueChange(Double.parseDouble(txtValue.getText().toString()));
+						m_controller.onValueChange(Double.parseDouble(m_txtValue.getText().toString()));
 					}
 				}			
 			});
 			
-		spnNotifyType.setOnItemSelectedListener(new OnItemSelectedListener()
+		m_spnNotifyType.setOnItemSelectedListener(new OnItemSelectedListener()
 			{
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
-				controller.onNotifyTypeSelected(Budget.NotificationType.fromInteger(position));
+				m_controller.onNotifyTypeSelected(Budget.NotificationType.fromInteger(position));
 			}
 
 			public void onNothingSelected(AdapterView<?> parent)
@@ -147,57 +141,15 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
         updateUi();
 	}
 
-    @Override
-    public void onChange(AddBudgetModel model)
-    {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                updateUi();
-            }
-        });
-    }
-	
-	public void updateUi()
-	{
-		txtName.setText(model.getBudgetName());
-		txtValue.setText(String.valueOf(model.getBudgetValue()));
-		spnNotifyType.setSelection(model.getNotifyType().getValue());
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
         cancelFocus();
-        savedInstanceState.putParcelable(SIS_KEY_MODEL, model);
+        savedInstanceState.putParcelable(SIS_KEY_MODEL, m_model);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		/*
-		ArrayList<Integer> selectedAccountIds = savedInstanceState
-				.getIntegerArrayList(STATE_SELECTED_ACCOUNTS);
-		ArrayList<Integer> selectedCategoryIds = savedInstanceState
-				.getIntegerArrayList(STATE_SELECTED_CATEGORIES);
-
-		selectedAccounts.clear();
-		for (int accountId : selectedAccountIds) {
-			for (Account account : currentAccounts) {
-				if (account.id == accountId) {
-					selectedAccounts.add(account);
-					break;
-				}
-			}
-		}
-
-		selectedCategories.clear();
-		for (int categoryId : selectedCategoryIds) {
-			for (Category category : currentCategories) {
-				if (category.id == categoryId) {
-					selectedCategories.add(category);
-					break;
-				}
-			}
-		}*/
 	}
 
 	@Override
@@ -209,12 +161,35 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return controller.onOptionsItemSelected(item);
+		return m_controller.onOptionsItemSelected(item);
+	}
+	
+	
+	/* Methods */
+	
+	public void updateUi()
+	{
+		m_txtName.setText(m_model.getBudgetName());
+		m_txtValue.setText(String.valueOf(m_model.getBudgetValue()));
+		m_spnNotifyType.setSelection(m_model.getNotifyType().getValue());
 	}
 
     public void cancelFocus()
     {
-        txtName.clearFocus();
-        txtValue.clearFocus();
+        m_txtName.clearFocus();
+        m_txtValue.clearFocus();
+    }
+	
+	
+	/* Implementation of OnChangeListener */
+
+    @Override
+    public void onChange(AddBudgetModel model)
+    {
+        runOnUiThread(new Runnable() {
+				public void run() {
+					updateUi();
+				}
+			});
     }
 }

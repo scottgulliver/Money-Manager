@@ -9,132 +9,141 @@ import sg.money.*;
 import sg.money.domainobjects.*;
 import sg.money.utils.*;
 
-public class AddBudgetModel extends SimpleObservable implements Parcelable {
+public class AddBudgetModel extends Observable implements Parcelable {
 
-    private Budget budget;
-    private ArrayList<Account> currentAccounts;
-    private ArrayList<Category> currentCategories;
-    private ArrayList<Budget> currentBudgets;
-    private ArrayList<String> notifyTypeOptions;
-    private boolean newBudget;
+    private Budget m_budget;
+    private ArrayList<Account> m_currentAccounts;
+    private ArrayList<Category> m_currentCategories;
+    private ArrayList<Budget> m_currentBudgets;
+    private ArrayList<String> m_notifyTypeOptions;
+    private boolean m_newBudget;
+	
+	
+	/* Constructor */
 
     public AddBudgetModel(Budget budget, Context context) {
-        this.budget = budget;
-        if (this.budget == null)
+        m_budget = budget;
+        if (m_budget == null)
         {
-            this.budget = new Budget();
-            this.budget.setNotifyType(Budget.NotificationType.None);
-            newBudget = true;
+            m_budget = new Budget();
+            m_budget.setNotifyType(Budget.NotificationType.None);
+            m_newBudget = true;
         }
 
-        currentAccounts = DatabaseManager.getInstance(context).GetAllAccounts();
-        currentBudgets = DatabaseManager.getInstance(context).GetAllBudgets();
-        currentCategories = new ArrayList<Category>();
+        m_currentAccounts = DatabaseManager.getInstance(context).GetAllAccounts();
+        m_currentBudgets = DatabaseManager.getInstance(context).GetAllBudgets();
+        m_currentCategories = new ArrayList<Category>();
 		
 		ArrayList<Category> allCategories = DatabaseManager.getInstance(context)
 			.GetAllCategories();
 		allCategories = Misc.getCategoriesInGroupOrder(allCategories);
 		for (Category category : allCategories) {
 			if (!category.isIncome())
-				currentCategories.add(category);
+				m_currentCategories.add(category);
 		}
 
-		notifyTypeOptions = new ArrayList<String>();
-		notifyTypeOptions.add("None");
-		notifyTypeOptions.add("Daily");
-		notifyTypeOptions.add("Weekly");
-		notifyTypeOptions.add("Monthly");
+		m_notifyTypeOptions = new ArrayList<String>();
+		m_notifyTypeOptions.add("None");
+		m_notifyTypeOptions.add("Daily");
+		m_notifyTypeOptions.add("Weekly");
+		m_notifyTypeOptions.add("Monthly");
     }
+	
+	
+	/* Getters / setters */
 
     public String getBudgetName() {
-        return budget.getName();
+        return m_budget.getName();
     }
 
     public void setBudgetName(String budgetName) {
-        budget.setName(budgetName);
+        m_budget.setName(budgetName);
         notifyObservers(this);
     }
 
     public Double getBudgetValue() {
-        return budget.getValue();
+        return m_budget.getValue();
     }
 
     public void setBudgetValue(Double value) {
-        budget.setValue(value);
+        m_budget.setValue(value);
         notifyObservers(this);
     }
 	
 	public ArrayList<String> getNotifyTypeOptions()
 	{
-		return notifyTypeOptions;
+		return m_notifyTypeOptions;
 	}
 	
 	public ArrayList<Account> getSelectedAccounts()
 	{
-		return budget.getAccounts();
+		return m_budget.getAccounts();
 	}
 	
 	public void setSelectedAccounts(ArrayList<Account> accounts)
 	{
-		budget.setAccounts(accounts);
+		m_budget.setAccounts(accounts);
 		notifyObservers(this);
 	}
 
 	public ArrayList<Category> getSelectedCategories()
 	{
-		return budget.getCategories();
+		return m_budget.getCategories();
 	}
 
 	public void setSelectedCategories(ArrayList<Category> categories)
 	{
-		budget.setCategories(categories);
+		m_budget.setCategories(categories);
 		notifyObservers(this);
 	}
 
 	public ArrayList<Account> getCurrentAccounts()
 	{
-		return currentAccounts;
+		return m_currentAccounts;
 	}
 
 	public ArrayList<Category> getCurrentCategories()
 	{
-		return currentCategories;
+		return m_currentCategories;
 	}
 	
 	public Budget.NotificationType getNotifyType()
 	{
-		return budget.getNotifyType();
+		return m_budget.getNotifyType();
 	}
 	
 	public void setNotifyType(Budget.NotificationType notifyType)
 	{
-        if (budget.getNotifyType() != notifyType)
+        if (m_budget.getNotifyType() != notifyType)
         {
-            budget.setNotifyType(notifyType);
+            m_budget.setNotifyType(notifyType);
             notifyObservers(this);
         }
 	}
 	
     public boolean isNewBudget()
     {
-        return newBudget;
+        return m_newBudget;
     }
+	
+	
+	/* Methods */
 
     public String validate(Context context)
     {
-        if (budget.getName().trim().equals("")) {
+        if (m_budget.getName().trim().equals("")) {
             return "Please enter a name.";
         }
 
-        if (budget.getValue() < 0) {
+        if (m_budget.getValue() < 0) {
             return "Please enter a positive budget value.";
         }
 
-        for (Budget currentBudget : currentBudgets) {
-            if (currentBudget.getId() == budget.getId())
+        for (Budget currentBudget : m_currentBudgets) {
+            if (currentBudget.getId() == m_budget.getId())
                 continue;
 
-            if (budget.getName().trim().equals(currentBudget.getName().trim())) {
+            if (m_budget.getName().trim().equals(currentBudget.getName().trim())) {
                 return "A budget with this name already exists.";
             }
         }
@@ -146,11 +155,11 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
     {
         if (isNewBudget())
         {
-            DatabaseManager.getInstance(context).AddBudget(budget);
+            DatabaseManager.getInstance(context).AddBudget(m_budget);
         }
         else
         {
-            DatabaseManager.getInstance(context).UpdateBudget(budget);
+            DatabaseManager.getInstance(context).UpdateBudget(m_budget);
         }
     }
 
@@ -167,12 +176,12 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
     };
 
     private AddBudgetModel(Parcel in) {
-        budget = in.readParcelable(Budget.class.getClassLoader());
-        currentAccounts = new ArrayList<Account>(Arrays.asList((Account[]) in.readParcelableArray(Account.class.getClassLoader())));
-        currentCategories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
-        currentBudgets = new ArrayList<Budget>(Arrays.asList((Budget[]) in.readParcelableArray(Budget.class.getClassLoader())));
-        notifyTypeOptions = in.createStringArrayList();
-        newBudget = in.readInt() == 1;
+        m_budget = in.readParcelable(Budget.class.getClassLoader());
+        m_currentAccounts = new ArrayList<Account>(Arrays.asList((Account[]) in.readParcelableArray(Account.class.getClassLoader())));
+        m_currentCategories = new ArrayList<Category>(Arrays.asList((Category[]) in.readParcelableArray(Category.class.getClassLoader())));
+        m_currentBudgets = new ArrayList<Budget>(Arrays.asList((Budget[]) in.readParcelableArray(Budget.class.getClassLoader())));
+        m_notifyTypeOptions = in.createStringArrayList();
+        m_newBudget = in.readInt() == 1;
     }
 
     @Override
@@ -182,12 +191,12 @@ public class AddBudgetModel extends SimpleObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(budget, flags);
-        parcel.writeParcelableArray((Parcelable[])currentAccounts.toArray(), flags);
-        parcel.writeParcelableArray((Parcelable[])currentCategories.toArray(), flags);
-        parcel.writeParcelableArray((Parcelable[])currentBudgets.toArray(), flags);
-        parcel.writeStringList(notifyTypeOptions);
-        parcel.writeInt(newBudget ? 1 : 0);
+        parcel.writeParcelable(m_budget, flags);
+        parcel.writeParcelableArray((Parcelable[])m_currentAccounts.toArray(), flags);
+        parcel.writeParcelableArray((Parcelable[])m_currentCategories.toArray(), flags);
+        parcel.writeParcelableArray((Parcelable[])m_currentBudgets.toArray(), flags);
+        parcel.writeStringList(m_notifyTypeOptions);
+        parcel.writeInt(m_newBudget ? 1 : 0);
     }
 
     /* End Implementation of Parcelable */

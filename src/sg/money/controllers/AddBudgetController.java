@@ -15,33 +15,43 @@ import android.view.*;
 
 public class AddBudgetController
 {
+	/**
+	* Different types of dialog may be presented to the user.
+	*/
     private enum DialogType
 	{
 		Accounts,
 		Categories
 	};
 	
-	private AddBudgetActivity view;
-	private AddBudgetModel model;
+	
+	private AddBudgetActivity m_view;
+	private AddBudgetModel m_model;
+	
+	
+	/* Constructor */
 
 	public AddBudgetController(AddBudgetActivity view, AddBudgetModel model)
 	{
-		this.model = model;
-		this.view = view;
+		m_model = model;
+		m_view = view;
 	}
+	
+	
+	/* Methods */
 	
 	public void onNameChange(String name)
 	{
-		model.setBudgetName(name);
+		m_model.setBudgetName(name);
 	}
 
 	public void onValueChange(Double value)
 	{
-		model.setBudgetValue(value);
+		m_model.setBudgetValue(value);
 	}
 
     public void onNotifyTypeSelected(Budget.NotificationType notificationType) {
-        model.setNotifyType(notificationType);
+        m_model.setNotifyType(notificationType);
     }
 
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
@@ -60,10 +70,10 @@ public class AddBudgetController
 				}
 
 			case android.R.id.home:
-				Intent intent = new Intent(view, ParentActivity.class);
+				Intent intent = new Intent(m_view, ParentActivity.class);
 				intent.putExtra(ParentActivity.INTENTEXTRA_CONTENTTYPE, HostActivityFragmentTypes.Budgets);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				view.startActivity(intent);
+				m_view.startActivity(intent);
 				break;
 		}
 		return true;
@@ -75,12 +85,12 @@ public class AddBudgetController
     }
 
 	public void CategoriesClicked() {
-		boolean[] checkedItems = new boolean[model.getCurrentCategories().size() + 1];
-		checkedItems[0] = model.getSelectedCategories().size() == 0;
-		for (int i = 0; i < model.getCurrentCategories().size(); i++) {
+		boolean[] checkedItems = new boolean[m_model.getCurrentCategories().size() + 1];
+		checkedItems[0] = m_model.getSelectedCategories().size() == 0;
+		for (int i = 0; i < m_model.getCurrentCategories().size(); i++) {
 			boolean alreadySelected = false;
-			for (Category selectedCategory : model.getSelectedCategories()) {
-				if (selectedCategory.getId() == model.getCurrentCategories().get(i).getId()) {
+			for (Category selectedCategory : m_model.getSelectedCategories()) {
+				if (selectedCategory.getId() == m_model.getCurrentCategories().get(i).getId()) {
 					alreadySelected = true;
 					break;
 				}
@@ -90,23 +100,23 @@ public class AddBudgetController
 
 		ArrayList<String> items = new ArrayList<String>();
 		items.add("All Categories");
-		for (Category category : model.getCurrentCategories()) {
+		for (Category category : m_model.getCurrentCategories()) {
 			if (!category.isUseInReports())
 				continue;
 
-			items.add(Misc.getCategoryName(category, model.getCurrentCategories()));
+			items.add(Misc.getCategoryName(category, m_model.getCurrentCategories()));
 		}
 
 		createDialog("Categories", items, checkedItems, DialogType.Categories).show();
 	}
 
 	public void AccountsClicked() {
-		boolean[] checkedItems = new boolean[model.getCurrentAccounts().size() + 1];
-		checkedItems[0] = model.getSelectedAccounts().size() == 0;
-		for (int i = 0; i < model.getCurrentAccounts().size(); i++) {
+		boolean[] checkedItems = new boolean[m_model.getCurrentAccounts().size() + 1];
+		checkedItems[0] = m_model.getSelectedAccounts().size() == 0;
+		for (int i = 0; i < m_model.getCurrentAccounts().size(); i++) {
 			boolean alreadySelected = false;
-			for (Account selectedAccount : model.getSelectedAccounts()) {
-				if (selectedAccount.getId() == model.getCurrentAccounts().get(i).getId()) {
+			for (Account selectedAccount : m_model.getSelectedAccounts()) {
+				if (selectedAccount.getId() == m_model.getCurrentAccounts().get(i).getId()) {
 					alreadySelected = true;
 					break;
 				}
@@ -116,7 +126,7 @@ public class AddBudgetController
 
 		ArrayList<String> items = new ArrayList<String>();
 		items.add("All Accounts");
-		for (Account account : model.getCurrentAccounts())
+		for (Account account : m_model.getCurrentAccounts())
 			items.add(account.getName());
 
 		createDialog("Accounts", items, checkedItems, DialogType.Accounts).show();
@@ -125,22 +135,15 @@ public class AddBudgetController
 	private Dialog createDialog(String title, final ArrayList<String> items,
 								final boolean[] checkedItems, final DialogType type) {
 		final ArrayList<Object> mSelectedItems = new ArrayList<Object>(); // Where
-		// we
-		// track
-		// the
-		// selected
-		// items
+		
 		for (int i = 1; i < checkedItems.length; i++) {
 			if (checkedItems[i] == true)
 				mSelectedItems.add(i);
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(view);
+		AlertDialog.Builder builder = new AlertDialog.Builder(m_view);
 		// Set the dialog title
 		builder.setTitle(title)
-			// Specify the list array, the items to be selected by default
-			// (null for none),
-			// and the listener through which to receive callbacks when
-			// items are selected
+			// choices..
 			.setMultiChoiceItems(
 			items.toArray(new CharSequence[items.size()]),
 			checkedItems,
@@ -198,24 +201,24 @@ public class AddBudgetController
 			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					if (type == DialogType.Accounts)
-						model.getSelectedAccounts().clear();
+						m_model.getSelectedAccounts().clear();
 					else if (type == DialogType.Categories)
-						model.getSelectedCategories().clear();
+						m_model.getSelectedCategories().clear();
 
 					for (Object item : mSelectedItems) {
 						if (type == DialogType.Accounts) {
-							for (Account account : model.getCurrentAccounts()) {
+							for (Account account : m_model.getCurrentAccounts()) {
 								if (account.getName().equals(items.get(Integer
 																  .parseInt(String.valueOf(item))))) {
-									model.getSelectedAccounts().add(account);
+									m_model.getSelectedAccounts().add(account);
 									break;
 								}
 							}
 						} else if (type == DialogType.Categories) {
-							for (Category category : model.getCurrentCategories()) {
-								if (Misc.getCategoryName(category, model.getCurrentCategories()).equals(items.get(Integer
+							for (Category category : m_model.getCurrentCategories()) {
+								if (Misc.getCategoryName(category, m_model.getCurrentCategories()).equals(items.get(Integer
 																									   .parseInt(String.valueOf(item))))) {
-									model.getSelectedCategories().add(category);
+									m_model.getSelectedCategories().add(category);
 									break;
 								}
 							}
@@ -237,26 +240,24 @@ public class AddBudgetController
 
 	private void OkClicked() {
 
-        view.cancelFocus();
+        m_view.cancelFocus();
 
-        String validationError = model.validate(view);
+        String validationError = m_model.validate(m_view);
         if (validationError != null)
         {
-            Toast.makeText(view, validationError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(m_view, validationError, Toast.LENGTH_SHORT).show();
         }
         else
         {
-            model.commit(view);
+            m_model.commit(m_view);
 
-            view.setResult(view.RESULT_OK, new Intent());
-            view.finish();
+            m_view.setResult(m_view.RESULT_OK, new Intent());
+            m_view.finish();
         }
-
-		//editBudget.notifyType = spnNotifyType.getSelectedItemPosition();
 	}
 
 	private void CancelClicked() {
-		view.setResult(view.RESULT_CANCELED, new Intent());
-		view.finish();
+		m_view.setResult(m_view.RESULT_CANCELED, new Intent());
+		m_view.finish();
 	}
 }
