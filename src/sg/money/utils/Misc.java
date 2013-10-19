@@ -3,9 +3,6 @@ package sg.money.utils;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,9 +16,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
-import sg.money.DatabaseManager;
 import sg.money.R;
-import sg.money.domainobjects.Category;
 
 public class Misc
 {	
@@ -284,57 +279,7 @@ public class Misc
 	    builder.create().show();
     }
 
-    public static ArrayList<Category> getCategoriesInGroupOrder(ArrayList<Category> categories)
-    {
-    	ArrayList<Category> orderedList = new ArrayList<Category>();
-    	
-    	Collections.sort(categories, new CategoryComparator());
-    	
-    	for(Category category : categories)
-    	{
-    		if (category.getParentCategoryId() == -1)
-    		{
-        		orderedList.add(category);
-    			for(Category subCategory : categories)
-    			{
-    				if (subCategory.getParentCategoryId() == category.getId())
-    					orderedList.add(subCategory);
-    			}
-    		}
-    	}
-    	
-    	return orderedList;
-    }
-
-    public static String getCategoryName(Category category, Context context)
-    {
-    	ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
-    	return getCategoryName(category, categories);
-    }
-
-    public static String getCategoryName(Category category, ArrayList<Category> categories)
-    {
-    	String name = category.getName();
-		if (category.getParentCategoryId() != -1)
-		{
-			for(Category parentCategory : categories)
-			{
-				if (parentCategory.getId() == category.getParentCategoryId())
-				{
-					name = parentCategory.getName() + " >> " + name;
-					break;
-				}
-			}
-		}
-		return name;
-    }
-
-    public static class CategoryComparator implements Comparator<Category> {
-	    public int compare(Category o1, Category o2) {
-	        return Double.compare(o1.getId(), o2.getId());
-	    }
-	}
-
+    /* Returns the value names in an enum */
     public static <T extends Enum<T>> List<String> toStringList(Class<T> clz) {
         try {
             List<String> res = new LinkedList<String>();
@@ -351,8 +296,9 @@ public class Misc
         }
     }
 
+    /* Returns true if a given string is null, is empty, or only contains whitespace */
     public static boolean stringNullEmptyOrWhitespace(final String string)
     {
-        return string == null || string.isEmpty() || string.trim().isEmpty();
+        return string == null || string.trim().equals("");
     }
 }

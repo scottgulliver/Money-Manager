@@ -82,7 +82,7 @@ public class CategoryListAdapter extends BaseAdapter {
     
     private String getCategoryName(Category category)
     {
-    	return Misc.getCategoryName(category, m_activity);
+    	return Category.getCategoryName(category, m_activity);
     }
     
     @SuppressLint("NewApi")

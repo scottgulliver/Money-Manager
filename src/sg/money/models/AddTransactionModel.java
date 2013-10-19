@@ -33,16 +33,32 @@ public class AddTransactionModel extends Observable implements Parcelable
 		m_accountsMap = new HashMap<String, Account>();
 		m_categoriesMap = new HashMap<String, Category>();
 
+        Date now = new Date();
+
         m_relatedTransaction = new Transaction();
         m_relatedTransaction.setDontReport(true);
         m_relatedTransaction.setTransferToTransaction(-1);
+        m_relatedTransaction.setDescription("");
+        m_relatedTransaction.setDateTime(now);
+        m_relatedTransaction.setTransfer(true);
+
+        //find a valid account to transfer to
+        ArrayList<Account> allAccounts = DatabaseManager.getInstance(context).GetAllAccounts();
+        for(Account account : allAccounts)
+        {
+            if (account.getId() != accountID)
+            {
+                m_relatedTransaction.setAccount(account.getId());
+                break;
+            }
+        }
 
         if (m_transaction == null)
         {
             m_transaction = new Transaction();
 			m_transaction.setAccount(accountID);
 			m_transaction.setCategory(defaultCategoryID);
-			m_transaction.setDateTime(new Date());
+			m_transaction.setDateTime(now);
             m_transaction.setTransferFromTransaction(-1);
             m_transaction.setTransferToTransaction(-1);
 			m_transaction.setDescription("");
@@ -65,13 +81,13 @@ public class AddTransactionModel extends Observable implements Parcelable
 
 
         ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
-        categories = Misc.getCategoriesInGroupOrder(categories);
+        categories = Category.getCategoriesInGroupOrder(categories);
         for(Category category : categories)
         {
             m_categoriesMap.put(category.getName(), category);
         }
 
-        if (!m_newTransaction)
+        if (!m_newTransaction && !m_transaction.isTransfer())
         {
             m_isIncomeType = getCategory().isIncome();
         }
@@ -105,6 +121,7 @@ public class AddTransactionModel extends Observable implements Parcelable
 		if (m_transaction.getValue() != value)
 		{
 			m_transaction.setValue(value);
+            m_relatedTransaction.setValue(value * -1.0f);
 			notifyObservers(this);
 		}
 	}
@@ -242,8 +259,11 @@ public class AddTransactionModel extends Observable implements Parcelable
 
     public void setTransferAccount(Account account)
     {
-        m_relatedTransaction.setAccount(account.getId());
-        notifyObservers(this);
+        if (m_relatedTransaction.getAccount() != account.getId())
+        {
+            m_relatedTransaction.setAccount(account.getId());
+            notifyObservers(this);
+        }
     }
 
     public Account getTransferAccount(Context context)
@@ -255,18 +275,13 @@ public class AddTransactionModel extends Observable implements Parcelable
 
         return null;
     }
-
-    public Transaction getRelatedTransferTransaction(AddTransactionActivity addTransactionActivity) {
-        //todo
-        return null;
-    }
 	
 	
 	/* Methods */
 
 	private boolean shouldReverseValue()
 	{
-		if (!getIsTransfer() && !m_isIncomeType || (getIsTransfer() && getIsReceivingParty()))
+		if ((!getIsTransfer() && !m_isIncomeType) || (getIsTransfer() && !getIsReceivingParty()))
 		{
 			return true;
 		}
@@ -288,38 +303,9 @@ public class AddTransactionModel extends Observable implements Parcelable
         return categoryNames;
 	}
 
-    public ArrayList<Category> getValidCategories()
-    {
-        ArrayList<Category> categories = new ArrayList<Category>();
-        for(String categoryName : getValidCategoryNames())
-        {
-            categories.add(m_categoriesMap.get(categoryName));
-        }
-
-        return categories;
-    }
-
     public Category[] getAllCategories()
     {
         return m_categoriesMap.values().toArray(new Category[m_categoriesMap.values().size()]);
-    }
-
-    public String[] getAllCategoryNames()
-    {
-        return m_categoriesMap.keySet().toArray(new String[m_categoriesMap.keySet().size()]);
-    }
-
-    private String getCategoryName(Category category)
-    {
-    	for(Map.Entry<String, Category> entry : m_categoriesMap.entrySet())
-        {
-            if (entry.getValue().getId() == category.getId())
-            {
-                return entry.getKey();
-            }
-        }
-
-        throw new RuntimeException("Category not found.");
     }
 
     public String validate()

@@ -36,7 +36,7 @@ public class AddBudgetModel extends Observable implements Parcelable {
 		
 		ArrayList<Category> allCategories = DatabaseManager.getInstance(context)
 			.GetAllCategories();
-		allCategories = Misc.getCategoriesInGroupOrder(allCategories);
+		allCategories = Category.getCategoriesInGroupOrder(allCategories);
 		for (Category category : allCategories) {
 			if (!category.isIncome())
 				m_currentCategories.add(category);

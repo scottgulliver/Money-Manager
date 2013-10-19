@@ -137,7 +137,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            //int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", -1);
 
             int lastSelectedCategoryId = sharedPref.getInt("lastExpenseCategoryId", -1);
 
@@ -161,6 +160,8 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
                 this,android.R.layout.simple_spinner_dropdown_item, m_controller.getTypeChoices());
 
         m_spnType.setAdapter(arrayAdapter2);
+
+        updateUi();
 
     	m_btnDate.setOnClickListener(new OnClickListener() {
     		 
@@ -194,12 +195,23 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 					}
 			});
 
+        m_spnTransferAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                cancelFocus();
+                m_controller.onTransferAccountChange(position);
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
 		m_txtValue.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
 				public void onFocusChange(View view, boolean hasFocus)
 				{
 					if (!hasFocus)
 					{
+
 						m_controller.onTransactionValueChange(Double.parseDouble(m_txtValue.getText().toString()));
 					}
 				}			
@@ -224,8 +236,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 					m_controller.onHideFromReportsChange(checked);
 				}
 			});
-
-        updateUi();
     }
 
     @Override
@@ -256,7 +266,6 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
 		m_txtValue.setText(String.valueOf(m_model.getValue()));
 
-		//gah! - change this! do this properly.
 		String str = m_txtValue.getText().toString();
 		if (str.contains(".") && str.substring(str.indexOf(".")+1).length() == 1)
 			m_txtValue.setText(str + 0);
@@ -275,12 +284,16 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 		m_spnTransferAccount.setAdapter(arrayAdapter1);
 
     	boolean isTransfer = m_model.getIsTransfer();
-    	m_txtTransferAccount.setVisibility(isTransfer ? View.VISIBLE : View.GONE);
-    	m_spnTransferAccount.setVisibility(isTransfer ? View.VISIBLE : View.GONE);
+        boolean isExistingTransfer = isTransfer && !m_model.isNewTransaction();
+    	m_txtTransferAccount.setVisibility(isTransfer && (!isExistingTransfer || !m_model.isReceivingParty())
+                ? View.VISIBLE : View.GONE);
+    	m_spnTransferAccount.setVisibility(isTransfer && (!isExistingTransfer || !m_model.isReceivingParty())
+                ? View.VISIBLE : View.GONE);
     	m_chkHideFromReports.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
     	m_txtHideFromReports.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
     	m_txtCategory.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
     	m_spnCategory.setVisibility(isTransfer ? View.GONE : View.VISIBLE);
+        m_spnType.setEnabled(!isExistingTransfer);
 
         boolean addNewCategory = m_model.getUseNewCategory();
         m_txtNewCatName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
@@ -293,20 +306,8 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
                 	? m_controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Income.name())
                 	: m_controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Expense.name()));
 
-        //spnType.setEnabled(model.getIsTransfer());
-		
-		if (!isTransfer)
-		{
-			//category stuff
-
-			
-		}
-
 		if (!m_model.getIsTransfer())
 		{
-			//if (!model.getCategory().income)
-			//	model.setValue(model.getValue() * -1.0);
-
             ArrayList<String> categoryNames = m_controller.getCategoryNames();
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
             m_spnCategory.setAdapter(arrayAdapter);
@@ -318,12 +319,10 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 			boolean isTransferFrom = !m_model.isReceivingParty();
 
 			if (isTransferFrom)
-				m_model.setValue(m_model.getValue() * -1.0); //ensure that the value is positive
+				m_model.setValue(m_model.getValue()); //ensure that the value is positive
 
 			m_spnTransferAccount.setEnabled(isTransferFrom);
-
-			int accountPosition = (new ArrayList<String>(Arrays.asList(m_model.getAccountNames()))).indexOf(m_model.getRelatedTransferTransaction(this).getAccount(this).getName());
-			m_spnTransferAccount.setSelection(accountPosition);
+            m_spnTransferAccount.setSelection(Arrays.asList(m_model.getAccountNames()).indexOf(m_model.getTransferAccount(this).getName()));
 		}
     }
     

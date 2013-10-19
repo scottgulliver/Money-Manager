@@ -1,6 +1,6 @@
 package sg.money.controllers;
+
 import sg.money.activities.*;
-import sg.money.domainobjects.Category;
 import sg.money.models.*;
 import com.actionbarsherlock.view.*;
 import sg.money.*;
@@ -12,7 +12,7 @@ import java.util.*;
 
 public class AddTransactionController
 {
-	/**
+    /**
 	* Available options for 'type' of transaction.
 	*/
     public enum TransactionType
@@ -58,33 +58,6 @@ public class AddTransactionController
 	{
 		m_view = view;
 		m_model = model;
-
-        if (model.isNewTransaction())
-        {
-            //go to last selected category
-
-            /*SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view);
-            int lastSelectedCategoryId = model.getCategory().income ? sharedPref.getInt("lastIncomeCategoryId", -1) : sharedPref.getInt("lastExpenseCategoryId", 
-			);
-
-            if (lastSelectedCategoryId != -1)
-            {
-                Category category = null;
-                for(Category cat : model.getAllCategories())
-                {
-                    if (cat.id == lastSelectedCategoryId)
-                    {
-                        category = cat;
-                        break;
-                    }
-                }
-
-                if (category != null)
-                {
-                    model.setCategory(category);
-                }
-            }*/
-        }
 	}
 	
 	
@@ -167,8 +140,8 @@ public class AddTransactionController
         m_view.finish();
     }
 
-    public void onCategoryChange(int position) {
-
+    public void onCategoryChange(int position)
+    {
         String selectedCategoryName = m_categoryNames.get(position);
 
         boolean useNewCategory = selectedCategoryName.equals(ADD_CATEGORY_STRING);
@@ -178,7 +151,11 @@ public class AddTransactionController
         {
             m_model.setCategory(selectedCategoryName);
         }
+    }
 
+    public void onTransferAccountChange(int position)
+    {
+        m_model.setTransferAccount(m_model.getAccounts()[position]);
     }
 
     public void onTypeChange(int position)
@@ -207,7 +184,7 @@ public class AddTransactionController
         ArrayList<String> typeChoices = new ArrayList<String>();
         typeChoices.add(TransactionType.Expense.name());
         typeChoices.add(TransactionType.Income.name());
-        if (m_model.getAccounts().length > 1)
+        if (m_model.getAccounts().length > 0)
         {
             typeChoices.add(TransactionType.Transfer.name());
         }

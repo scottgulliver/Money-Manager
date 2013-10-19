@@ -8,6 +8,7 @@ import sg.money.activities.*;
 import sg.money.domainobjects.*;
 import sg.money.fragments.*;
 import sg.money.models.*;
+import sg.money.widgets.ColorPickerDialog;
 
 public class AddCategoryController 
 {
@@ -124,5 +125,9 @@ public class AddCategoryController
     	}
 		
 		return m_parentOptions;
+    }
+
+    public void changeColor() {
+        new ColorPickerDialog(m_view, m_view, m_model.getCurrentColor()).show();
     }
 }

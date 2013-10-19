@@ -12,7 +12,8 @@ import android.os.Parcelable;
 import sg.money.DatabaseManager;
 
 /**
- * TODO add summary
+ * A budget holds a desired value against a set of accounts and categories
+ * which it applies to.
  */
 public class Budget implements Parcelable
 {

@@ -88,7 +88,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
         setTitle(m_model.isNewCategory() ? "Add Category" : "Edit Category");
 
         m_imgColor.setOnClickListener(new OnClickListener() { 
-			public void onClick(View v) { ColorClicked(); } });
+			public void onClick(View v) { m_controller.changeColor(); } });
 
 
 		m_txtName.setOnFocusChangeListener(new OnFocusChangeListener()
@@ -193,13 +193,6 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 		m_txtName.setClickable(enableControls);
         m_spnType.setEnabled(enableControls);
 		m_spnParent.setEnabled(enableControls);
-    }
-
-	//TODO move to controller
-    private void ColorClicked()
-    {
-    	//launch the color picker
-    	new ColorPickerDialog(this, this, m_model.getCurrentColor()).show();
     }
 
     public void cancelFocus()

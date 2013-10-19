@@ -32,11 +32,14 @@ import sg.money.activities.AddCategoryActivity;
 
 public class CategoriesFragment extends HostActivityFragmentBase implements OnItemLongClickListener, OnGroupClickListener, OnChildClickListener
 {
-	static final int REQUEST_ADDCATEGORY = 0;
+	private ExpandableListView m_categoriesList;
+    private ArrayList<Category> m_categories;
+    private CategoriesExpandableListAdapter m_adapter;
 
-	ExpandableListView categoriesList;
-	ArrayList<Category> categories;
-	CategoriesExpandableListAdapter adapter;
+    private static final int REQUEST_ADDCATEGORY = 0;
+
+
+    /* Fragment overrides */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -45,57 +48,83 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 
         View v = inflater.inflate(R.layout.activity_categories, null);
 
-		categoriesList = (ExpandableListView)v.findViewById(R.id.categoriesList);
+		m_categoriesList = (ExpandableListView)v.findViewById(R.id.categoriesList);
         
         View emptyView = v.findViewById(android.R.id.empty);
     	((TextView)v.findViewById(R.id.empty_text)).setText("No categories");
     	((TextView)v.findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
-    	categoriesList.setEmptyView(emptyView);
+    	m_categoriesList.setEmptyView(emptyView);
     	
 
         setActionMode(null);
-        categoriesList.setItemsCanFocus(false);
-        categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        categoriesList.setOnGroupClickListener(this);
-        categoriesList.setOnChildClickListener(this);
-        categoriesList.setOnItemLongClickListener(this);
+        m_categoriesList.setItemsCanFocus(false);
+        m_categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        m_categoriesList.setOnGroupClickListener(this);
+        m_categoriesList.setOnChildClickListener(this);
+        m_categoriesList.setOnItemLongClickListener(this);
 
-        /*(new Handler()).post(new Runnable() {
-            public void run() {
-                categoriesList.setIndicatorBounds((int)(categoriesList.getRight()- Misc.dipsToPixels(getResources(), 40)), categoriesList.getRight());
-            }
-        });*/
 		UpdateList();
 
         return v;
 	}
-	
-	private Category getCategoryFromId(int id)
-	{
-		for(Category category : categories)
-		{
-			if (category.getId() == id)
-				return category;
-		}
-		
-		return null;
-	}
 
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		if (getActionMode() == null) {
-        	setActionMode(getParentActivity().startActionMode(new ModeCallback()));
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_categories, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_addcategory: {
+                Intent intent = new Intent(getParentActivity(), AddCategoryActivity.class);
+                startActivityForResult(intent, REQUEST_ADDCATEGORY);
+                break;
+            }
+
+            case R.id.menu_settings: {
+                startActivity(new Intent(getParentActivity(), SettingsActivity.class));
+                break;
+            }
         }
-		
-		categoriesList.setItemChecked(position, !categoriesList.isItemChecked(position));
-		changeItemCheckState(position, categoriesList.isItemChecked(position));
-        
-		return true;
-	}
-	
-	public void changeItemCheckState(int position, boolean checked) {
-        adapter.SetSelected(position, checked);
-        adapter.notifyDataSetChanged();
-    	final int checkedCount = adapter.GetSelectedItems().size();
+        return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_ADDCATEGORY: {
+                UpdateList();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
+        menu.findItem(R.id.menu_addcategory).setVisible(!drawerIsOpen);
+        return true;
+    }
+
+
+    /* Listener callbacks */
+
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (getActionMode() == null) {
+            setActionMode(getParentActivity().startActionMode(new ModeCallback()));
+        }
+
+        m_categoriesList.setItemChecked(position, !m_categoriesList.isItemChecked(position));
+        changeItemCheckState(position, m_categoriesList.isItemChecked(position));
+
+        return true;
+    }
+
+    public void changeItemCheckState(int position, boolean checked) {
+        m_adapter.SetSelected(position, checked);
+        m_adapter.notifyDataSetChanged();
+        final int checkedCount = m_adapter.GetSelectedItems().size();
         switch (checkedCount) {
             case 0:
                 getActionMode().setSubtitle(null);
@@ -111,52 +140,56 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
                 getActionMode().setSubtitle("" + checkedCount + " selected");
                 break;
         }
-        
-        if (adapter.GetSelectedItems().size() == 0)
+
+        if (m_adapter.GetSelectedItems().size() == 0)
             getActionMode().finish();
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-        getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_categories, menu);
-		return true;
+    public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
+        onItemClick((int) m_adapter.getChildId(groupPosition, childPosition), m_adapter.getPosition(groupPosition, childPosition));
+        return true;
+    }
+
+    public boolean onGroupClick(ExpandableListView parent, View view, int groupPosition, long id) {
+        onItemClick((int) m_adapter.getGroupId(groupPosition), m_adapter.getPosition(groupPosition, -1));
+        return true;
+    }
+
+    private void onItemClick(int categoryId, int position)
+    {
+        if (getActionMode() == null)
+        {
+            EditItem(getCategoryFromId(categoryId));
+        }
+        else
+        {
+            m_categoriesList.setItemChecked(position, !m_categoriesList.isItemChecked(position));
+            changeItemCheckState(position, m_categoriesList.isItemChecked(position));
+        }
+    }
+
+
+    /* Methods */
+	
+	private Category getCategoryFromId(int id)
+	{
+		for(Category category : m_categories)
+		{
+			if (category.getId() == id)
+				return category;
+		}
+		
+		return null;
 	}
 
 	private void UpdateList() {
-		categories = DatabaseManager.getInstance(getParentActivity())
+		m_categories = DatabaseManager.getInstance(getParentActivity())
 				.GetAllCategories();
 
-		adapter = new CategoriesExpandableListAdapter(getParentActivity(), categories);
-		categoriesList.setAdapter(adapter);
-		for(int i = 0; i < adapter.getGroupCount(); i++)
-			categoriesList.expandGroup(i);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		case R.id.menu_addcategory: {
-			Intent intent = new Intent(getParentActivity(), AddCategoryActivity.class);
-			startActivityForResult(intent, REQUEST_ADDCATEGORY);
-			break;
-		}
-
-		case R.id.menu_settings: { 
-        	startActivity(new Intent(getParentActivity(), SettingsActivity.class));
-			break;
-		}
-		}
-		return true;
-	}
-
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case REQUEST_ADDCATEGORY: {
-					UpdateList();
-				break;
-			}
-		}
+		m_adapter = new CategoriesExpandableListAdapter(getParentActivity(), m_categories);
+		m_categoriesList.setAdapter(m_adapter);
+		for(int i = 0; i < m_adapter.getGroupCount(); i++)
+			m_categoriesList.expandGroup(i);
 	}
 	
 	private void EditItem(Category selectedItem)
@@ -169,9 +202,9 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 	private void confirmDeleteItems(final ActionMode mode)
 	{
 		Misc.showConfirmationDialog(getParentActivity(),
-                adapter.GetSelectedItems().size() == 1
+                m_adapter.GetSelectedItems().size() == 1
                         ? "Delete 1 category?"
-                        : "Delete " + adapter.GetSelectedItems().size() + " categories?",
+                        : "Delete " + m_adapter.GetSelectedItems().size() + " categories?",
                 DialogButtons.OkCancel,
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -189,7 +222,7 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 	
 	private void DeleteItems()
 	{
-		ArrayList<Category> selectedItems = adapter.GetSelectedItems();
+		ArrayList<Category> selectedItems = m_adapter.GetSelectedItems();
 		ArrayList<Category> permanentItems = new ArrayList<Category>();
 		for(Category selectedItem : selectedItems)
 		{
@@ -208,6 +241,9 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 			Toast.makeText(getParentActivity(), msg, Toast.LENGTH_SHORT).show();
 		}
 	}
+
+
+    /* ModeCallback class */
 	
 	private final class ModeCallback implements ActionMode.Callback {
 	   	 
@@ -223,9 +259,9 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
         }
  
         public void onDestroyActionMode(ActionMode mode) {
-			adapter.ClearSelected();
-	        adapter.notifyDataSetChanged();
-	        categoriesList.clearChoices();
+			m_adapter.ClearSelected();
+	        m_adapter.notifyDataSetChanged();
+	        m_categoriesList.clearChoices();
  
             if (mode == getActionMode()) {
             	setActionMode(null);
@@ -235,7 +271,7 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
             case R.id.cab_edit:
-            	EditItem(adapter.GetSelectedItems().get(0));
+            	EditItem(m_adapter.GetSelectedItems().get(0));
                 mode.finish();
                 return true;
             case R.id.cab_delete:
@@ -245,34 +281,5 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
                 return false;
         }
         }
-    }
-
-	public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
-		onItemClick((int)adapter.getChildId(groupPosition, childPosition), adapter.getPosition(groupPosition, childPosition));
-		return true;
-	}
-
-	public boolean onGroupClick(ExpandableListView parent, View view, int groupPosition, long id) {
-		onItemClick((int)adapter.getGroupId(groupPosition), adapter.getPosition(groupPosition, -1));
-		return true;
-	}
-	
-	private void onItemClick(int categoryId, int position)
-	{
-		if (getActionMode() == null)
-		{
-	    	EditItem(getCategoryFromId(categoryId));
-		}
-		else
-		{
-			categoriesList.setItemChecked(position, !categoriesList.isItemChecked(position));
-			changeItemCheckState(position, categoriesList.isItemChecked(position));
-		}
-	}
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
-        menu.findItem(R.id.menu_addcategory).setVisible(!drawerIsOpen);
-        return true;
     }
 }

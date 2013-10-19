@@ -1,12 +1,16 @@
 package sg.money.domainobjects;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
+import sg.money.DatabaseManager;
 
 /**
-* TODO add summary
+* A categorisation of a transaction.
 */
 public class Category implements Parcelable
 {
@@ -108,6 +112,64 @@ public class Category implements Parcelable
 	{
 		return m_parentCategoryId;
 	}
+
+
+    /* Methods */
+
+    /* Reorders a list of categories to be in group (subcategories) order */
+    public static ArrayList<Category> getCategoriesInGroupOrder(ArrayList<Category> categories)
+    {
+        ArrayList<Category> orderedList = new ArrayList<Category>();
+
+        Collections.sort(categories, new CategoryComparator());
+
+        for(Category category : categories)
+        {
+            if (category.getParentCategoryId() == -1)
+            {
+                orderedList.add(category);
+                for(Category subCategory : categories)
+                {
+                    if (subCategory.getParentCategoryId() == category.getId())
+                        orderedList.add(subCategory);
+                }
+            }
+        }
+
+        return orderedList;
+    }
+
+    /* Gets the name of a category */
+    public static String getCategoryName(Category category, Context context)
+    {
+        ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
+        return getCategoryName(category, categories);
+    }
+
+    /* Gets the name of a category */
+    public static String getCategoryName(Category category, ArrayList<Category> categories)
+    {
+        String name = category.getName();
+        if (category.getParentCategoryId() != -1)
+        {
+            for(Category parentCategory : categories)
+            {
+                if (parentCategory.getId() == category.getParentCategoryId())
+                {
+                    name = parentCategory.getName() + " >> " + name;
+                    break;
+                }
+            }
+        }
+        return name;
+    }
+
+    /* Standard comparator for categories - compares IDs */
+    public static class CategoryComparator implements Comparator<Category> {
+        public int compare(Category o1, Category o2) {
+            return Double.compare(o1.getId(), o2.getId());
+        }
+    }
 	
 
     /* Implementation of Parcelable */

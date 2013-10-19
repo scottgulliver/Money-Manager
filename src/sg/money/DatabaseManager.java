@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import sg.money.domainobjects.Account;
 import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
@@ -17,18 +16,18 @@ import sg.money.domainobjects.Transaction;
 
 public class DatabaseManager extends SQLiteOpenHelper
 {
-	static Context _context;
-	private static DatabaseManager instance = null;
+    private static Context s_context;
+	private static DatabaseManager s_instance;
 	
-   public static DatabaseManager getInstance(Context context) {
-	  _context = context;
-      if(instance == null) {
-         instance = new DatabaseManager(context);
-      }
-      return instance;
-   }
-	   
-	static final String dbName="finance_test";
+    public static DatabaseManager getInstance(Context context) {
+        s_context = context;
+        if(s_instance == null) {
+            s_instance = new DatabaseManager(context);
+        }
+        return s_instance;
+    }
+
+    static final String dbName="finance_test";
 	
 	static final String transTable="Transactions";
 	static final String colTransID="TransactionID";
@@ -1033,7 +1032,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				Integer id = c.getInt((c.getColumnIndex(colAccountsID)));
 				String name = c.getString((c.getColumnIndex(colAccountsName)));
 				
-				Account account = new Account(_context, id, name);
+				Account account = new Account(s_context, id, name);
 				accounts.add(account);
 				
 	       	    c.moveToNext();
@@ -1071,7 +1070,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 			{
 				String name = c.getString((c.getColumnIndex(colAccountsName)));
 				
-				account = new Account(_context, id, name);
+				account = new Account(s_context, id, name);
 				
 	       	    c.moveToNext();
 	        }
@@ -1112,8 +1111,8 @@ public class DatabaseManager extends SQLiteOpenHelper
 				if (transaction.isTransfer())
 				{
 					//update the related entry, so that it still shows as an entry, but doesn't act as a transfer.
-					Transaction relatedTransaction = transaction.getRelatedTransferTransaction(_context);
-					relatedTransaction.setDescription(relatedTransaction.getDescription() + " (" + relatedTransaction.getTransferDescription(_context) + ")");
+					Transaction relatedTransaction = transaction.getRelatedTransferTransaction(s_context);
+					relatedTransaction.setDescription(relatedTransaction.getDescription() + " (" + relatedTransaction.getTransferDescription(s_context) + ")");
 					relatedTransaction.setCategory(relatedTransaction.isReceivingParty()
 														? incomeUncategorised.getId()
 														: expenseUncategorised.getId());

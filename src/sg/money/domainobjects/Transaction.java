@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import sg.money.DatabaseManager;
 
 /**
- * TODO add summary
+ * An instance of an expense, income, or transfer.
  */
 public class Transaction implements Parcelable
 {
@@ -181,7 +181,10 @@ public class Transaction implements Parcelable
     public Transaction getRelatedTransferTransaction(Context context)
     {
         if (!m_isTransfer)
-            return null; //todo throw exception here.
+        {
+            throw new RuntimeException("getRelatedTransferTransaction called, although the" +
+                    " transaction is not a transfer.");
+        }
 
         return DatabaseManager.getInstance(context).GetTransaction(m_transferFromTransaction != -1
                 ? m_transferFromTransaction
@@ -191,7 +194,10 @@ public class Transaction implements Parcelable
     public boolean isReceivingParty()
     {
         if (!m_isTransfer)
-            return false; //todo throw exception here.
+        {
+            throw new RuntimeException("isReceivingParty called, although the" +
+                    " transaction is not a transfer.");
+        }
 
         return m_transferFromTransaction != -1;
     }

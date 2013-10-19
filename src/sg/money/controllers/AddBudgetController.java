@@ -104,7 +104,7 @@ public class AddBudgetController
 			if (!category.isUseInReports())
 				continue;
 
-			items.add(Misc.getCategoryName(category, m_model.getCurrentCategories()));
+			items.add(Category.getCategoryName(category, m_model.getCurrentCategories()));
 		}
 
 		createDialog("Categories", items, checkedItems, DialogType.Categories).show();
@@ -209,14 +209,14 @@ public class AddBudgetController
 						if (type == DialogType.Accounts) {
 							for (Account account : m_model.getCurrentAccounts()) {
 								if (account.getName().equals(items.get(Integer
-																  .parseInt(String.valueOf(item))))) {
+												  .parseInt(String.valueOf(item))))) {
 									m_model.getSelectedAccounts().add(account);
 									break;
 								}
 							}
 						} else if (type == DialogType.Categories) {
 							for (Category category : m_model.getCurrentCategories()) {
-								if (Misc.getCategoryName(category, m_model.getCurrentCategories()).equals(items.get(Integer
+								if (Category.getCategoryName(category, m_model.getCurrentCategories()).equals(items.get(Integer
 																									   .parseInt(String.valueOf(item))))) {
 									m_model.getSelectedCategories().add(category);
 									break;

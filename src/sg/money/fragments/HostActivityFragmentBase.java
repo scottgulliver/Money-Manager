@@ -2,13 +2,15 @@ package sg.money.fragments;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-
 import sg.money.activities.ParentActivity;
 
+/**
+ * The base class for fragments which are held in the main view of the app
+ * (those navigable via the drawer)
+ */
 public abstract class HostActivityFragmentBase extends Fragment {
 
     public HostActivityFragmentBase()

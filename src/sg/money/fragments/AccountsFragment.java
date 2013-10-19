@@ -5,6 +5,8 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,37 +31,93 @@ import sg.money.activities.AddAccountActivity;
 
 public class AccountsFragment extends HostActivityFragmentBase implements OnItemLongClickListener, OnItemClickListener
 {
-    static final int REQUEST_ADDACCOUNT = 0;
+	private ListView m_accountsList;
+    private ArrayList<Account> m_accounts;
+    private AccountListAdapter m_adapter;
 
-	ListView accountsList;
-	ArrayList<Account> accounts;
-	AccountListAdapter adapter;
+    private static final int REQUEST_ADDACCOUNT = 0;
+    private static final int REQUEST_SETTINGS = 10;
+
+
+    /* Fragment overrides */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.activity_transactions);
         View v = inflater.inflate(R.layout.activity_accounts, null);
 
-        accountsList = (ListView)v.findViewById(R.id.accountsList);
+        m_accountsList = (ListView)v.findViewById(R.id.accountsList);
 
         View emptyView = v.findViewById(android.R.id.empty);
         ((TextView)v.findViewById(R.id.empty_text)).setText("No accounts");
         ((TextView)v.findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
-        accountsList.setEmptyView(emptyView);
+        m_accountsList.setEmptyView(emptyView);
 
         setActionMode(null);
-        accountsList.setItemsCanFocus(false);
-        accountsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        accountsList.setOnItemClickListener(this);
-        accountsList.setOnItemLongClickListener(this);
+        m_accountsList.setItemsCanFocus(false);
+        m_accountsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        m_accountsList.setOnItemClickListener(this);
+        m_accountsList.setOnItemLongClickListener(this);
 
         UpdateList();
 
         return v;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_accounts, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.menu_addaccount:{
+                Intent intent = new Intent(getParentActivity(), AddAccountActivity.class);
+                startActivityForResult(intent, REQUEST_ADDACCOUNT);
+                break;
+            }
+
+            case R.id.menu_settings:{
+                startActivityForResult(new Intent(getParentActivity(), SettingsActivity.class), REQUEST_SETTINGS);
+                break;
+            }
+        }
+        return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch(requestCode)
+        {
+            case REQUEST_ADDACCOUNT:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    UpdateList();
+                }
+                break;
+            }
+            case REQUEST_SETTINGS:
+            {
+                UpdateList();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
+        menu.findItem(R.id.menu_addaccount).setVisible(!drawerIsOpen);
+        return true;
+    }
+
+
+    /* Listener callbacks */
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (getActionMode() == null)
@@ -68,7 +126,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 		}
 		else
 		{
-			changeItemCheckState(position, accountsList.isItemChecked(position));
+			changeItemCheckState(position, m_accountsList.isItemChecked(position));
 		}
 	}
 
@@ -77,16 +135,16 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
         	setActionMode(getParentActivity().startActionMode(new ModeCallback()));
         }
 
-		accountsList.setItemChecked(position, !accountsList.isItemChecked(position));
-		changeItemCheckState(position, accountsList.isItemChecked(position));
+		m_accountsList.setItemChecked(position, !m_accountsList.isItemChecked(position));
+		changeItemCheckState(position, m_accountsList.isItemChecked(position));
         
 		return true;
 	}
 	
 	public void changeItemCheckState(int position, boolean checked) {
-        adapter.setSelected(position, checked);
-        adapter.notifyDataSetChanged();
-    	final int checkedCount = adapter.getSelectedItems().size();
+        m_adapter.setSelected(position, checked);
+        m_adapter.notifyDataSetChanged();
+    	final int checkedCount = m_adapter.getSelectedItems().size();
         switch (checkedCount) {
             case 0:
                 getActionMode().setSubtitle(null);
@@ -103,115 +161,33 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
                 break;
         }
         
-        if (adapter.getSelectedItems().size() == 0)
+        if (m_adapter.getSelectedItems().size() == 0)
             getActionMode().finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_accounts, menu);
-        return true;
-    }
-    
-    private void UpdateList()
-    {
-    	accounts = DatabaseManager.getInstance(getParentActivity()).GetAllAccounts();
- 
-		adapter = new AccountListAdapter(getParentActivity(), accounts);
-		accountsList.setAdapter(adapter);
-    }
-    
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId())
-	    {
-	    	case R.id.menu_addaccount:{
-	    		Intent intent = new Intent(getParentActivity(), AddAccountActivity.class);
-	        	startActivityForResult(intent, REQUEST_ADDACCOUNT);
-	    		break;
-	    		}
 
-	        case R.id.menu_settings:{
-	        	startActivityForResult(new Intent(getParentActivity(), SettingsActivity.class), REQUEST_SETTINGS);
-                break;
-            	}
-	    }
-	    return true;
-	}
-
-    
     protected void onListItemClick(AdapterView<?> l, View v, int position, long id)
-	{
-        Account account = accounts.get(position);
-
-        Intent intent = new Intent();
+    {
+        Account account = m_accounts.get(position);
         Settings.setDefaultAccount(getActivity(), account.getId());
 
         getParentActivity().changeContent(HostActivityFragmentTypes.Transactions);
-	}
-
-	static final int REQUEST_SETTINGS = 10;
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		switch(requestCode)
-		{
-			case REQUEST_ADDACCOUNT:
-			{
-				if (resultCode == getParentActivity().RESULT_OK)
-				{
-					UpdateList();
-				}
-				break;
-			}
-			case REQUEST_SETTINGS:
-			{
-				UpdateList();
-				break;
-			}
-		}
     }
+
+
+    /* Methods */
     
-    private final class ModeCallback implements ActionMode.Callback {
-    	 
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            // Create the menu from the xml file
-            MenuInflater inflater = getParentActivity().getSupportMenuInflater();
-            inflater.inflate(R.menu.standard_cab, menu);
-            return true;
-        }
+    private void UpdateList()
+    {
+    	m_accounts = DatabaseManager.getInstance(getParentActivity()).GetAllAccounts();
  
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
- 
-        public void onDestroyActionMode(ActionMode mode) {
-			adapter.clearSelected();
-	        adapter.notifyDataSetChanged();
-	        accountsList.clearChoices();
- 
-            if (mode == getActionMode()) {
-            	setActionMode(null);
-            }
-        }
- 
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-            case R.id.cab_edit:
-            	EditItem();
-                mode.finish();
-                return true;
-            case R.id.cab_delete:
-            	confirmDeleteItems(mode);
-                return true;
-            default:
-                return false;
-        }
-        }
-    };
+		m_adapter = new AccountListAdapter(getParentActivity(), m_accounts);
+		m_accountsList.setAdapter(m_adapter);
+    }
 	
 	private void EditItem()
 	{
-		Account selectedItem = adapter.getSelectedItems().get(0);
+		Account selectedItem = m_adapter.getSelectedItems().get(0);
 		Intent intent = new Intent(getParentActivity(), AddAccountActivity.class);
 		intent.putExtra("ID", selectedItem.getId());
     	startActivityForResult(intent, REQUEST_ADDACCOUNT);
@@ -220,9 +196,9 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	private void confirmDeleteItems(final ActionMode mode)
 	{
 		Misc.showConfirmationDialog(getParentActivity(),
-                adapter.getSelectedItems().size() == 1
+                m_adapter.getSelectedItems().size() == 1
                         ? "Delete 1 account?"
-                        : "Delete " + adapter.getSelectedItems().size() + " accounts?",
+                        : "Delete " + m_adapter.getSelectedItems().size() + " accounts?",
                 DialogButtons.OkCancel,
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -240,7 +216,7 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 	
 	private void DeleteItems()
 	{
-		ArrayList<Account> selectedItems = adapter.getSelectedItems();
+		ArrayList<Account> selectedItems = m_adapter.getSelectedItems();
 		for(Account selectedItem : selectedItems)
 		{
 			DatabaseManager.getInstance(getParentActivity()).DeleteAccount(selectedItem);
@@ -248,9 +224,43 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 		UpdateList();
 	}
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
-        menu.findItem(R.id.menu_addaccount).setVisible(!drawerIsOpen);
-        return true;
+
+    /* ModeCallback class */
+
+    private final class ModeCallback implements ActionMode.Callback {
+
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = getParentActivity().getSupportMenuInflater();
+            inflater.inflate(R.menu.standard_cab, menu);
+            return true;
+        }
+
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        public void onDestroyActionMode(ActionMode mode) {
+            m_adapter.clearSelected();
+            m_adapter.notifyDataSetChanged();
+            m_accountsList.clearChoices();
+
+            if (mode == getActionMode()) {
+                setActionMode(null);
+            }
+        }
+
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.cab_edit:
+                    EditItem();
+                    mode.finish();
+                    return true;
+                case R.id.cab_delete:
+                    confirmDeleteItems(mode);
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

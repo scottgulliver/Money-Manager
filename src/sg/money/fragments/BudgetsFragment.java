@@ -39,46 +39,51 @@ import sg.money.activities.AddBudgetActivity;
 
 public class BudgetsFragment extends HostActivityFragmentBase implements OnItemLongClickListener, OnItemClickListener
 {
-	static final int REQUEST_ADDBUDGET = 0;
-	static final int REQUEST_SETTINGS = 1;
 
-	ListView budgetsList;
-	TextView txtMonth;
-	ArrayList<Budget> budgets;
-	BudgetListAdapter adapter;
-	SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
-	String currentMonth;
-	ArrayList<Transaction> transactions;
+	private ListView m_budgetsList;
+    private TextView m_txtMonth;
+    private ArrayList<Budget> m_budgets;
+    private BudgetListAdapter m_adapter;
+    private SimpleDateFormat m_monthYearFormat;
+    private String m_currentMonth;
+    private ArrayList<Transaction> m_transactions;
+
+    private static final int REQUEST_ADDBUDGET = 0;
+    private static final int REQUEST_SETTINGS = 1;
 	
 	//Bundle State Data
-	static final String STATE_MONTH = "stateMonth";
+	private static final String STATE_MONTH = "stateMonth";
+
+
+    /* Fragment overrides */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.activity_transactions);
+        m_monthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+
         View v = inflater.inflate(R.layout.activity_budgets, null);
 		
-		budgetsList = (ListView)v.findViewById(R.id.budgetsList);
-        txtMonth = (TextView)v.findViewById(R.id.txtMonth);
+		m_budgetsList = (ListView)v.findViewById(R.id.budgetsList);
+        m_txtMonth = (TextView)v.findViewById(R.id.txtMonth);
         
         View emptyView = v.findViewById(android.R.id.empty);
     	((TextView)v.findViewById(R.id.empty_text)).setText("No budgets");
     	((TextView)v.findViewById(R.id.empty_hint)).setText("Use the add button to create one.");
-    	budgetsList.setEmptyView(emptyView);
+    	m_budgetsList.setEmptyView(emptyView);
 
         setActionMode(null);
-        budgetsList.setItemsCanFocus(false);
-        budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        budgetsList.setOnItemClickListener(this);
-        budgetsList.setOnItemLongClickListener(this);
+        m_budgetsList.setItemsCanFocus(false);
+        m_budgetsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        m_budgetsList.setOnItemClickListener(this);
+        m_budgetsList.setOnItemLongClickListener(this);
 		
 		if (savedInstanceState != null)
     	{
-    		currentMonth = savedInstanceState.getString(STATE_MONTH);
-        	setData(currentMonth);
+    		m_currentMonth = savedInstanceState.getString(STATE_MONTH);
+        	setData(m_currentMonth);
     	}
     	else
     	{
@@ -88,6 +93,66 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         return v;
 	}
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(STATE_MONTH, m_currentMonth);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_budgets, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_addbudget: {
+                Intent intent = new Intent(getParentActivity(), AddBudgetActivity.class);
+                startActivityForResult(intent, REQUEST_ADDBUDGET);
+                break;
+            }
+
+            case R.id.menu_month:{
+                createDialog().show();
+                break;
+            }
+
+            case R.id.menu_settings: {
+                startActivityForResult(new Intent(getParentActivity(), SettingsActivity.class), REQUEST_SETTINGS);
+                break;
+            }
+        }
+        return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_ADDBUDGET: {
+                if (resultCode == getParentActivity().RESULT_OK) {
+                    setData(m_currentMonth);
+                }
+                break;
+            }
+            case REQUEST_SETTINGS:
+                setData(m_currentMonth);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
+        menu.findItem(R.id.menu_addbudget).setVisible(!drawerIsOpen);
+        menu.findItem(R.id.menu_month).setVisible(!drawerIsOpen);
+        return true;
+    }
+
+
+    /* Listener callbacks */
+
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (getActionMode() == null)
 		{
@@ -95,7 +160,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 		}
 		else
 		{
-			changeItemCheckState(position, budgetsList.isItemChecked(position));
+			changeItemCheckState(position, m_budgetsList.isItemChecked(position));
 		}
 	}
 
@@ -104,16 +169,16 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         	setActionMode(getParentActivity().startActionMode(new ModeCallback()));
         }
 
-		budgetsList.setItemChecked(position, !budgetsList.isItemChecked(position));
-		changeItemCheckState(position, budgetsList.isItemChecked(position));
+		m_budgetsList.setItemChecked(position, !m_budgetsList.isItemChecked(position));
+		changeItemCheckState(position, m_budgetsList.isItemChecked(position));
         
 		return true;
 	}
 	
 	public void changeItemCheckState(int position, boolean checked) {
-        adapter.setSelected(position, checked);
-        adapter.notifyDataSetChanged();
-    	final int checkedCount = adapter.getSelectedItems().size();
+        m_adapter.setSelected(position, checked);
+        m_adapter.notifyDataSetChanged();
+    	final int checkedCount = m_adapter.getSelectedItems().size();
         switch (checkedCount) {
             case 0:
                 getActionMode().setSubtitle(null);
@@ -130,22 +195,16 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
                 break;
         }
         
-        if (adapter.getSelectedItems().size() == 0)
+        if (m_adapter.getSelectedItems().size() == 0)
             getActionMode().finish();
     }
-    
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(STATE_MONTH, currentMonth);
-        
-        super.onSaveInstanceState(savedInstanceState);
+
+    protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
+        EditItem(m_budgets.get(position));
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-        getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_budgets, menu);
-		return true;
-	}
+
+    /* Methods */
 
 	private void setData(String month) {
 		if (month.equals(""))
@@ -153,15 +212,15 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
     		Calendar currentDate = Calendar.getInstance();
     	    currentDate.set(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), 1, 0, 0, 1);
     	    
-        	month = monthYearFormat.format(currentDate.getTime());
+        	month = m_monthYearFormat.format(currentDate.getTime());
     	}
 		
-		txtMonth.setText(month);
-    	currentMonth = month;
+		m_txtMonth.setText(month);
+    	m_currentMonth = month;
     	
     	Calendar startDate = new GregorianCalendar();
     	try {
-			startDate.setTime(monthYearFormat.parse(month));
+			startDate.setTime(m_monthYearFormat.parse(month));
 		} catch (ParseException e) {
 			e.printStackTrace(); 
 		}
@@ -169,10 +228,10 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
     	endDate.add(Calendar.MONTH, 1);
 		endDate.add(Calendar.SECOND, -1);
     	
-    	transactions = DatabaseManager.getInstance(getParentActivity()).GetAllTransactions(startDate.getTime(), endDate.getTime());
-		budgets = DatabaseManager.getInstance(getParentActivity()).GetAllBudgets();
-		adapter = new BudgetListAdapter(getParentActivity(), budgets, transactions);
-		budgetsList.setAdapter(adapter);
+    	m_transactions = DatabaseManager.getInstance(getParentActivity()).GetAllTransactions(startDate.getTime(), endDate.getTime());
+		m_budgets = DatabaseManager.getInstance(getParentActivity()).GetAllBudgets();
+		m_adapter = new BudgetListAdapter(getParentActivity(), m_budgets, m_transactions);
+		m_budgetsList.setAdapter(m_adapter);
 	}
 
 	public class DateComparator implements Comparator<Transaction> {
@@ -183,30 +242,29 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	
 	private Dialog createDialog()
 	{
-		transactions = DatabaseManager.getInstance(getParentActivity()).GetAllTransactions();
-		Collections.sort(transactions, new DateComparator());
-    	Collections.reverse(transactions);
+		m_transactions = DatabaseManager.getInstance(getParentActivity()).GetAllTransactions();
+		Collections.sort(m_transactions, new DateComparator());
+    	Collections.reverse(m_transactions);
 
     	final ArrayList<String> months = new ArrayList<String>();
-    	if (transactions.size() == 0)
+    	if (m_transactions.size() == 0)
     	{
     		Calendar currentDate = Calendar.getInstance();
 		    currentDate.set(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), 1, 0, 0, 0);
-		    months.add(monthYearFormat.format(currentDate.getTime()));
+		    months.add(m_monthYearFormat.format(currentDate.getTime()));
     	}
     	else
     	{
-	    	Transaction oldestTransaction = transactions.get(transactions.size()-1);
+	    	Transaction oldestTransaction = m_transactions.get(m_transactions.size()-1);
 	    	Calendar oldestDate = Calendar.getInstance();
 	    	oldestDate.setTime(oldestTransaction.getDateTime());
 	    	oldestDate.set(oldestDate.get(Calendar.YEAR), oldestDate.get(Calendar.MONTH), 1, 0, 0, 0);
 		    
 		    Calendar currentDate = Calendar.getInstance();
 		    currentDate.set(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), 1, 0, 0, 0);
-		    //oldestDate.set(2012, 1, 1);
 	    	while(true)
 	    	{
-	    		months.add(monthYearFormat.format(currentDate.getTime()));
+	    		months.add(m_monthYearFormat.format(currentDate.getTime()));
 	    		currentDate.add(Calendar.MONTH, -1);
 	    		if (currentDate.before(oldestDate))
 	    			break;
@@ -226,47 +284,6 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 		});
 	    return builder.create();
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-            
-		case R.id.menu_addbudget: {
-			Intent intent = new Intent(getParentActivity(), AddBudgetActivity.class);
-			startActivityForResult(intent, REQUEST_ADDBUDGET);
-			break;
-			}
-
-		case R.id.menu_month:{
-    		createDialog().show();
-    		break;
-    		}
-
-		case R.id.menu_settings: { 
-        	startActivityForResult(new Intent(getParentActivity(), SettingsActivity.class), REQUEST_SETTINGS);
-			break;
-			}
-		}
-		return true;
-	}
-
-	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
-    	EditItem(budgets.get(position));
-	}
-	
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case REQUEST_ADDBUDGET: {
-			if (resultCode == getParentActivity().RESULT_OK) {
-				setData(currentMonth);
-			}
-			break;
-		}
-		case REQUEST_SETTINGS:
-			setData(currentMonth);
-			break;
-		}
-	}
 	
 	private void EditItem(Budget selectedItem)
 	{			
@@ -278,9 +295,9 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	private void confirmDeleteItems(final ActionMode mode)
 	{
 		Misc.showConfirmationDialog(getParentActivity(),
-                adapter.getSelectedItems().size() == 1
+                m_adapter.getSelectedItems().size() == 1
                         ? "Delete 1 budget?"
-                        : "Delete " + adapter.getSelectedItems().size() + " budgets?",
+                        : "Delete " + m_adapter.getSelectedItems().size() + " budgets?",
                 DialogButtons.OkCancel,
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -298,14 +315,17 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
 	
 	private void DeleteItems()
 	{
-		ArrayList<Budget> selectedItems = adapter.getSelectedItems();
+		ArrayList<Budget> selectedItems = m_adapter.getSelectedItems();
 		for(Budget selectedItem : selectedItems)
 		{
 			DatabaseManager.getInstance(getParentActivity()).DeleteBudget(selectedItem);
 		}
-		setData(currentMonth);
+		setData(m_currentMonth);
 	}
-	
+
+
+    /* ModeCallback class */
+
 	private final class ModeCallback implements ActionMode.Callback {
    	 
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -320,9 +340,9 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         }
  
         public void onDestroyActionMode(ActionMode mode) {
-			adapter.clearSelected();
-	        adapter.notifyDataSetChanged();
-	        budgetsList.clearChoices();
+			m_adapter.clearSelected();
+	        m_adapter.notifyDataSetChanged();
+	        m_budgetsList.clearChoices();
  
             if (mode == getActionMode()) {
             	setActionMode(null);
@@ -332,7 +352,7 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
             case R.id.cab_edit:
-            	EditItem(adapter.getSelectedItems().get(0));
+            	EditItem(m_adapter.getSelectedItems().get(0));
                 mode.finish();
                 return true;
             case R.id.cab_delete:
@@ -342,12 +362,5 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
                 return false;
         }
         }
-    };
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
-        menu.findItem(R.id.menu_addbudget).setVisible(!drawerIsOpen);
-        menu.findItem(R.id.menu_month).setVisible(!drawerIsOpen);
-        return true;
     }
 }
