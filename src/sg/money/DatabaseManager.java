@@ -534,7 +534,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 						+df.format(trans.getDateTime())+"',"
 						+trans.getAccount()+","
 						+(trans.isDontReport()?1:0)+","
-						+(trans.isDontReport()?1:0)+","
+						+(trans.isTransfer()?1:0)+","
 						+trans.getTransferToTransaction()+","
 						+trans.getTransferFromTransaction()+","
 						+(trans.isReconciled()?1:0)
@@ -571,7 +571,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
 				transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
 				transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
-				Date theDate = (Date)df.parse(c.getString((c.getColumnIndex(colTransDate))));
+				Date theDate = df.parse(c.getString((c.getColumnIndex(colTransDate))));
 				transaction.setDateTime(theDate);
 				transaction.setAccount(c.getInt((c.getColumnIndex(colTransAccount))));
 				transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);
@@ -621,7 +621,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
 				transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
 				transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
-				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
+				Date theDate = df.parse(c.getString((c.getColumnIndex(colTransDate))));
 				transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);
 				transaction.setTransfer(c.getInt((c.getColumnIndex(colTransIsTransfer)))==1);
 				transaction.setTransferToTransaction(c.getInt((c.getColumnIndex(colTransToTrans))));
@@ -669,7 +669,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 				transaction.setValue(c.getDouble((c.getColumnIndex(colTransValue))));
 				transaction.setDescription(c.getString((c.getColumnIndex(colTransDesc))));
 				transaction.setCategory(c.getInt((c.getColumnIndex(colTransCategory))));
-				Date theDate =  (Date) df.parse(c.getString((c.getColumnIndex(colTransDate))));
+				Date theDate = df.parse(c.getString((c.getColumnIndex(colTransDate))));
 				transaction.setDateTime(theDate);
 				transaction.setAccount(accountID);
 				transaction.setDontReport(c.getInt((c.getColumnIndex(colTransDontReport)))==1);

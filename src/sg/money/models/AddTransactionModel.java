@@ -133,8 +133,11 @@ public class AddTransactionModel extends Observable implements Parcelable
 	
 	public void setDontReport(boolean dontReport)
 	{
-		m_transaction.setDontReport(dontReport);
-		notifyObservers(this);
+		if (m_transaction.isDontReport() != dontReport)
+		{
+			m_transaction.setDontReport(dontReport);
+			notifyObservers(this);
+		}
 	}
 
 	public String getDescription()
