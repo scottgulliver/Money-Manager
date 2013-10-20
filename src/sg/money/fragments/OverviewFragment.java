@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import sg.money.domainobjects.Category;
 import sg.money.adapters.CategoryListAdapter;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 import sg.money.utils.Misc;
 import sg.money.widgets.PieChartSegment;
 import sg.money.widgets.PieChartView;

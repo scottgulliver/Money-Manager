@@ -1,4 +1,4 @@
-package sg.money.adapters;
+package sg.money.domainobjects;
 
 public class DrawerArrayItem {
     private String text;

@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import sg.money.adapters.CategoriesExpandableListAdapter;
 import sg.money.domainobjects.Category;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 import sg.money.utils.DialogButtons;
 import sg.money.utils.Misc;
 import sg.money.R;

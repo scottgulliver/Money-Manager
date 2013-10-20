@@ -4,18 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import sg.money.DatabaseManager;
-import sg.money.activities.AddTransactionActivity;
+import sg.money.common.DatabaseManager;
 import sg.money.controllers.AddTransactionController;
-import sg.money.domainobjects.Account;
-import sg.money.domainobjects.Budget;
 import sg.money.domainobjects.Category;
 
 public class AddCategoryModel extends Observable implements Parcelable {
@@ -107,7 +101,7 @@ public class AddCategoryModel extends Observable implements Parcelable {
     }
 
     public int getCurrentColor() {
-        return m_category.getParentCategoryId();
+        return m_category.getColor();
     }
 
     public ArrayList<Category> getCurrentCategories() {

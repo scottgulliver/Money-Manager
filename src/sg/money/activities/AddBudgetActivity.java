@@ -1,26 +1,17 @@
 package sg.money.activities;
 
-import java.util.ArrayList;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
-import sg.money.domainobjects.Account;
+
 import sg.money.domainobjects.Budget;
-import sg.money.domainobjects.Category;
-import sg.money.DatabaseManager;
-import sg.money.fragments.HostActivityFragmentTypes;
+import sg.money.common.DatabaseManager;
 import sg.money.models.AddBudgetModel;
 import sg.money.utils.Misc;
 import sg.money.R;

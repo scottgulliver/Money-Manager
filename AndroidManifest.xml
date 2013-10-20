@@ -43,7 +43,7 @@
         </activity>
 
         <receiver
-            android:name=".adapters.BudgetNotificationReciever"
+            android:name=".common.BudgetNotificationReciever"
             android:process=":remote" >
         </receiver>
 

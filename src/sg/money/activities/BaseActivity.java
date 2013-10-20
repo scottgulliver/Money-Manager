@@ -2,7 +2,7 @@ package sg.money.activities;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import android.os.Bundle;
-import sg.money.adapters.BudgetNotificationReciever;
+import sg.money.common.BudgetNotificationReciever;
 
 /**
 * Forms the base of all activities in the app.

@@ -1,36 +1,25 @@
 package sg.money.activities;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.*;
-import sg.money.controllers.AddCategoryController;
-import sg.money.domainobjects.Account;
+
 import sg.money.domainobjects.Category;
-import sg.money.DatabaseManager;
-import sg.money.fragments.HostActivityFragmentTypes;
-import sg.money.models.AddCategoryModel;
+import sg.money.common.DatabaseManager;
 import sg.money.models.AddTransactionModel;
 import sg.money.models.OnChangeListener;
 import sg.money.utils.Misc;

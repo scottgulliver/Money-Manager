@@ -13,7 +13,7 @@ import java.util.*;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import sg.money.domainobjects.Account;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 import sg.money.R;
 import sg.money.utils.Settings;
 import sg.money.activities.SettingsActivity;

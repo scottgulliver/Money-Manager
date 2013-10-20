@@ -5,9 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.*;
-import sg.money.*;
+
+import sg.money.common.DatabaseManager;
 import sg.money.domainobjects.*;
-import sg.money.utils.*;
 
 public class AddBudgetModel extends Observable implements Parcelable {
 

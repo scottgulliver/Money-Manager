@@ -1,4 +1,4 @@
-package sg.money;
+package sg.money.common;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

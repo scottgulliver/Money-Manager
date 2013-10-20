@@ -1,12 +1,10 @@
 package sg.money.activities;
 
 import java.util.ArrayList;
-import java.util.Random;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
-import android.content.Intent;
-import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -15,16 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
-import sg.money.controllers.AddBudgetController;
-import sg.money.domainobjects.Budget;
+
 import sg.money.domainobjects.Category;
-import sg.money.models.AddBudgetModel;
 import sg.money.models.AddCategoryModel;
 import sg.money.models.OnChangeListener;
 import sg.money.widgets.ColorPickerDialog;
-import sg.money.DatabaseManager;
-import sg.money.fragments.HostActivityFragmentTypes;
+import sg.money.common.DatabaseManager;
 import sg.money.R;
 import sg.money.controllers.*;
 import android.view.View.*;

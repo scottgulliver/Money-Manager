@@ -18,7 +18,7 @@ import sg.money.fragments.AccountsFragment;
 import sg.money.fragments.BudgetsFragment;
 import sg.money.fragments.CategoriesFragment;
 import sg.money.adapters.DrawerArrayAdapter;
-import sg.money.adapters.DrawerArrayItem;
+import sg.money.domainobjects.DrawerArrayItem;
 import sg.money.fragments.HostActivityFragmentBase;
 import sg.money.fragments.HostActivityFragmentTypes;
 import sg.money.fragments.OverviewFragment;

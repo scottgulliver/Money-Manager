@@ -29,7 +29,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import sg.money.domainobjects.Budget;
 import sg.money.adapters.BudgetListAdapter;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 import sg.money.utils.DialogButtons;
 import sg.money.utils.Misc;
 import sg.money.R;

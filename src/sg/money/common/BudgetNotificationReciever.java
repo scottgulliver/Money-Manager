@@ -1,4 +1,4 @@
-package sg.money.adapters;
+package sg.money.common;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,7 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import sg.money.DatabaseManager;
+
 import sg.money.R;
 import sg.money.domainobjects.Budget;
 import sg.money.fragments.BudgetsFragment;

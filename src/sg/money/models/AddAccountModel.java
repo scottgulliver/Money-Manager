@@ -1,11 +1,11 @@
 package sg.money.models;
 
+import sg.money.common.DatabaseManager;
 import sg.money.domainobjects.Account;
 import android.content.*;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import sg.money.*;
 import sg.money.domainobjects.*;
 import java.util.*;
 

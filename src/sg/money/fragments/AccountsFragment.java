@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import sg.money.domainobjects.Account;
 import sg.money.adapters.AccountListAdapter;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 import sg.money.utils.DialogButtons;
 import sg.money.utils.Misc;
 import sg.money.R;

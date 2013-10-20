@@ -4,13 +4,12 @@ import android.content.*;
 import android.graphics.*;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.*;
+
 import java.io.Serializable;
 import java.util.*;
-import sg.money.*;
-import sg.money.activities.*;
+
+import sg.money.common.DatabaseManager;
 import sg.money.domainobjects.*;
-import sg.money.utils.*;
 
 public class AddTransactionModel extends Observable implements Parcelable
 {	

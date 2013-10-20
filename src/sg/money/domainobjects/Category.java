@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 
 /**
 * A categorisation of a transaction.

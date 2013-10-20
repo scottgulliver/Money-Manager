@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 
 /**
 * An account holds a value, which is affected by transactions recorded against it.

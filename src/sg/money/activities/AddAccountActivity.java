@@ -1,28 +1,21 @@
 package sg.money.activities;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
-import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import sg.money.domainobjects.Account;
-import sg.money.domainobjects.Category;
-import sg.money.DatabaseManager;
-import sg.money.fragments.HostActivityFragmentTypes;
+import sg.money.common.DatabaseManager;
 import sg.money.R;
-import sg.money.domainobjects.Transaction;
 import sg.money.models.AddAccountModel;
 import sg.money.models.OnChangeListener;
 import android.view.View.*;
-import android.location.*;
+
 import sg.money.controllers.*;
 import sg.money.utils.Misc;
-import android.util.*;
 
 public class AddAccountActivity extends BaseActivity implements OnChangeListener<AddAccountModel>
 {

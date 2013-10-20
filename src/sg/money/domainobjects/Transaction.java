@@ -4,7 +4,7 @@ import java.util.Date;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 
 /**
  * An instance of an expense, income, or transfer.

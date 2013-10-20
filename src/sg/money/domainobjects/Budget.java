@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import sg.money.DatabaseManager;
+import sg.money.common.DatabaseManager;
 
 /**
  * A budget holds a desired value against a set of accounts and categories
