@@ -119,9 +119,9 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
 	}
 
     public void changeItemCheckState(int position, boolean checked) {
-        m_adapter.SetSelected(position, checked);
+        m_adapter.setSelected(position, checked);
         m_adapter.notifyDataSetChanged();
-        final int checkedCount = m_adapter.GetSelectedItems().size();
+        final int checkedCount = m_adapter.getSelectedItems().size();
         switch (checkedCount) {
             case 0:
                 m_parentFragment.getActionMode().setSubtitle(null);
@@ -138,7 +138,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
                 break;
         }
 
-        if (m_adapter.GetSelectedItems().size() == 0)
+        if (m_adapter.getSelectedItems().size() == 0)
             m_parentFragment.getActionMode().finish();
     }
 
@@ -200,9 +200,9 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
     private void confirmDeleteItems(final ActionMode mode)
     {
         Misc.showConfirmationDialog(getActivity(),
-                m_adapter.GetSelectedItems().size() == 1
+                m_adapter.getSelectedItems().size() == 1
                         ? "Delete 1 transaction?"
-                        : "Delete " + m_adapter.GetSelectedItems().size() + " transactions?",
+                        : "Delete " + m_adapter.getSelectedItems().size() + " transactions?",
                 DialogButtons.OkCancel,
                 new OnClickListener() { public void onClick(DialogInterface dialog, int which) {
                     DeleteItems();
@@ -217,7 +217,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
 
     private void DeleteItems()
     {
-        ArrayList<Transaction> selectedItems = m_adapter.GetSelectedItems();
+        ArrayList<Transaction> selectedItems = m_adapter.getSelectedItems();
         for(Transaction selectedItem : selectedItems)
         {
             if (selectedItem.isTransfer())
@@ -253,7 +253,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
         }
  
         public void onDestroyActionMode(ActionMode mode) {
-        	m_adapter.ClearSelected();
+        	m_adapter.clearSelected();
 	        m_adapter.notifyDataSetChanged();
 	        m_transactionsList.clearChoices();
  
@@ -265,7 +265,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
             case R.id.cab_edit:
-            	EditItem(m_adapter.GetSelectedItems().get(0));
+            	EditItem(m_adapter.getSelectedItems().get(0));
                 mode.finish();
                 return true;
             case R.id.cab_delete:

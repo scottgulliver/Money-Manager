@@ -135,7 +135,7 @@ public class AddBudgetModel extends Observable implements Parcelable {
             return "Please enter a name.";
         }
 
-        if (m_budget.getValue() < 0) {
+        if (m_budget.getValue() <= 0) {
             return "Please enter a positive budget value.";
         }
 
