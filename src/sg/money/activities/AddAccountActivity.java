@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import sg.money.domainobjects.Account;
 import sg.money.common.DatabaseManager;
 import sg.money.R;
 import sg.money.models.AddAccountModel;
 import sg.money.models.OnChangeListener;
 import android.view.View.*;
-
 import sg.money.controllers.*;
 import sg.money.utils.Misc;
 
@@ -130,7 +128,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 	private void updateUi()
 	{
 		m_txtName.setText(m_model.getAccountName());
-		m_txtStartingBalance.setText(String.valueOf(m_model.getStartingBalance()));
+		m_txtStartingBalance.setText(Misc.formatValue(m_model.getStartingBalance()));
 	}
 
     public void cancelFocus()

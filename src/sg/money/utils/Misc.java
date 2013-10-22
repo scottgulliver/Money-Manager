@@ -53,6 +53,15 @@ public class Misc
 	}
 	
 	/**
+	 * Returns a string representing the value to 2dp
+	 */
+	public static String formatValue(double value)
+	{
+		DecimalFormat format = new DecimalFormat("0.00");
+		return format.format(value);
+	}
+	
+	/**
 	 * Returns the symbol for a given currency code
 	 */
     public static String getCurrencySymbol(String currencyCode)

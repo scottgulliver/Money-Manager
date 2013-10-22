@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import sg.money.domainobjects.Budget;
 import sg.money.common.DatabaseManager;
 import sg.money.models.AddBudgetModel;
@@ -161,7 +160,7 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 	public void updateUi()
 	{
 		m_txtName.setText(m_model.getBudgetName());
-		m_txtValue.setText(String.valueOf(m_model.getBudgetValue()));
+		m_txtValue.setText(Misc.formatValue(m_model.getBudgetValue()));
 		m_spnNotifyType.setSelection(m_model.getNotifyType().getValue());
 	}
 

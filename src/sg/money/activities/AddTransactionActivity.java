@@ -257,12 +257,8 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     {
 		m_txtDesc.setText(m_model.getDescription());
 		m_chkHideFromReports.setChecked(m_model.getDontReport());
-
-		m_txtValue.setText(String.valueOf(m_model.getValue()));
-
-		String str = m_txtValue.getText().toString();
-		if (str.contains(".") && str.substring(str.indexOf(".")+1).length() == 1)
-			m_txtValue.setText(str + 0);
+		m_txtValue.setText(Misc.formatValue(m_model.getValue()));
+		
 		
 		try
 		{
