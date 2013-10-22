@@ -1,14 +1,15 @@
 package sg.money.controllers;
 
-import sg.money.activities.*;
-import sg.money.models.*;
-import com.actionbarsherlock.view.*;
-import sg.money.*;
 import android.content.*;
-import sg.money.fragments.*;
 import android.widget.*;
-import android.preference.*;
+import com.actionbarsherlock.view.*;
 import java.util.*;
+import sg.money.*;
+import sg.money.activities.*;
+import sg.money.domainobjects.*;
+import sg.money.fragments.*;
+import sg.money.models.*;
+import sg.money.utils.*;
 
 public class AddTransactionController
 {
@@ -58,6 +59,11 @@ public class AddTransactionController
 	{
 		m_view = view;
 		m_model = model;
+		
+		if (m_model.isNewTransaction())
+		{
+			setSavedCategorySelection();
+		}
 	}
 	
 	
@@ -109,6 +115,19 @@ public class AddTransactionController
 	    }
 	    return true;
 	}
+	
+	private void setSavedCategorySelection()
+	{
+		int savedId = Settings.getLastUsedCategoryId(m_view, m_model.isIncomeType());
+		for(Category category : m_model.getAllCategories())
+		{
+			if (category.getId() == savedId)
+			{
+				m_model.setCategory(category);
+				break;
+			}
+		}
+	}
 
     private void OkClicked()
     {
@@ -122,13 +141,6 @@ public class AddTransactionController
         else
         {
             m_model.commit(m_view);
-
-    		//save selections to preference, for loading these by default next time
-    		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_view);
-    		SharedPreferences.Editor editor = sharedPref.edit();
-			editor.putInt((m_model.getCategory().isIncome() ? "lastIncomeCategoryId" : "lastExpenseCategoryId"), m_model.getCategory().getId());
-    		editor.commit();
-
             m_view.setResult(m_view.RESULT_OK, new Intent());
             m_view.finish();
         }
@@ -151,6 +163,9 @@ public class AddTransactionController
         {
             m_model.setCategory(selectedCategoryName);
         }
+		
+		Settings.setLastUsedCategoryId(m_view, m_model.getCategory().getId(),
+			m_model.getCategory().isIncome());
     }
 
     public void onTransferAccountChange(int position)
@@ -168,6 +183,8 @@ public class AddTransactionController
         m_model.setIsTransfer(type == TransactionType.Transfer);
 
         m_model.setValue(transactionValue); // now that the type may have changed, refresh the value
+		
+		setSavedCategorySelection();
     }
 
     public ArrayList<String> getCategoryNames() {

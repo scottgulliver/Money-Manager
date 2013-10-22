@@ -26,7 +26,7 @@ public class AddTransactionModel extends Observable implements Parcelable
 	
 	/* Constructor */
 
-    public AddTransactionModel(Transaction transaction, int accountID, int defaultCategoryID, Context context) {
+    public AddTransactionModel(Transaction transaction, int accountID, Context context) {
         m_transaction = transaction;
 		
 		m_accountsMap = new HashMap<String, Account>();
@@ -56,7 +56,6 @@ public class AddTransactionModel extends Observable implements Parcelable
         {
             m_transaction = new Transaction();
 			m_transaction.setAccount(accountID);
-			m_transaction.setCategory(defaultCategoryID);
 			m_transaction.setDateTime(now);
             m_transaction.setTransferFromTransaction(-1);
             m_transaction.setTransferToTransaction(-1);

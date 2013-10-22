@@ -9,8 +9,11 @@ import android.preference.PreferenceManager;
 */
 public class Settings {
 
-    static final String SETTING_DEFAULTACCOUNTID = "SETTING_DEFAULTACCOUNTID";
-    static final String SETTING_FIRSTTIMEDRAWEROPENED = "SETTING_FIRSTTIMEDRAWEROPENED";
+    private static final String SETTING_DEFAULTACCOUNTID = "SETTING_DEFAULTACCOUNTID";
+    private static final String SETTING_FIRSTTIMEDRAWEROPENED = "SETTING_FIRSTTIMEDRAWEROPENED";
+	private static final String SETTING_LASTINCOMECATEGORYID = "lastIncomeCategoryId";
+	private static final String SETTING_LASTEXPENSECATEGORYID = "lastExpenseCategoryId";
+	
 
 	/**
 	 * Sets the default account to open in the transactions view.
@@ -43,10 +46,32 @@ public class Settings {
     }
 
 	/**
-	 * Sets whether the navigation drawer has been shown to the user yet.
+	 * Gets whether the navigation drawer has been shown to the user yet.
 	 */
     public static boolean getFirstTimeDrawerOpened(Context context)
     {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SETTING_FIRSTTIMEDRAWEROPENED, false);
     }
+
+	/**
+	 * Sets the id of the last used category.
+	 */
+    public static void setLastUsedCategoryId(Context context, int id, boolean incomeType)
+    {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(incomeType ? SETTING_LASTINCOMECATEGORYID : SETTING_LASTEXPENSECATEGORYID, id);
+        editor.commit();
+    }
+
+	/**
+	 * Gets the id of the last used category.
+	 */
+    public static int getLastUsedCategoryId(Context context, boolean incomeType)
+    {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+			.getInt(incomeType ? SETTING_LASTINCOMECATEGORYID : SETTING_LASTEXPENSECATEGORYID, -1);
+    }
+	
+	
 }

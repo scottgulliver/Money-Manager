@@ -137,7 +137,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
                 }
             }
 
-            m_model = new AddTransactionModel(editTransaction, accountId, lastSelectedCategoryId, this);
+            m_model = new AddTransactionModel(editTransaction, accountId, this);
         }
 
         m_model.addListener(this);
@@ -287,8 +287,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         boolean addNewCategory = m_model.getUseNewCategory();
         m_txtNewCatName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
         m_tvCategoryName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
-
-		Log.e("sg.money", m_model.isIncomeType() ? "Income spn" : "Not income spn");
+		
         m_spnType.setSelection(m_model.getIsTransfer()
                 ? m_controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Transfer.name())
                 : m_model.isIncomeType()
