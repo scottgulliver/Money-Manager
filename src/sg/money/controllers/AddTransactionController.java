@@ -59,11 +59,6 @@ public class AddTransactionController
 	{
 		m_view = view;
 		m_model = model;
-		
-		if (m_model.isNewTransaction())
-		{
-			setSavedCategorySelection();
-		}
 	}
 	
 	
@@ -116,7 +111,7 @@ public class AddTransactionController
 	    return true;
 	}
 	
-	private void setSavedCategorySelection()
+	public void setSavedCategorySelection()
 	{
 		int savedId = Settings.getLastUsedCategoryId(m_view, m_model.isIncomeType());
 		for(Category category : m_model.getAllCategories())

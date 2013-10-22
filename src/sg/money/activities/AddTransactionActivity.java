@@ -146,9 +146,14 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         setTitle(m_model.isNewTransaction() ? "Add Transaction" : "Edit Transaction");
 
         ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(
-                this,android.R.layout.simple_spinner_dropdown_item, m_controller.getTypeChoices());
+			this,android.R.layout.simple_spinner_dropdown_item, m_controller.getTypeChoices());
 
         m_spnType.setAdapter(arrayAdapter2);
+
+		if (m_model.isNewTransaction())
+		{
+			m_controller.setSavedCategorySelection();
+		}
 
         updateUi();
 
