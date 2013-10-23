@@ -15,8 +15,8 @@ public class AddTransactionModel extends Observable implements Parcelable
 {	
     private Transaction m_transaction;
     private boolean m_newTransaction;
-    private Map<String, Account> m_accountsMap;
-    private Map<String, Category> m_categoriesMap;
+    private HashMap<String, Account> m_accountsMap;
+    private HashMap<String, Category> m_categoriesMap;
 	private Category m_cachedCategory;
     private Transaction m_relatedTransaction; // other half of a transaction
 	private boolean m_useNewCategory;
@@ -311,7 +311,7 @@ public class AddTransactionModel extends Observable implements Parcelable
 
     public String validate()
     {
-    	if (String.valueOf(m_transaction.getValue()).trim().equals(""))
+    	if (m_transaction.getValue() == 0)
     	{
     		return "Please enter a value.";
     	}

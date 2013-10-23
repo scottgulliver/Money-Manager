@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.*;
-
 import sg.money.domainobjects.Category;
 import sg.money.common.DatabaseManager;
 import sg.money.models.AddTransactionModel;
@@ -156,6 +154,11 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 		}
 
         updateUi();
+		
+		if (m_model.isNewTransaction())
+		{
+			m_txtValue.selectAll();
+		}
 
     	m_btnDate.setOnClickListener(new OnClickListener() {
     		 
@@ -205,7 +208,10 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 				{
 					if (!hasFocus)
 					{
-
+						if (m_txtValue.getText().toString().trim().equals(""))
+						{
+							m_txtValue.setText("0.00");
+						}
 						m_controller.onTransactionValueChange(Double.parseDouble(m_txtValue.getText().toString()));
 					}
 				}			
