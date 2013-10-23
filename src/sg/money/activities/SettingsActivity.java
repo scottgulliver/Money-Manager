@@ -17,7 +17,6 @@ import sg.money.domainobjects.Transaction;
 
 public class SettingsActivity extends SherlockPreferenceActivity {
 
-	private CheckBoxPreference m_useReconcilePreference;
 	private Preference m_enablePinPref;
 	private Preference m_changePinPref;
 	private Preference m_disablePinPref;
@@ -36,7 +35,6 @@ public class SettingsActivity extends SherlockPreferenceActivity {
 		m_enablePinPref = findPreference(resString(R.string.pref_enablepin_key));
 		m_changePinPref = findPreference(resString(R.string.pref_changepin_key));
 		m_disablePinPref = findPreference(resString(R.string.pref_disablepin_key));
-		m_useReconcilePreference = (CheckBoxPreference)findPreference(resString(R.string.pref_usereconcile_key));
 
 		conditionPreferences();
 
@@ -74,18 +72,6 @@ public class SettingsActivity extends SherlockPreferenceActivity {
 						return false;
 					}
 				});
-				
-		m_useReconcilePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-			{
-
-				public boolean onPreferenceChange(Preference p1, Object p2)
-				{
-					boolean setting = (Boolean)p2;
-					if (setting)
-						showReconcileTransactionsDialog();
-					return true;
-				}
-		});
 	}
 
 	@Override

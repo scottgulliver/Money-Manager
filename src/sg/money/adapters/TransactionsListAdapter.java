@@ -16,7 +16,6 @@ public class TransactionsListAdapter extends BaseListAdapter<Transaction> {
 
     private ArrayList<Category> m_categories;
 	private boolean m_showReconcileOptions;
-	private boolean m_greyOutReconciled;
 
     final int COLOR_RECONCILED = Color.rgb(220, 220, 235);
 	
@@ -24,12 +23,11 @@ public class TransactionsListAdapter extends BaseListAdapter<Transaction> {
 	/* Constructor */
  
     public TransactionsListAdapter(Activity activity, ArrayList<Transaction> transactions,
-           ArrayList<Category> categories, boolean showReconcileOptions, boolean greyOutReconciled) {
+           ArrayList<Category> categories, boolean showReconcileOptions) {
         super(activity, transactions);
 
         this.m_categories = categories;
 		this.m_showReconcileOptions = showReconcileOptions;
-		this.m_greyOutReconciled = greyOutReconciled;
     }
 	
 	
@@ -96,7 +94,7 @@ public class TransactionsListAdapter extends BaseListAdapter<Transaction> {
             valueText.setTextColor(Color.argb(255, 204, 0, 0));
         }
 
-        descText.setTextColor(transaction.isReconciled() && m_greyOutReconciled
+        descText.setTextColor(transaction.isReconciled()
                 ? Color.argb(255, 100, 100, 100)
                 : Color.argb(255, 34, 34, 34));
 
@@ -115,7 +113,7 @@ public class TransactionsListAdapter extends BaseListAdapter<Transaction> {
         {
             view.setBackgroundColor(COLOR_SELECTED);
         }
-        else if (transaction.isReconciled() && m_greyOutReconciled)
+        else if (transaction.isReconciled())
         {
             view.setBackgroundColor(COLOR_RECONCILED);
         }

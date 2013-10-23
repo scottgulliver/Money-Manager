@@ -28,7 +28,6 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
     private static ArrayList<Account> m_accounts;
     private ActionBar m_actionBar;
     private Menu m_menu;
-	private boolean m_useReconcile;
 	private boolean m_inReconcileMode;
 	private boolean m_showReconciled;
 
@@ -48,12 +47,7 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
 
     public boolean showReconciledTransactions()
     {
-        return m_showReconciled || m_inReconcileMode || !m_useReconcile;
-    }
-
-    public boolean useReconcile()
-    {
-        return m_useReconcile;
+        return m_showReconciled || m_inReconcileMode;
     }
 
 
@@ -86,12 +80,9 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
         MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
         addTransaction.setVisible(m_accounts.size() > 0);
 
-        updateCanReconcile(false);
-
         MenuItem reconcileTransactions = menu.findItem(R.id.menu_reconcile);
         MenuItem showHideReconciled = menu.findItem(R.id.menu_showhidereconciled);
-        reconcileTransactions.setVisible(m_useReconcile);
-        showHideReconciled.setVisible(m_useReconcile && !m_inReconcileMode);
+        showHideReconciled.setVisible(!m_inReconcileMode);
         reconcileTransactions.setTitle(m_inReconcileMode ? "Finish Reconciling" : "Reconcile Transactions");
         showHideReconciled.setTitle(m_showReconciled ? "Hide Reconciled" : "Show Reconciled");
 
@@ -224,8 +215,6 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
 	        m_tabsAdapter.addTab(m_actionBar.newTab().setText("(No m_accounts)"), EmptyListFragment.class, tabBundle, null);
         	m_viewPager.setCurrentItem(0);
         }
-		 
-		updateCanReconcile(true);
         
         m_selectedAccount = !m_accounts.isEmpty() ? m_accounts.get(0) : null;
 
@@ -255,29 +244,11 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
             ((ParentActivity)getActivity()).onCreateOptionsMenu(this.m_menu);
         }
     }
-	
-	private void updateCanReconcile(boolean updateMenu)
-	{
-		boolean oldValue = m_useReconcile;
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		m_useReconcile = sharedPref.getBoolean(getString(R.string.pref_usereconcile_key), true);
-		
-		if (!m_useReconcile)
-			m_inReconcileMode = false;
-			
-		if ((oldValue != m_useReconcile) && updateMenu && m_menu != null)
-		{
-			m_menu.clear();
-            ((ParentActivity)getActivity()).onCreateOptionsMenu(m_menu);
-		}
-	}
 
 	public void UpdateTransactions()
 	{
 		if (m_accounts.isEmpty())
 			return;
-			
-		updateCanReconcile(true);
 		
 		for(Fragment fragment : m_tabsAdapter.fragments)
 		{

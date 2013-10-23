@@ -185,7 +185,7 @@ public class AccountTransactionsFragment extends Fragment implements OnItemLongC
         Collections.reverse(m_transactions);
 
         // Getting m_adapter by passing xml data ArrayList
-        m_adapter =new TransactionsListAdapter(m_parentActivity, m_transactions, m_categories, m_parentFragment.isInReconcileMode(), m_parentFragment.useReconcile());
+        m_adapter = new TransactionsListAdapter(m_parentActivity, m_transactions, m_categories, m_parentFragment.isInReconcileMode());
         m_transactionsList.setAdapter(m_adapter);
     }
 
