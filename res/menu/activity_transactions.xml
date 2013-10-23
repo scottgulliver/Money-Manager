@@ -6,6 +6,12 @@
         android:orderInCategory="1"
         android:showAsAction="always"
         android:title="@string/add_transaction"/>
+	<item
+		android:id="@+id/menu_acceptreconcilechanges"
+		android:icon="@drawable/navigation_accept"
+		android:orderInCategory="2"
+		android:showAsAction="always"
+		android:title="@string/acceptreconcilechanges" />
     <item
         android:id="@+id/menu_reconcile"
         android:orderInCategory="4"

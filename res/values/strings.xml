@@ -418,6 +418,7 @@
 	<string name="transfer_to">Transfer to</string>
 	<string name="reconcile_transactions">Reconcile Transactions</string>
 	<string name="show_hide_reconciled">Show Reconciled Transactions"</string>
+	<string name="acceptreconcilechanges">Done</string>
 
 	<string-array name="drawer_links_array">
 		<item>Accounts</item>

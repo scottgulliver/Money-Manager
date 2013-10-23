@@ -76,23 +76,15 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getParentActivity().getSupportMenuInflater().inflate(R.menu.activity_transactions, menu);
-
-        MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
-        addTransaction.setVisible(m_accounts.size() > 0);
-
-        MenuItem reconcileTransactions = menu.findItem(R.id.menu_reconcile);
-        MenuItem showHideReconciled = menu.findItem(R.id.menu_showhidereconciled);
-        showHideReconciled.setVisible(!m_inReconcileMode);
-        reconcileTransactions.setTitle(m_inReconcileMode ? "Finish Reconciling" : "Reconcile Transactions");
-        showHideReconciled.setTitle(m_showReconciled ? "Hide Reconciled" : "Show Reconciled");
-
-        this.m_menu = menu;
+		conditionMenu(menu);
+        m_menu = menu;
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu, boolean drawerIsOpen) {
         menu.findItem(R.id.menu_addtransaction).setVisible(!drawerIsOpen);
+		conditionMenu(menu);
         return true;
     }
 
@@ -122,12 +114,20 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
             }
 
             case R.id.menu_reconcile:{
-                m_inReconcileMode = !m_inReconcileMode;
+                m_inReconcileMode = true;
                 UpdateTransactions();
                 m_menu.clear();
                 onCreateOptionsMenu(this.m_menu);
                 break;
-            }
+				}
+
+            case R.id.menu_acceptreconcilechanges:{
+				m_inReconcileMode = false;
+				UpdateTransactions();
+				m_menu.clear();
+				onCreateOptionsMenu(this.m_menu);
+				break;
+				}
 
             case R.id.menu_showhidereconciled:{
                 m_showReconciled = !m_showReconciled;
@@ -244,6 +244,22 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
             ((ParentActivity)getActivity()).onCreateOptionsMenu(this.m_menu);
         }
     }
+
+	private void conditionMenu(Menu menu)
+	{
+        MenuItem addTransaction = menu.findItem(R.id.menu_addtransaction);
+        addTransaction.setVisible(m_accounts.size() > 0 && !m_inReconcileMode);
+
+        MenuItem showHideReconciled = menu.findItem(R.id.menu_showhidereconciled);
+        showHideReconciled.setVisible(!m_inReconcileMode && m_accounts.size() > 0);
+        showHideReconciled.setTitle(m_showReconciled ? "Hide Reconciled" : "Show Reconciled");
+
+        MenuItem reconcileTransactions = menu.findItem(R.id.menu_reconcile);
+        reconcileTransactions.setVisible(!m_inReconcileMode && m_accounts.size() > 0);
+
+        MenuItem finishReconciliation = menu.findItem(R.id.menu_acceptreconcilechanges);
+        finishReconciliation.setVisible(m_inReconcileMode && m_accounts.size() > 0);	
+	}
 
 	public void UpdateTransactions()
 	{
