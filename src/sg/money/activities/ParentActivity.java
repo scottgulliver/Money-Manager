@@ -1,30 +1,25 @@
 package sg.money.activities;
 
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockActionBarDrawerToggle;
-import com.actionbarsherlock.app.SherlockActionBarDrawerToggleDelegate;
+import android.content.*;
+import android.content.res.*;
+import android.os.*;
+import android.support.v4.app.*;
+import android.support.v4.widget.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
+import com.actionbarsherlock.app.*;
+import com.actionbarsherlock.view.*;
+import java.util.*;
+import sg.money.*;
+import sg.money.adapters.*;
+import sg.money.domainobjects.*;
+import sg.money.fragments.*;
+import sg.money.utils.*;
+
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import java.util.ArrayList;
-import sg.money.fragments.AccountsFragment;
-import sg.money.fragments.BudgetsFragment;
-import sg.money.fragments.CategoriesFragment;
-import sg.money.adapters.DrawerArrayAdapter;
-import sg.money.domainobjects.DrawerArrayItem;
-import sg.money.fragments.HostActivityFragmentBase;
-import sg.money.fragments.HostActivityFragmentTypes;
-import sg.money.fragments.OverviewFragment;
-import sg.money.R;
-import sg.money.utils.Settings;
-import sg.money.fragments.TransactionsHolderFragment;
 
 /**
  * Holds the main navigation drawer, and uses fragments to populate its view.
@@ -49,6 +44,7 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
     private HostActivityFragmentBase m_currentFragment;
     private ArrayList<DrawerArrayItem> m_drawerItems;
     private ActionMode m_actionMode;
+	private HostActivityFragmentTypes m_currentFragmentType;
 	
 	
 	/* Activity overrides */
@@ -97,6 +93,8 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+		
+		
 
         if(savedInstanceState == null)
         {
@@ -109,6 +107,11 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
                 changeContent(HostActivityFragmentTypes.Transactions);
             }
         }
+		else
+		{
+			changeContent(HostActivityFragmentTypes.fromInteger(
+				savedInstanceState.getInt("m_currentFragmentType")));
+		}
 
         //open the drawer if this is the first run
         if (!Settings.getFirstTimeDrawerOpened(this))
@@ -116,6 +119,16 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
             m_drawerLayout.openDrawer(m_drawerList);
             Settings.setFirstTimeDrawerOpened(this, true);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt("m_currentFragmentType", m_currentFragmentType.getValue());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -153,9 +166,12 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        m_currentFragment.onPrepareOptionsMenu(menu, m_drawerLayout.isDrawerOpen(m_drawerList));
-        return super.onPrepareOptionsMenu(menu);
-    }
+		if (m_currentFragment != null)
+		{
+        	m_currentFragment.onPrepareOptionsMenu(menu, m_drawerLayout.isDrawerOpen(m_drawerList));
+    	}
+		return super.onPrepareOptionsMenu(menu);
+	}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -220,6 +236,8 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
                 changeFragment(BudgetsFragment.class, newType.name());
                 break;
         }
+		
+		m_currentFragmentType = newType;
     }
 
     private <T extends HostActivityFragmentBase> void changeFragment(Class<T> fragmentClass, String title)
