@@ -6,13 +6,13 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
 import sg.money.common.DatabaseManager;
+import java.io.*;
 
 /**
 * A categorisation of a transaction.
 */
-public class Category implements Parcelable
+public class Category implements Parcelable, Serializable
 {
 	private int m_id;
 	private String m_name;

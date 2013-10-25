@@ -5,11 +5,12 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import sg.money.common.DatabaseManager;
+import java.io.*;
 
 /**
 * An account holds a value, which is affected by transactions recorded against it.
 */
-public class Account implements Parcelable
+public class Account implements Parcelable, Serializable
 {  
 	private int m_id;
 	private String m_name;
