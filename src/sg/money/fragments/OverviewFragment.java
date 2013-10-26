@@ -110,7 +110,10 @@ public class OverviewFragment extends HostActivityFragmentBase
         	setData("");
     	}
 
-        getParentActivity().invalidateOptionsMenu();
+        if (savedInstanceState == null)
+        {
+            getParentActivity().invalidateOptionsMenu();
+        }
 
         return v;
     }

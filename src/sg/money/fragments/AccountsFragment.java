@@ -63,7 +63,10 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 
         UpdateList();
 
-        getParentActivity().invalidateOptionsMenu();
+        if (savedInstanceState == null)
+        {
+            getParentActivity().invalidateOptionsMenu();
+        }
 
         return v;
     }

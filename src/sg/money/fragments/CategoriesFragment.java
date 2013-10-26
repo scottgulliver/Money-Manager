@@ -65,7 +65,10 @@ public class CategoriesFragment extends HostActivityFragmentBase implements OnIt
 
 		UpdateList();
 
-        getParentActivity().invalidateOptionsMenu();
+        if (savedInstanceState == null)
+        {
+            getParentActivity().invalidateOptionsMenu();
+        }
 
         return v;
 	}
