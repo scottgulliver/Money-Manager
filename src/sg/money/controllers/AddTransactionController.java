@@ -199,7 +199,8 @@ public class AddTransactionController
         ArrayList<String> typeChoices = new ArrayList<String>();
         typeChoices.add(TransactionType.Expense.name());
         typeChoices.add(TransactionType.Income.name());
-        if (m_model.getAccounts().length > 0)
+        if (m_model.getAccounts().length > 0 &&
+                (m_model.isNewTransaction() || m_model.getIsTransfer()))
         {
             typeChoices.add(TransactionType.Transfer.name());
         }
