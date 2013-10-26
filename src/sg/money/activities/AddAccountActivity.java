@@ -25,6 +25,7 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
     private TextView m_tvStartingBalance;
     private AddAccountModel m_model;
 	private AddAccountController m_controller;
+    private View m_lastFocus;
 	
 	
 	/* Activity Overrides */
@@ -133,8 +134,18 @@ public class AddAccountActivity extends BaseActivity implements OnChangeListener
 
     public void cancelFocus()
     {
+        m_lastFocus = getCurrentFocus();
+
         m_txtName.clearFocus();
         m_txtStartingBalance.clearFocus();
+    }
+
+    public void restoreFocus()
+    {
+        if (m_lastFocus != null)
+        {
+            m_lastFocus.requestFocus();
+        }
     }
 
 

@@ -76,6 +76,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 	private static Button m_btnDate;
     private AddTransactionModel m_model;
 	private AddTransactionController m_controller;
+    private View m_lastFocus;
 	
 	
 	/* Activity overrides */
@@ -175,6 +176,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         cancelFocus();
 						m_controller.onTypeChange(position);
+                        restoreFocus();
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
@@ -185,7 +187,8 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 		m_spnCategory.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         cancelFocus();
-						m_controller.onCategoryChange(position);
+                        m_controller.onCategoryChange(position);
+                        restoreFocus();
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
@@ -196,6 +199,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 cancelFocus();
                 m_controller.onTransferAccountChange(position);
+                restoreFocus();
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -234,6 +238,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 				{
                     cancelFocus();
 					m_controller.onHideFromReportsChange(checked);
+                    restoreFocus();
 				}
 			});
     }
@@ -325,13 +330,25 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
     {
         cancelFocus();
 		m_controller.onDateChange(date);
+        restoreFocus();
    	}
 	
 	public void cancelFocus()
 	{
-		m_txtValue.clearFocus();
-		m_txtDesc.clearFocus();
-	}
+        m_lastFocus = getCurrentFocus();
+
+        m_txtValue.clearFocus();
+        m_txtDesc.clearFocus();
+    }
+
+    public void restoreFocus()
+    {
+        if (m_lastFocus != null)
+        {
+            m_lastFocus.requestFocus();
+        }
+    }
+
 	
 	
 	/* Implementation of OnChangeListener */

@@ -31,6 +31,7 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 	private Spinner m_spnNotifyType;
     private AddBudgetModel m_model;
 	private AddBudgetController m_controller;
+    private View m_lastFocus;
 
 	// Bundle State Data
 	static final String STATE_SELECTED_ACCOUNTS = "stateSelectedAccounts";
@@ -121,6 +122,7 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 			{
                 cancelFocus();
 				m_controller.onNotifyTypeSelected(Budget.NotificationType.fromInteger(position));
+                restoreFocus();
 			}
 
 			public void onNothingSelected(AdapterView<?> parent)
@@ -167,8 +169,18 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 
     public void cancelFocus()
     {
+        m_lastFocus = getCurrentFocus();
+
         m_txtName.clearFocus();
         m_txtValue.clearFocus();
+    }
+
+    private void restoreFocus()
+    {
+        if (m_lastFocus != null)
+        {
+            m_lastFocus.requestFocus();
+        }
     }
 	
 	

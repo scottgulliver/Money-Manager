@@ -33,6 +33,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 	private ImageView m_imgColor;
     private AddCategoryModel m_model;
 	private AddCategoryController m_controller;
+    private View m_lastFocus;
 	
 	
 	/* Activity overrides */
@@ -102,6 +103,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         cancelFocus();
                         m_controller.onTypeChange(position == 1);
+                        restoreFocus();
 					}
 
 					public void onNothingSelected(AdapterView<?> parent) {
@@ -116,6 +118,7 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 cancelFocus();
                                 m_controller.onParentChange(position);
+                                restoreFocus();
 							}
 
 							public void onNothingSelected(AdapterView<?> parent) {
@@ -191,7 +194,17 @@ public class AddCategoryActivity extends BaseActivity implements ColorPickerDial
 
     public void cancelFocus()
     {
+        m_lastFocus = getCurrentFocus();
+
         m_txtName.clearFocus();
+    }
+
+    public void restoreFocus()
+    {
+        if (m_lastFocus != null)
+        {
+            m_lastFocus.requestFocus();
+        }
     }
 	
 	
