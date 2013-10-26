@@ -13,6 +13,6 @@ public abstract class BaseActivity extends SherlockActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		BudgetNotificationReciever.setUpEvents(this, false);
+		BudgetNotificationReciever.setUpEvents(this);
 	}
 }

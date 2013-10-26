@@ -14,10 +14,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import sg.money.R;
+import sg.money.activities.PinEntryActivity;
 import sg.money.domainobjects.Budget;
-import sg.money.fragments.BudgetsFragment;
 
 public class BudgetNotificationReciever extends BroadcastReceiver {
 	
@@ -26,18 +27,12 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 	
 	/* Static methods */
 	
-	public static void setUpEvents(Context context, boolean deleteExisting)
+	public static void setUpEvents(Context context)
 	{
 		AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
 		Intent intent = new Intent(context, BudgetNotificationReciever.class);
 		intent.putExtra("alarmType", DAILY_NOTIFICATION);
-		
-		if (!deleteExisting)
-		{
-			if (PendingIntent.getBroadcast(context, DAILY_NOTIFICATION, intent, PendingIntent.FLAG_NO_CREATE) != null)
-				return;
-		}
 		
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, DAILY_NOTIFICATION, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
@@ -48,7 +43,7 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 		calendar.set(Calendar.SECOND, 0);
 		calendar.add(Calendar.DATE, 1);
 		
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*60*24 , pendingIntent);	
+		alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*60*24 , pendingIntent);
 	}
 	
 	@Override
@@ -109,12 +104,12 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 						onlyDailyBudgets = false;
                     }
 				}
-				
+
 				if (onlyDailyBudgets)
 					title = "Daily budget overview";
 				
 				String smallText = "Expand to see budgets";
-				
+
 				if (!budgetsToShow.isEmpty())
 					createNotification(context, title, smallText, linesToShow);
 			}
@@ -134,7 +129,7 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 		
 		if (Build.VERSION.RELEASE.compareTo("4.1") >= 0)
 			mBuilder.setPriority(Notification.PRIORITY_LOW);
-		
+
 		if (linesToShow.size() == 1)
 		{
 			mBuilder.setContentText(linesToShow.get(0));
@@ -149,9 +144,9 @@ public class BudgetNotificationReciever extends BroadcastReceiver {
 			mBuilder.setStyle(inboxStyle);
 		}
 
-		Intent resultIntent = new Intent(context, BudgetsFragment.class);
+		Intent resultIntent = new Intent(context, PinEntryActivity.class);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-		stackBuilder.addParentStack(BudgetsFragment.class);
+		stackBuilder.addParentStack(PinEntryActivity.class);
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);

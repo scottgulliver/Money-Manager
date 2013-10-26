@@ -60,10 +60,10 @@ public class ParentActivity extends BaseFragmentActivity implements ActionBarDra
 
         // Set the adapter for the list view
         m_drawerItems = new ArrayList<DrawerArrayItem>();
+        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Overview.name(), R.drawable.overview));
         m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Transactions.name(), R.drawable.sort_by_size));
         m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Accounts.name(), R.drawable.bank));
         m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Categories.name(), R.drawable.categories));
-        m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Overview.name(), R.drawable.overview));
         m_drawerItems.add(new DrawerArrayItem(HostActivityFragmentTypes.Budgets.name(), R.drawable.percent));
         m_drawerList.setAdapter(new DrawerArrayAdapter(this, m_drawerItems));
         // Set the list's click listener

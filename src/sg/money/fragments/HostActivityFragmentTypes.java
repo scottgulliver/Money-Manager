@@ -4,23 +4,23 @@ package sg.money.fragments;
  * The concrete types of fragments which may be accessed via the navigation drawer
  */
 public enum HostActivityFragmentTypes {
-    Transactions(0),
-    Accounts(1),
-    Categories(2),
-    Overview(3),
+    Overview(0),
+    Transactions(1),
+    Accounts(2),
+    Categories(3),
     Budgets(4);
 
 	// access to values() for casting is expensive, so use this instead..
 	public static HostActivityFragmentTypes fromInteger(int x) {
 		switch(x) {
-			case 0:
-				return Transactions;
+            case 0:
+                return Overview;
 			case 1:
-				return Accounts;
+				return Transactions;
 			case 2:
-				return Categories;
+				return Accounts;
 			case 3:
-				return Overview;
+				return Categories;
 			case 4:
 				return Budgets;
 		}

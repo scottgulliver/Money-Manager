@@ -13,6 +13,6 @@ public abstract class BaseFragmentActivity extends SherlockFragmentActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		BudgetNotificationReciever.setUpEvents(this, false);
+		BudgetNotificationReciever.setUpEvents(this);
 	}
 }
