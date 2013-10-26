@@ -3,6 +3,7 @@ package sg.money.utils;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -309,5 +310,17 @@ public class Misc
     public static boolean stringNullEmptyOrWhitespace(final String string)
     {
         return string == null || string.trim().equals("");
+    }
+
+    /**
+     * Converts an object based boolean list to a primitve array
+     */
+    public static boolean[] toPrimitiveArray(final ArrayList<Boolean> booleanList) {
+        final boolean[] primitives = new boolean[booleanList.size()];
+        int index = 0;
+        for (Boolean object : booleanList) {
+            primitives[index++] = object;
+        }
+        return primitives;
     }
 }

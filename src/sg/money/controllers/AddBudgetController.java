@@ -85,51 +85,53 @@ public class AddBudgetController
     }
 
 	public void CategoriesClicked() {
-		boolean[] checkedItems = new boolean[m_model.getCurrentCategories().size() + 1];
-		checkedItems[0] = m_model.getSelectedCategories().size() == 0;
-		for (int i = 0; i < m_model.getCurrentCategories().size(); i++) {
-			boolean alreadySelected = false;
-			for (Category selectedCategory : m_model.getSelectedCategories()) {
-				if (selectedCategory.getId() == m_model.getCurrentCategories().get(i).getId()) {
-					alreadySelected = true;
-					break;
-				}
-			}
-			checkedItems[i + 1] = alreadySelected;
-		}
-
 		ArrayList<String> items = new ArrayList<String>();
 		items.add("All Categories");
+
+        ArrayList<Boolean> checkedList = new ArrayList<Boolean>();
+        checkedList.add(m_model.getSelectedCategories().size() == 0);
+
 		for (Category category : m_model.getCurrentCategories()) {
 			if (!category.isUseInReports())
 				continue;
 
+            boolean alreadySelected = false;
+            for (Category selectedCategory : m_model.getSelectedCategories()) {
+                if (selectedCategory.getId() == category.getId()) {
+                    alreadySelected = true;
+                    break;
+                }
+            }
+            checkedList.add(alreadySelected);
+
 			items.add(Category.getCategoryName(category, m_model.getCurrentCategories()));
 		}
 
-		createDialog("Categories", items, checkedItems, DialogType.Categories).show();
+		createDialog("Categories", items, Misc.toPrimitiveArray(checkedList), DialogType.Categories).show();
 	}
 
 	public void AccountsClicked() {
-		boolean[] checkedItems = new boolean[m_model.getCurrentAccounts().size() + 1];
-		checkedItems[0] = m_model.getSelectedAccounts().size() == 0;
-		for (int i = 0; i < m_model.getCurrentAccounts().size(); i++) {
-			boolean alreadySelected = false;
-			for (Account selectedAccount : m_model.getSelectedAccounts()) {
-				if (selectedAccount.getId() == m_model.getCurrentAccounts().get(i).getId()) {
-					alreadySelected = true;
-					break;
-				}
-			}
-			checkedItems[i + 1] = alreadySelected;
-		}
-
 		ArrayList<String> items = new ArrayList<String>();
 		items.add("All Accounts");
-		for (Account account : m_model.getCurrentAccounts())
-			items.add(account.getName());
 
-		createDialog("Accounts", items, checkedItems, DialogType.Accounts).show();
+        ArrayList<Boolean> checkedItems = new ArrayList<Boolean>();
+        checkedItems.add(m_model.getSelectedAccounts().size() == 0);
+
+		for (Account account : m_model.getCurrentAccounts())
+        {
+            boolean alreadySelected = false;
+            for (Account selectedAccount : m_model.getSelectedAccounts()) {
+                if (selectedAccount.getId() == account.getId()) {
+                    alreadySelected = true;
+                    break;
+                }
+            }
+            checkedItems.add(alreadySelected);
+
+            items.add(account.getName());
+        }
+
+		createDialog("Accounts", items, Misc.toPrimitiveArray(checkedItems), DialogType.Accounts).show();
 	}
 
 	private Dialog createDialog(String title, final ArrayList<String> items,
