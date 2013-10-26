@@ -69,6 +69,7 @@ public class AddTransactionModel extends Observable implements Parcelable
 
 		m_useNewCategory = false;
 		m_newCategory = new Category();
+        m_newCategory.setName("");
 
         ArrayList<Account> accounts = DatabaseManager.getInstance(context).GetAllAccounts();
         for(Account account : accounts)
@@ -79,7 +80,6 @@ public class AddTransactionModel extends Observable implements Parcelable
 
 
         ArrayList<Category> categories = DatabaseManager.getInstance(context).GetAllCategories();
-        categories = Category.getCategoriesInGroupOrder(categories);
         for(Category category : categories)
         {
             m_categoriesMap.put(category.getName(), category);
@@ -236,8 +236,25 @@ public class AddTransactionModel extends Observable implements Parcelable
         return m_useNewCategory;
     }
 
+    public void setNewCategoryName(String newCategoryName) {
+        if (!m_newCategory.getName().equals(newCategoryName))
+        {
+            m_newCategory.setName(newCategoryName);
+            notifyObservers(this);
+        }
+    }
+
+    public String getNewCategoryName()
+    {
+        return m_newCategory.getName();
+    }
+
     public void setUseNewCategory(boolean useNewCategory) {
-        this.m_useNewCategory = useNewCategory;
+        if (m_useNewCategory != useNewCategory)
+        {
+            m_useNewCategory = useNewCategory;
+            notifyObservers(this);
+        }
     }
 
     public boolean isIncomeType() {
@@ -347,6 +364,7 @@ public class AddTransactionModel extends Observable implements Parcelable
     	{
         	Random rnd = new Random(System.currentTimeMillis());
         	m_newCategory.setColor(Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
+            m_newCategory.setIncome(m_isIncomeType);
 			DatabaseManager.getInstance(context).AddCategory(m_newCategory);
       
 			m_transaction.setCategory(m_newCategory.getId());

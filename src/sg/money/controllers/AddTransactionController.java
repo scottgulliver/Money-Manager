@@ -83,6 +83,9 @@ public class AddTransactionController
 	{
 		m_model.setDontReport(checked);
 	}
+    public void onNewCategoryNameChange(String name) {
+        m_model.setNewCategoryName(name);
+    }
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId())

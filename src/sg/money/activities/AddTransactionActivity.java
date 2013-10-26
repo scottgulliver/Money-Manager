@@ -241,6 +241,18 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
                     restoreFocus();
 				}
 			});
+
+        m_txtNewCatName.setOnFocusChangeListener(new OnFocusChangeListener()
+        {
+            public void onFocusChange(View view, boolean hasFocus)
+            {
+                if (!hasFocus)
+                {
+                    m_controller.onNewCategoryNameChange(m_txtNewCatName.getText().toString());
+                }
+            }
+        });
+
     }
 
     @Override
@@ -299,6 +311,11 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
         boolean addNewCategory = m_model.getUseNewCategory();
         m_txtNewCatName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
         m_tvCategoryName.setVisibility(addNewCategory ? View.VISIBLE : View.GONE);
+
+        if (addNewCategory)
+        {
+            m_txtNewCatName.setText(m_model.getNewCategoryName());
+        }
 		
         m_spnType.setSelection(m_model.getIsTransfer()
                 ? m_controller.getTypeChoices().indexOf(AddTransactionController.TransactionType.Transfer.name())
@@ -312,7 +329,9 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, categoryNames);
             m_spnCategory.setAdapter(arrayAdapter);
 
-            m_spnCategory.setSelection(categoryNames.indexOf(m_model.getCategory() != null ? m_model.getCategory().getName() : AddTransactionController.ADD_CATEGORY_STRING));
+            m_spnCategory.setSelection(categoryNames.indexOf(m_model.getCategory() != null && !m_model.getUseNewCategory()
+                    ? m_model.getCategory().getName()
+                    : AddTransactionController.ADD_CATEGORY_STRING));
 		}
 		else
 		{
@@ -339,6 +358,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 
         m_txtValue.clearFocus();
         m_txtDesc.clearFocus();
+        m_txtNewCatName.clearFocus();
     }
 
     public void restoreFocus()
