@@ -119,6 +119,7 @@ public class AddBudgetActivity extends BaseActivity implements OnChangeListener<
 			{
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
+                cancelFocus();
 				m_controller.onNotifyTypeSelected(Budget.NotificationType.fromInteger(position));
 			}
 
