@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Random;
 import sg.money.common.DatabaseManager;
 import sg.money.controllers.AddTransactionController;
+import sg.money.domainobjects.Account;
 import sg.money.domainobjects.Category;
 
 public class AddCategoryModel extends Observable implements Parcelable {
@@ -199,7 +200,7 @@ public class AddCategoryModel extends Observable implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(m_category, flags);
-        parcel.writeParcelableArray((Parcelable[])m_currentCategories.toArray(), flags);
+        parcel.writeParcelableArray(m_currentCategories.toArray(new Category[m_currentCategories.size()]), flags);
         parcel.writeStringList(m_options);
         parcel.writeStringList(m_parentOptions);
         parcel.writeInt(m_newCategory ? 1 : 0);

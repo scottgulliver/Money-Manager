@@ -142,8 +142,8 @@ public class Budget implements Parcelable
         parcel.writeString(m_name);
         parcel.writeDouble(m_value);
         parcel.writeInt(m_notifyType.getValue());
-        parcel.writeParcelableArray((Parcelable[]) m_accounts.toArray(), flags);
-        parcel.writeParcelableArray((Parcelable[]) m_categories.toArray(), flags);
+        parcel.writeParcelableArray(m_accounts.toArray(new Account[m_accounts.size()]), 0);
+        parcel.writeParcelableArray(m_categories.toArray(new Category[m_categories.size()]), flags);
     }
 
     @Override

@@ -152,7 +152,7 @@ public class AddAccountModel extends Observable implements Parcelable {
         parcel.writeParcelable(m_account, flags);
         parcel.writeDouble(m_startingBalance);
         parcel.writeInt(m_newAccount ? 1 : 0);
-        parcel.writeParcelableArray((Parcelable[])m_currentAccounts.toArray(), flags);
+        parcel.writeParcelableArray(m_currentAccounts.toArray(new Account[m_currentAccounts.size()]), flags);
     }
 
     /* End Implementation of Parcelable */

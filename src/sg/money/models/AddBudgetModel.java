@@ -192,9 +192,9 @@ public class AddBudgetModel extends Observable implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(m_budget, flags);
-        parcel.writeParcelableArray((Parcelable[])m_currentAccounts.toArray(), flags);
-        parcel.writeParcelableArray((Parcelable[])m_currentCategories.toArray(), flags);
-        parcel.writeParcelableArray((Parcelable[])m_currentBudgets.toArray(), flags);
+        parcel.writeParcelableArray(m_currentAccounts.toArray(new Account[m_currentAccounts.size()]), flags);
+        parcel.writeParcelableArray(m_currentCategories.toArray(new Category[m_currentAccounts.size()]), flags);
+        parcel.writeParcelableArray(m_currentBudgets.toArray(new Budget[m_currentBudgets.size()]), flags);
         parcel.writeStringList(m_notifyTypeOptions);
         parcel.writeInt(m_newBudget ? 1 : 0);
     }
