@@ -63,6 +63,8 @@ public class AccountsFragment extends HostActivityFragmentBase implements OnItem
 
         UpdateList();
 
+        getParentActivity().invalidateOptionsMenu();
+
         return v;
     }
 

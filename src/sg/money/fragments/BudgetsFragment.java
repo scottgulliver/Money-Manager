@@ -90,6 +90,8 @@ public class BudgetsFragment extends HostActivityFragmentBase implements OnItemL
         	setData("");
     	}
 
+        getParentActivity().invalidateOptionsMenu();
+
         return v;
 	}
 

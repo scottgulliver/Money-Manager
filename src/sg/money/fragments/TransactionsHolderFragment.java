@@ -70,6 +70,8 @@ public class TransactionsHolderFragment extends HostActivityFragmentBase
         
         UpdateUI();
 
+        getParentActivity().invalidateOptionsMenu();
+
         return v;
     }
 
