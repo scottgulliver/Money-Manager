@@ -81,7 +81,7 @@ public class AddCategoryModel extends Observable implements Parcelable {
 		m_cachedParentCategory = null;
 		for(Category category : m_currentCategories)
 		{
-			if (category.getId() == category.getParentCategoryId())
+			if (category.getId() == m_category.getParentCategoryId())
 			{
 				m_cachedParentCategory = category;
 			}
