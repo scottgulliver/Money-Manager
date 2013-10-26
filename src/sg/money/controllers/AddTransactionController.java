@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.*;
 import java.util.*;
 import sg.money.*;
 import sg.money.activities.*;
+import sg.money.common.DatabaseManager;
 import sg.money.domainobjects.*;
 import sg.money.fragments.*;
 import sg.money.models.*;
@@ -117,15 +118,28 @@ public class AddTransactionController
 	public void setSavedCategorySelection()
 	{
 		int savedId = Settings.getLastUsedCategoryId(m_view, m_model.isIncomeType());
-		for(Category category : m_model.getAllCategories())
-		{
-			if (category.getId() == savedId)
-			{
-				m_model.setCategory(category);
-				break;
-			}
-		}
+
+        if (savedId == -1)
+        {
+            m_model.setCategory(getDefaultCategory());
+        }
+        else
+        {
+            for(Category category : m_model.getAllCategories())
+            {
+                if (category.getId() == savedId)
+                {
+                    m_model.setCategory(category);
+                    break;
+                }
+            }
+        }
 	}
+
+    private Category getDefaultCategory()
+    {
+        return DatabaseManager.getInstance(m_view).GetAllCategories().get(0);
+    }
 
     private void OkClicked()
     {
