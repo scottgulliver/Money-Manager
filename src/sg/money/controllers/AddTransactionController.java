@@ -138,7 +138,15 @@ public class AddTransactionController
 
     private Category getDefaultCategory()
     {
-        return DatabaseManager.getInstance(m_view).GetAllCategories().get(0);
+        for(Category category : DatabaseManager.getInstance(m_view).GetAllCategories())
+        {
+            if (category.isIncome() == m_model.isIncomeType())
+            {
+                return category;
+            }
+        }
+
+        return null;
     }
 
     private void OkClicked()
