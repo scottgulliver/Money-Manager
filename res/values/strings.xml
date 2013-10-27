@@ -38,34 +38,323 @@
     <string name="pref_usereconcile_summ">Allow for transactions to be manually reconciled.</string>
 
     <string-array name="Currencies_Entries">
-        <item>$ (USD)</item>
-        <item>$ (CAD)</item>
-        <item>€ (EUR)</item>
-        <item>£ (GBP)</item>
-        <item>Fr (CHF)</item>
-        <item>$ (NZD)</item>
+        <item>د.إ (AED)</item>
+        <item>؋ (AFN)</item>
+        <item>L (ALL)</item>
+        <item>ƒ (ANG)</item>
+        <item>Kz (AOA)</item>
+        <item>$ (ARS)</item>
         <item>$ (AUD)</item>
-        <item>¥ (JPY)</item>
-        <item>W (KRW)</item>
+        <item>ƒ (AWG)</item>
+        <item>KM (BAM)</item>
+        <item>$ (BBD)</item>
+        <item>৳ (BDT)</item>
+        <item>лв (BGN)</item>
+        <item>.د.ب (BHD)</item>
+        <item>Fr (BIF)</item>
+        <item>$ (BMD)</item>
+        <item>$ (BND)</item>
+        <item>Bs. (BOB)</item>
         <item>R$ (BRL)</item>
-        <item>$ (TWD)</item>
+        <item>$ (BSD)</item>
+        <item>Nu. (BTN)</item>
+        <item>P (BWP)</item>
+        <item>Br (BYR)</item>
+        <item>$ (BZD)</item>
+        <item>$ (CAD)</item>
+        <item>Fr (CDF)</item>
+        <item>Fr (CHF)</item>
+        <item>$ (CLP)</item>
+        <item>¥ (CNY)</item>
+        <item>$ (COP)</item>
+        <item>₡ (CRC)</item>
+        <item>$ (CUC)</item>
+        <item>$ (CUP)</item>
+        <item>$ (CVE)</item>
+        <item>Kč (CZK)</item>
+        <item>Fr (DJF)</item>
+        <item>kr (DKK)</item>
+        <item>$ (DOP)</item>
+        <item>د.ج (DZD)</item>
+        <item>£ (EGP)</item>
+        <item>Nfk (ERN)</item>
+        <item>Br (ETB)</item>
+        <item>€ (EUR)</item>
+        <item>$ (FJD)</item>
+        <item>£ (FKP)</item>
+        <item>£ (GBP)</item>
+        <item>ლ (GEL)</item>
+        <item>£ (GGP)</item>
+        <item>₵ (GHS)</item>
+        <item>£ (GIP)</item>
+        <item>D (GMD)</item>
+        <item>Fr (GNF)</item>
+        <item>Q (GTQ)</item>
+        <item>$ (GYD)</item>
+        <item>$ (HKD)</item>
+        <item>L (HNL)</item>
+        <item>kn (HRK)</item>
+        <item>G (HTG)</item>
+        <item>Ft (HUF)</item>
+        <item>Rp (IDR)</item>
+        <item>₪ (ILS)</item>
+        <item>£ (IMP)</item>
         <item>₹ (INR)</item>
-        <item>d (VND)</item>
+        <item>ع.د (IQD)</item>
+        <item>﷼ (IRR)</item>
+        <item>kr (ISK)</item>
+        <item>£ (JEP)</item>
+        <item>$ (JMD)</item>
+        <item>د.ا (JOD)</item>
+        <item>¥ (JPY)</item>
+        <item>Sh (KES)</item>
+        <item>៛ (KHR)</item>
+        <item>Fr (KMF)</item>
+        <item>₩ (KPW)</item>
+        <item>₩ (KRW)</item>
+        <item>د.ك (KWD)</item>
+        <item>$ (KYD)</item>
+        <item>₸ (KZT)</item>
+        <item>₭ (LAK)</item>
+        <item>ل.ل (LBP)</item>
+        <item>Rs (LKR)</item>
+        <item>$ (LRD)</item>
+        <item>L (LSL)</item>
+        <item>Lt (LTL)</item>
+        <item>Ls (LVL)</item>
+        <item>ل.د (LYD)</item>
+        <item>د.م. (MAD)</item>
+        <item>L (MDL)</item>
+        <item>Ar (MGA)</item>
+        <item>ден (MKD)</item>
+        <item>Ks (MMK)</item>
+        <item>₮ (MNT)</item>
+        <item>P (MOP)</item>
+        <item>UM (MRO)</item>
+        <item>₨ (MUR)</item>
+        <item>.ރ (MVR)</item>
+        <item>MK (MWK)</item>
+        <item>$ (MXN)</item>
+        <item>RM (MYR)</item>
+        <item>MT (MZN)</item>
+        <item>$ (NAD)</item>
+        <item>₦ (NGN)</item>
+        <item>C$ (NIO)</item>
+        <item>kr (NOK)</item>
+        <item>₨ (NPR)</item>
+        <item>$ (NZD)</item>
+        <item>ر.ع. (OMR)</item>
+        <item>B/. (PAB)</item>
+        <item>S/. (PEN)</item>
+        <item>K (PGK)</item>
+        <item>₱ (PHP)</item>
+        <item>₨ (PKR)</item>
+        <item>zł (PLN)</item>
+        <item>р. (PRB)</item>
+        <item>₲ (PYG)</item>
+        <item>ر.ق (QAR)</item>
+        <item>L (RON)</item>
+        <item>дин. (RSD)</item>
+        <item>р. (RUB)</item>
+        <item>Fr (RWF)</item>
+        <item>ر.س (SAR)</item>
+        <item>$ (SBD)</item>
+        <item>₨ (SCR)</item>
+        <item>£ (SDG)</item>
+        <item>kr (SEK)</item>
+        <item>$ (SGD)</item>
+        <item>£ (SHP)</item>
+        <item>Le (SLL)</item>
+        <item>Sh (SOS)</item>
+        <item>$ (SRD)</item>
+        <item>£ (SSP)</item>
+        <item>Db (STD)</item>
+        <item>₡ (SVC)</item>
+        <item>£ (SYP)</item>
+        <item>L (SZL)</item>
+        <item>ЅМ (TJS)</item>
+        <item>m (TMT)</item>
+        <item>د.ت (TND)</item>
+        <item>T$ (TOP)</item>
+        <item>$ (TTD)</item>
+        <item>$ (TWD)</item>
+        <item>Sh (TZS)</item>
+        <item>₴ (UAH)</item>
+        <item>Sh (UGX)</item>
+        <item>$ (USD)</item>
+        <item>$ (UYU)</item>
+        <item>Bs F (VEF)</item>
+        <item>₫ (VND)</item>
+        <item>Vt (VUV)</item>
+        <item>T (WST)</item>
+        <item>Fr (XAF)</item>
+        <item>$ (XCD)</item>
+        <item>Fr (XOF)</item>
+        <item>Fr (XPF)</item>
+        <item>﷼ (YER)</item>
+        <item>R (ZAR)</item>
+        <item>ZK (ZMW)</item>
+        <item>$ (ZWL)</item>
+
     </string-array>
     <string-array name="Currencies_Values">
-        <item>USD</item>
-        <item>CAD</item>
-        <item>EUR</item>
-        <item>GBP</item>
-        <item>CHF</item>
-        <item>NZD</item>
+        <item>AED</item>
+        <item>AFN</item>
+        <item>ALL</item>
+        <item>ANG</item>
+        <item>AOA</item>
+        <item>ARS</item>
         <item>AUD</item>
-        <item>JPY</item>
-        <item>KRW</item>
+        <item>AWG</item>
+        <item>BAM</item>
+        <item>BBD</item>
+        <item>BDT</item>
+        <item>BGN</item>
+        <item>BHD</item>
+        <item>BIF</item>
+        <item>BMD</item>
+        <item>BND</item>
+        <item>BOB</item>
         <item>BRL</item>
-        <item>TWD</item>
+        <item>BSD</item>
+        <item>BTN</item>
+        <item>BWP</item>
+        <item>BYR</item>
+        <item>BZD</item>
+        <item>CAD</item>
+        <item>CDF</item>
+        <item>CHF</item>
+        <item>CLP</item>
+        <item>CNY</item>
+        <item>COP</item>
+        <item>CRC</item>
+        <item>CUC</item>
+        <item>CUP</item>
+        <item>CVE</item>
+        <item>CZK</item>
+        <item>DJF</item>
+        <item>DKK</item>
+        <item>DOP</item>
+        <item>DZD</item>
+        <item>EGP</item>
+        <item>ERN</item>
+        <item>ETB</item>
+        <item>EUR</item>
+        <item>FJD</item>
+        <item>FKP</item>
+        <item>GBP</item>
+        <item>GEL</item>
+        <item>GGP</item>
+        <item>GHS</item>
+        <item>GIP</item>
+        <item>GMD</item>
+        <item>GNF</item>
+        <item>GTQ</item>
+        <item>GYD</item>
+        <item>HKD</item>
+        <item>HNL</item>
+        <item>HRK</item>
+        <item>HTG</item>
+        <item>HUF</item>
+        <item>IDR</item>
+        <item>ILS</item>
+        <item>IMP</item>
         <item>INR</item>
+        <item>IQD</item>
+        <item>IRR</item>
+        <item>ISK</item>
+        <item>JEP</item>
+        <item>JMD</item>
+        <item>JOD</item>
+        <item>JPY</item>
+        <item>KES</item>
+        <item>KHR</item>
+        <item>KMF</item>
+        <item>KPW</item>
+        <item>KRW</item>
+        <item>KWD</item>
+        <item>KYD</item>
+        <item>KZT</item>
+        <item>LAK</item>
+        <item>LBP</item>
+        <item>LKR</item>
+        <item>LRD</item>
+        <item>LSL</item>
+        <item>LTL</item>
+        <item>LVL</item>
+        <item>LYD</item>
+        <item>MAD</item>
+        <item>MDL</item>
+        <item>MGA</item>
+        <item>MKD</item>
+        <item>MMK</item>
+        <item>MNT</item>
+        <item>MOP</item>
+        <item>MRO</item>
+        <item>MUR</item>
+        <item>MVR</item>
+        <item>MWK</item>
+        <item>MXN</item>
+        <item>MYR</item>
+        <item>MZN</item>
+        <item>NAD</item>
+        <item>NGN</item>
+        <item>NIO</item>
+        <item>NOK</item>
+        <item>NPR</item>
+        <item>NZD</item>
+        <item>OMR</item>
+        <item>PAB</item>
+        <item>PEN</item>
+        <item>PGK</item>
+        <item>PHP</item>
+        <item>PKR</item>
+        <item>PLN</item>
+        <item>PRB</item>
+        <item>PYG</item>
+        <item>QAR</item>
+        <item>RON</item>
+        <item>RSD</item>
+        <item>RUB</item>
+        <item>RWF</item>
+        <item>SAR</item>
+        <item>SBD</item>
+        <item>SCR</item>
+        <item>SDG</item>
+        <item>SEK</item>
+        <item>SGD</item>
+        <item>SHP</item>
+        <item>SLL</item>
+        <item>SOS</item>
+        <item>SRD</item>
+        <item>SSP</item>
+        <item>STD</item>
+        <item>SVC</item>
+        <item>SYP</item>
+        <item>SZL</item>
+        <item>TJS</item>
+        <item>TMT</item>
+        <item>TND</item>
+        <item>TOP</item>
+        <item>TTD</item>
+        <item>TWD</item>
+        <item>TZS</item>
+        <item>UAH</item>
+        <item>UGX</item>
+        <item>USD</item>
+        <item>UYU</item>
+        <item>VEF</item>
         <item>VND</item>
+        <item>VUV</item>
+        <item>WST</item>
+        <item>XAF</item>
+        <item>XCD</item>
+        <item>XOF</item>
+        <item>XPF</item>
+        <item>YER</item>
+        <item>ZAR</item>
+        <item>ZMW</item>
+        <item>ZWL</item>
     </string-array>
     <string-array name="Dateformat_Entries">
         <item>dd/mm/yy</item>
@@ -129,5 +418,15 @@
 	<string name="transfer_to">Transfer to</string>
 	<string name="reconcile_transactions">Reconcile Transactions</string>
 	<string name="show_hide_reconciled">Show Reconciled Transactions"</string>
+	<string name="acceptreconcilechanges">Done</string>
 
+	<string-array name="drawer_links_array">
+		<item>Accounts</item>
+		<item>Transactions</item>
+		<item>Categories</item>
+		<item>Overview</item>
+	</string-array>
+
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 </resources>

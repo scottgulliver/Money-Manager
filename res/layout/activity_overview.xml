@@ -48,7 +48,7 @@
         android:layout_toRightOf="@+id/textView3"
         android:text="@string/design_overview_spend" />
 
-    <sg.money.PieChartView
+    <sg.money.widgets.PieChartView
         android:id="@+id/pieChartView"
         android:layout_width="wrap_content"
         android:layout_height="250dp"

@@ -30,7 +30,7 @@
         android:text="@string/design_budgetitem_extra"
         android:textColor="#888888" />
     
-    <sg.money.BudgetDateView 
+    <sg.money.widgets.BudgetDateView
         android:id="@+id/budget_progress"
         android:layout_below="@id/budget_extra"
         android:layout_alignLeft="@id/budget_extra"
