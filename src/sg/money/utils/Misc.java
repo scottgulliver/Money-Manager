@@ -58,7 +58,7 @@ public class Misc
 	 */
 	public static String formatValue(double value)
 	{
-		DecimalFormat format = new DecimalFormat("0.00");
+        DecimalFormat format = new DecimalFormat("###,##0.00");
 		return format.format(value);
 	}
 	

@@ -1,9 +1,13 @@
 package sg.money.activities;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
@@ -216,7 +220,12 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 						{
 							m_txtValue.setText("0.00");
 						}
-						m_controller.onTransactionValueChange(Double.parseDouble(m_txtValue.getText().toString()));
+                        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+                        try {
+                            m_controller.onTransactionValueChange(nf.parse(m_txtValue.getText().toString()).doubleValue());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 					}
 				}			
 			});
