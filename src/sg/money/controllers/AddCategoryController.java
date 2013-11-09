@@ -118,7 +118,10 @@ public class AddCategoryController
     	m_parentOptions.add("< None >");
     	for(Category category : m_model.getCurrentCategories())
     	{
-    		if (category.getParentCategoryId() == -1 && category.isIncome() == m_model.getIsIncome() && !category.isPermanent())
+    		if (category.getParentCategoryId() == -1
+                    && category.isIncome() == m_model.getIsIncome()
+                    && !category.isPermanent()
+                    && (m_model.isNewCategory() || m_model.getId() != category.getId()))
     		{
     			m_parentOptions.add(category.getName());
     		}

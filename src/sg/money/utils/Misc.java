@@ -2,6 +2,7 @@ package sg.money.utils;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,7 +59,7 @@ public class Misc
 	 */
 	public static String formatValue(double value)
 	{
-        DecimalFormat format = new DecimalFormat("###,##0.00");
+        DecimalFormat format = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		return format.format(value);
 	}
 	

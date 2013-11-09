@@ -220,7 +220,7 @@ public class AddTransactionActivity extends BaseFragmentActivity implements OnCh
 						{
 							m_txtValue.setText("0.00");
 						}
-                        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+                        NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
                         try {
                             m_controller.onTransactionValueChange(nf.parse(m_txtValue.getText().toString()).doubleValue());
                         } catch (ParseException e) {

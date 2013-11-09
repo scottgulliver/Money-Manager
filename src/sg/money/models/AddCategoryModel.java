@@ -42,6 +42,11 @@ public class AddCategoryModel extends Observable implements Parcelable {
 	
 	/* Getters / setters */
 
+    public int getId()
+    {
+        return m_category.getId();
+    }
+
 	public void setIsIncome(boolean incomeSelected)
 	{
         if (m_category.isIncome() != incomeSelected)

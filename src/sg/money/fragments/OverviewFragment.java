@@ -90,7 +90,6 @@ public class OverviewFragment extends HostActivityFragmentBase
     	Collections.sort(m_transactions, new DateComparator());
     	Collections.reverse(m_transactions);
     	m_categories = DatabaseManager.getInstance(getParentActivity()).GetAllCategories();
-    	m_categories = Category.getCategoriesInGroupOrder(m_categories);
     	
     	m_chkShowSubcategories.setChecked(true);
     	m_chkShowSubcategories.setOnCheckedChangeListener(new OnCheckedChangeListener() {
