@@ -499,53 +499,8 @@ public class DatabaseManager extends SQLiteOpenHelper
             }
         }
 
-        //fix where transactions have no valid category - an issue before the refactor
         if (oldVersion <= 23)
         {
-            ArrayList<Category> categories = GetAllCategories();
-            Category expenseUncategorised = null;
-            for(Category category : categories)
-            {
-                if (category.getName().equals("Uncategorised") && !category.isIncome())
-                {
-                    expenseUncategorised = category;
-                    break;
-                }
-            }
-
-            if (expenseUncategorised != null)
-            {
-                ArrayList<Transaction> transactions = GetAllTransactions();
-                for(Transaction transaction : transactions)
-                {
-                    //find the associated category
-                    boolean hasValidCategory = false;
-                    for(Category category : categories)
-                    {
-                        if (category.getId() == transaction.getCategory())
-                        {
-                            hasValidCategory = true;
-                            break;
-                        }
-                    }
-
-                    if (!hasValidCategory)
-                    {
-                        transaction.setCategory(expenseUncategorised.getId());
-                        UpdateTransaction(transaction);
-                    }
-                }
-            }
-
-            //fix categoryparent issue
-            for(Category category : categories)
-            {
-                if (category.getParentCategoryId() == category.getId())
-                {
-                    category.setParentCategoryId(-1);
-                    UpdateCategory(category);
-                }
-            }
         }
 
 		clearDatabase();
@@ -641,7 +596,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
@@ -689,7 +644,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
@@ -737,7 +692,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
@@ -777,7 +732,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 	}
 	
@@ -931,7 +886,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
@@ -972,7 +927,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 	}
 	
@@ -1093,8 +1048,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
@@ -1130,7 +1084,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			return null;
+            throw new RuntimeException(ex);
 		}
 	}
 	
@@ -1288,8 +1242,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
@@ -1350,8 +1303,7 @@ public class DatabaseManager extends SQLiteOpenHelper
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
-			return null;
+            throw new RuntimeException(ex);
 		}
 		finally
 		{
